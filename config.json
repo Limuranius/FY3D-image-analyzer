@@ -1,127 +1,240 @@
 {
   "IMAGES_DIR": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников",
-  "LOOK_AT": [0, 6, 7],
   "DRAW_GRAPHS": true,
+  "SAVE_COLORED_IMAGES": false,
+  "USED_IMAGE_TASKS": [
+    "К-зеркало 1"
+  ],
+  "USED_AREA_TASKS": [],
   "IMAGES": [
-
     {
-      "PATH": "17.03.23 06.20 (Берег Австралии)/FY3D_MERSI_GBAL_L1_20230317_0620_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 06.20 (Берег Австралии)/FY3D_MERSI_GBAL_L1_20230317_0620_1000M_MS.HDF",
       "NAME": "17.03.23 06.20 (Берег Австралии)",
+      "IS_USED": true,
       "AREAS": [
         {
           "X": 650,
           "Y": 1200,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         },
         {
           "X": 650,
           "Y": 1210,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1100,
+          "Y": 1200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1100,
+          "Y": 1210,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1550,
+          "Y": 1200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1550,
+          "Y": 1210,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 650,
+          "Y": 1420,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 650,
+          "Y": 1430,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 650,
+          "Y": 1550,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 650,
+          "Y": 1560,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "17.03.23 06.30 (Индокитай)/FY3D_MERSI_GBAL_L1_20230317_0630_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 06.30 (Индокитай)/FY3D_MERSI_GBAL_L1_20230317_0630_1000M_MS.HDF",
       "NAME": "17.03.23 06.30 (Индокитай)",
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 0,
           "Y": 0,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "17.03.23 06.50 (Антарктида)/FY3D_MERSI_GBAL_L1_20230317_0650_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 06.50 (Антарктида)/FY3D_MERSI_GBAL_L1_20230317_0650_1000M_MS.HDF",
       "NAME": "17.03.23 06.50 (Антарктида)",
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 0,
           "Y": 0,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "17.03.23 07.10 (Куба, ночь)/FY3D_MERSI_GBAL_L1_20230317_0710_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 07.10 (Куба, ночь)/FY3D_MERSI_GBAL_L1_20230317_0710_1000M_MS.HDF",
       "NAME": "17.03.23 07.10 (Куба, ночь)",
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 0,
           "Y": 0,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "17.03.23 08.00 (Индийский океан)/FY3D_MERSI_GBAL_L1_20230317_0800_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 08.00 (Индийский океан)/FY3D_MERSI_GBAL_L1_20230317_0800_1000M_MS.HDF",
       "NAME": "17.03.23 08.00 (Индийский океан)",
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 0,
           "Y": 0,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "17.03.23 08.50 (Ночь)/FY3D_MERSI_GBAL_L1_20230317_0850_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 08.50 (Ночь)/FY3D_MERSI_GBAL_L1_20230317_0850_1000M_MS.HDF",
       "NAME": "17.03.23 08.50 (Ночь)",
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 0,
           "Y": 0,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "17.03.23 09.55 (Персидский залив)/FY3D_MERSI_GBAL_L1_20230317_0955_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 09.55 (Персидский залив)/FY3D_MERSI_GBAL_L1_20230317_0955_1000M_MS.HDF",
       "NAME": "17.03.23 09.55 (Персидский залив)",
+      "IS_USED": true,
       "AREAS": [
         {
-          "X": 500,
+          "X": 400,
           "Y": 1200,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         },
         {
-          "X": 500,
+          "X": 400,
           "Y": 1210,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 600,
+          "Y": 1200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 600,
+          "Y": 1210,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 400,
+          "Y": 1290,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 400,
+          "Y": 1300,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 400,
+          "Y": 200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 400,
+          "Y": 210,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
-
     {
-      "PATH": "23.02.23 06.00 (Филиппины)/FY3D_MERSI_GBAL_L1_20230203_0600_1000M_MS.HDF",
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\23.02.23 06.00 (Филиппины)/FY3D_MERSI_GBAL_L1_20230203_0600_1000M_MS.HDF",
       "NAME": "23.02.23 06.00 (Филиппины)",
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 540,
           "Y": 1450,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         },
         {
           "X": 540,
           "Y": 1460,
           "WIDTH": 100,
-          "HEIGHT": 10
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     }
