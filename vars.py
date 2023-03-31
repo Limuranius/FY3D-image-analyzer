@@ -1,19 +1,12 @@
-CONFIG_PATH = "config.json"
-COLORED_PICTURES_PATH = "Изображения/Цветные"
-MONOCHROME_PICTURES_PATH = "Изображения/Однотонные"
+from os import path
+
+BASE_DIR = path.dirname(__file__)
+
+CONFIG_PATH = path.join(BASE_DIR, "config.json")
+COLORED_PICTURES_PATH = path.join(BASE_DIR, "Изображения/Цветные")
+MONOCHROME_PICTURES_PATH = path.join(BASE_DIR, "Изображения/Однотонные")
 
 EXTENSIONS = [".txt", ".xlsx", ".png"]
 
-RESULTS_DIR = "Результаты"
-BB_DIR = "Результаты/Чёрное тело"
-METHOD_1_DIR = "Результаты/Способ 1 (Отклонение от среднего по строке)"
-METHOD_2_DIR = "Результаты/Способ 2 (Отклонение от среднего по столбцу)"
-METHOD_3_DIR = "Результаты/Способ 3 (Средние значения столбцов)"
-METHOD_4_DIR = "Результаты/Способ 4 (Стандартное отклонение столбцов)"
-METHOD_5_DIR = "Результаты/Способ 5 (Отклонение от общего среднего)"
-
-NOISES_1_1_DIR = "Результаты/Шумы 1.1 (случайная ошибка строки)"
-NOISES_1_2_DIR = "Результаты/Шумы 1.2 (отклонение от общего среднего)"
-NOISES_2_1_DIR = "Результаты/Шумы 2.1 (линейный тренд)"
-NOISES_2_2_DIR = "Результаты/Шумы 2.2 (тренд по средним)"
+RESULTS_DIR = path.join(BASE_DIR, "Результаты")
 
