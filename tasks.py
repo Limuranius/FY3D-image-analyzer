@@ -14,11 +14,13 @@ from math import sqrt
 class BaseTask(ABC):
     excel_dir: str = "Excel таблицы"
     graphs_dir: str = "Графики"
+    task_name: str
     root_dir: str
     excel_writer: pd.ExcelWriter
     obj_name: str
 
     def __init__(self):
+        self.root_dir = os.path.join(vars.RESULTS_DIR, self.task_name)
         # Создаём обработчика эксель файла
         file_name = self.obj_name + ".xlsx"
         path = os.path.join(self.root_dir, self.excel_dir, file_name)
@@ -36,6 +38,22 @@ class BaseTask(ABC):
     @abstractmethod
     def save_excel(self, *args, **kwargs):
         pass
+
+    def create_and_save_figure(self, data: list[list[int | float]], fig_name: str, title: str = "", xlabel: str = "",
+                               ylabel: str = "", lim: tuple[float, float] = None, legend: list = None,
+                               legend_title: str = ""):
+        fig, ax = plt.subplots()
+        ax.set_title(title)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        if lim:
+            ax.set_ylim(lim)
+        for row in data:
+            x = list(range(len(row)))
+            ax.plot(x, row)
+        if legend:
+            ax.legend(legend, title=legend_title, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 1))
+        self.save_figure(fig, fig_name)
 
     def save_figure(self, fig: plt.Figure, fig_name: str):
         """fig_name - название файла без разрешения"""
@@ -66,7 +84,8 @@ class BaseImageTask(BaseTask, ABC):
 
 
 class BBTask(BaseImageTask):
-    root_dir = vars.BB_DIR
+    """Просмотр яркости чёрного тела для разных каналов"""
+    task_name = "Чёрное тело"
 
     def analyze(self, draw_graphs: bool = False):
         logging.info(f"Рассматриваем чёрное тело...")
@@ -83,7 +102,9 @@ class BBTask(BaseImageTask):
 
     def save_graphs(self, bb: np.ndarray):
         logging.info("Создаём графики чёрного тела для каналов:")
-        for ch_i in range(25):
+        min_bb = bb[0:19].min()
+        max_bb = bb[0:19].max()
+        for ch_i in range(19):
             channel_number = ch_i + 1
             logging.info(f"Канал {channel_number}")
             bb_row = bb[ch_i]
@@ -93,6 +114,7 @@ class BBTask(BaseImageTask):
             ax.set_xlabel("Номер десятка строк")
             ax.set_ylabel("Среднее значение чёрного тела по 10 строкам")
             ax.plot(x, bb_row)
+            ax.set_ylim([min_bb, max_bb])
             self.save_figure(fig, f"Канал {channel_number}")
 
 
@@ -103,7 +125,7 @@ class Task1(BaseAreaTask):
         Находим среднее значение - одно число на строку
         Для каждого пикселя находится отклонение от этого среднего
     """
-    root_dir = vars.METHOD_1_DIR
+    task_name = "Способ 1 (Отклонение от среднего по строке)"
 
     def analyze(self, draw_graphs: bool = False):
         for channel in range(5, 20):
@@ -149,7 +171,7 @@ class Task2(BaseAreaTask):
         Находим среднее столбца
         Для каждого пикселя находится отклонение от этого среднего
     """
-    root_dir = vars.METHOD_2_DIR
+    task_name = "Способ 2 (Отклонение от среднего по столбцу)"
 
     def analyze(self, draw_graphs: bool = False):
         for channel in range(5, 20):
@@ -193,7 +215,7 @@ class Task3(BaseAreaTask):
     Метод 3.
         У каждого столбца находим среднее и отображаем его на графике
     """
-    root_dir = vars.METHOD_3_DIR
+    task_name = "Способ 3 (Средние значения столбцов)"
 
     def analyze(self, draw_graphs: bool = False):
         for channel in range(5, 20):
@@ -236,7 +258,7 @@ class Task4(BaseAreaTask):
     Метод 4.
         У каждого столбца находим стандартное отклонение и отображаем его на графике
     """
-    root_dir = vars.METHOD_4_DIR
+    task_name = "Способ 4 (Стандартное отклонение столбцов)"
 
     def analyze(self, draw_graphs: bool = False):
         for channel in range(5, 20):
@@ -280,7 +302,7 @@ class Task5(BaseAreaTask):
         Находим среднее по всей области
         У каждого пикселя находим отклонение от этого среднего
     """
-    root_dir = vars.METHOD_5_DIR
+    task_name = "Способ 5 (Отклонение от общего среднего)"
 
     def analyze(self, draw_graphs: bool = False):
         for channel in range(5, 20):
@@ -321,7 +343,7 @@ class TaskNoise1_1(BaseAreaTask):
     """
     Нахождение среднего, стандартного отклонения и случайной ошибки каждой строки
     """
-    root_dir = vars.NOISES_1_1_DIR
+    task_name = "Шумы 1.1 (случайная ошибка строки)"
 
     def analyze(self, draw_graphs: bool = False):
         self.save_excel()
@@ -369,7 +391,7 @@ class TaskNoise1_2(BaseAreaTask):
     Нахождение стандартного отклонения и случайной ошибки для всей области
     Нахождение общего среднего области и отклонения среднего каждой строки от этого общего среднего
     """
-    root_dir = vars.NOISES_1_2_DIR
+    task_name = "Шумы 1.2 (отклонение от общего среднего)"
 
     def analyze(self, draw_graphs: bool = False):
         self.save_excel()
@@ -414,7 +436,7 @@ class TaskNoise2_1(BaseAreaTask):
     """
     Нахождение линии тренда для каждой строки
     """
-    root_dir = vars.NOISES_2_1_DIR
+    task_name = "Шумы 2.1 (линейный тренд)"
 
     def analyze(self, draw_graphs: bool = False):
         self.save_excel()
@@ -451,7 +473,7 @@ class TaskNoise2_2(BaseAreaTask):
     """
     Нахождение другого тренда, получаемого из среднего по строке, столбцу и общему среднему
     """
-    root_dir = vars.NOISES_2_2_DIR
+    task_name = "Шумы 2.2 (тренд по средним)"
 
     def analyze(self, draw_graphs: bool = False):
         self.save_excel()
@@ -503,9 +525,202 @@ class TaskNoise2_2(BaseAreaTask):
                 stds_table[i + 2].append(row_std)
 
         pd.DataFrame(raw_data_table).to_excel(self.excel_writer, f"Исходные данные", index=False, header=False)
-        pd.DataFrame(row_excl_table).to_excel(self.excel_writer, f"Вычитание отклонения строки", index=False, header=False)
-        pd.DataFrame(col_excl_table).to_excel(self.excel_writer, f"Вычитание среднего столбца", index=False, header=False)
+        pd.DataFrame(row_excl_table).to_excel(self.excel_writer, f"Вычитание отклонения строки", index=False,
+                                              header=False)
+        pd.DataFrame(col_excl_table).to_excel(self.excel_writer, f"Вычитание среднего столбца", index=False,
+                                              header=False)
         pd.DataFrame(stds_table).to_excel(self.excel_writer, f"Ст. откл. строк", index=False, header=False)
 
     def save_graphs(self):
         pass
+
+
+# ============================= K-mirror tasks =====================================================
+
+class KMirrorBaseTask(BaseImageTask, ABC):
+    def find_neighbor_areas(self) -> list[tuple[FY3DImageArea, FY3DImageArea]]:
+        """Находит и возвращает пары областей, соответствующие разным сторонам зеркала"""
+        pairs = []
+        areas = self.image.areas.copy()
+        while areas:
+            area_1 = areas.pop(0)
+            for i, area_2 in enumerate(areas):
+
+                higher_area = min(area_1, area_2, key=lambda a: a.y)
+                lower_area = max(area_1, area_2, key=lambda a: a.y)
+
+                height_10 = higher_area.height == lower_area.height == 10
+                aligned_to_sides = higher_area.y % 10 == 0 and lower_area.y % 10 == 0
+                on_proper_sides = (higher_area.y // 10) % 2 == 0 and (lower_area.y // 10) % 2 == 1
+                are_neighbors = higher_area.y + higher_area.height == lower_area.y
+                same_size = higher_area.x == lower_area.x and higher_area.width == lower_area.width
+                is_valid = height_10 and aligned_to_sides and on_proper_sides and are_neighbors and same_size
+
+                if is_valid:
+                    pairs.append((higher_area, lower_area))
+                    areas.pop(i)
+                    break
+        return pairs
+
+
+class TaskNoise3_1(KMirrorBaseTask):
+    """
+    Проверка K-зеркала путём сравнения показаний одинаковых датчиков на областях, расположенных друг под другом таких,
+    что первая область получена одной стороной зеркала, а вторая - другой
+    Метод:
+        Имеем две области, расположенные друг под другом.
+        Находим средние по строкам;
+        Для обеих областей находим размах (разницу между максимальным и минимальным средним по строке) и сравниваем их
+
+        Дополнительно выводим ст. отклонение и случайную ошибку для строк
+    """
+    task_name = "Шумы 3 (K-зеркало)"
+
+    def analyze(self, draw_graphs: bool = False):
+        self.save_excel()
+        self.excel_writer.close()
+        logging.info(f"Шумы 3 завершён")
+
+    def save_excel(self):
+        pairs = self.find_neighbor_areas()
+
+        header = ["Строка"] + [f"{ch} канал" for ch in range(5, 20)]
+
+        for higher_area, lower_area in pairs:
+            width, height = higher_area.width, higher_area.height
+
+            high_avg_table = [[i, ] for i in range(height)]
+            low_avg_table = [[i, ] for i in range(height)]
+
+            high_range_table = ["", ]
+            low_range_table = ["", ]
+
+            high_std_table = [[i, ] for i in range(height)]
+            low_std_table = [[i, ] for i in range(height)]
+
+            high_error_table = [[i, ] for i in range(height)]
+            low_error_table = [[i, ] for i in range(height)]
+
+            for channel in range(5, 20):
+                high_ch_area = higher_area.get_vis_channel(channel)
+                low_ch_area = lower_area.get_vis_channel(channel)
+
+                for i in range(height):
+                    high_row_avg = high_ch_area[i].mean()
+                    low_row_avg = low_ch_area[i].mean()
+
+                    high_row_std = high_ch_area[i].std()
+                    low_row_std = low_ch_area[i].std()
+
+                    high_row_error = high_ch_area[i].std() / sqrt(len(high_ch_area[i]))
+                    low_row_error = low_ch_area[i].std() / sqrt(len(low_ch_area[i]))
+
+                    high_avg_table[i].append(high_row_avg)
+                    low_avg_table[i].append(low_row_avg)
+                    high_std_table[i].append(high_row_std)
+                    low_std_table[i].append(low_row_std)
+                    high_error_table[i].append(high_row_error)
+                    low_error_table[i].append(low_row_error)
+
+            # Подсчитываем размах средних по строке для нижней и верхней областей
+            for channel in range(5, 20):
+                j = channel - 5 + 1
+                high_avg_col = [high_avg_table[i][j] for i in range(height)]
+                low_avg_col = [low_avg_table[i][j] for i in range(height)]
+
+                high_range_table.append(max(high_avg_col) - min(high_avg_col))
+                low_range_table.append(max(low_avg_col) - min(low_avg_col))
+
+            result_table = [
+                ["Зеркало 1"],
+                header,
+                *high_avg_table,
+                [],
+                ["Зеркало 2"],
+                header,
+                *low_avg_table,
+                [],
+                ["Размах"],
+                high_range_table,
+                low_range_table,
+                [],
+                ["Стандартное отклонение, зеркало 1"],
+                *high_std_table,
+                [],
+                ["Стандартное отклонение, зеркало 2"],
+                *low_std_table,
+                [],
+                ["Случайная ошибка, зеркало 1"],
+                *high_error_table,
+                [],
+                ["Случайная ошибка, зеркало 2"],
+                *low_error_table,
+                [],
+            ]
+            sheet_name = f"{higher_area.x} {higher_area.y}"
+            pd.DataFrame(result_table).to_excel(self.excel_writer, sheet_name, index=False, header=False)
+
+    def save_graphs(self):
+        pass
+
+
+class KMirror1(KMirrorBaseTask):
+    """Выводит графики областей двустороннего зеркала"""
+    task_name = "К-зеркало 1"
+
+    def analyze(self, draw_graphs: bool = False):
+        self.save_excel()
+        self.excel_writer.close()
+        self.save_graphs()
+
+    def save_excel(self):
+        # for higher, lower in self.find_neighbor_areas():
+        #     for ch in range(5, 20):
+        #         h_area = higher.get_vis_channel(ch)
+        #         l_area = lower.get_vis_channel(ch)
+        pd.DataFrame().to_excel(self.excel_writer)
+        pass
+
+    def save_graphs(self):
+        for higher, lower in self.find_neighbor_areas():
+            width = higher.width
+            for ch in range(5, 20):
+                h_area = higher.get_vis_channel(ch)
+                l_area = lower.get_vis_channel(ch)
+
+                h_col_avg = []
+                l_col_avg = []
+
+                for col in range(width):
+                    h_col_avg.append(h_area[:, col].mean())
+                    l_col_avg.append(l_area[:, col].mean())
+
+                self.create_and_save_figure(
+                    [h_col_avg, l_col_avg], f"Канал {ch} {higher.x} {higher.y}",
+                    title=f"Средние значения столбцов для двух сторон зеркала\nна канале {ch}",
+                    xlabel="Номер столбца", ylabel="Среднее значение столбца", legend_title="Сторона зеркала",
+                    legend=["Первая", "Вторая"]
+                )
+
+
+
+IMAGE_TASKS = [
+    BBTask,
+    TaskNoise3_1,
+    KMirror1
+]
+
+AREA_TASKS = [
+    Task1,
+    Task2,
+    Task3,
+    Task4,
+    Task5,
+    TaskNoise1_1,
+    TaskNoise1_2,
+    TaskNoise2_1,
+    TaskNoise2_2,
+]
+
+DICT_IMAGE_TASKS = {task.task_name: task for task in IMAGE_TASKS}
+DICT_AREA_TASKS = {task.task_name: task for task in AREA_TASKS}
