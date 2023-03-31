@@ -7,8 +7,13 @@ import os
 
 
 class FY3DImage:
+    areas: list[FY3DImageArea]
+    name: str
+
     def __init__(self, path: str, name: str):
         self.name = name
+        self.areas = []
+
         self.file = h5py.File(path, "r")
         geolocation = self.file["Geolocation"]
         self.Latitude = geolocation["Latitude"]
@@ -35,6 +40,9 @@ class FY3DImage:
             Longitude=self.Longitude[y: y + height, x: x + width]
         )
 
+    def add_area(self, x: int, y: int, width: int, height: int):
+        self.areas.append(self.get_area(x, y, width, height))
+
     def get_center_coords(self) -> tuple[float, float]:
         """Возвращает широту и долготу центрального пикселя"""
         x = self.width // 2
@@ -43,25 +51,23 @@ class FY3DImage:
         long = self.Longitude[y, x]
         return lat, long
 
-    def get_colored_picture(self, areas: list[FY3DImageArea] = None) -> Image:
+    def get_colored_picture(self) -> Image:
         r = self.EV_250_Aggr1KM_RefSB[2]  # 3 канал
         g = self.EV_250_Aggr1KM_RefSB[1]  # 2 канал
         b = self.EV_250_Aggr1KM_RefSB[0]  # 1 канал
         image = get_colored_image(r, g, b)
 
         # Отмечаем границы областей на изображении
-        if areas:
-            for area in areas:
-                draw_rectangle(image, area.x, area.y, area.width, area.height)
+        for area in self.areas:
+            draw_rectangle(image, area.x, area.y, area.width, area.height)
         return image
 
-    def get_vis_channel_picture(self, channel: int, areas: list[FY3DImageArea] = None) -> Image:
+    def get_vis_channel_picture(self, channel: int) -> Image:
         ch_i = channel - 5
         layer = self.EV_1KM_RefSB[ch_i]
         image = get_monochrome_image(layer)
 
         # Отмечаем границы областей на изображении
-        if areas:
-            for area in areas:
-                draw_rectangle(image, area.x, area.y, area.width, area.height)
+        for area in self.areas:
+            draw_rectangle(image, area.x, area.y, area.width, area.height)
         return image
