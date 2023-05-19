@@ -5,7 +5,7 @@ import shutil
 from vars import EXTENSIONS
 
 
-def create_dirs(some_path: str):
+def create_dir(some_path: str):
     for ext in EXTENSIONS:
         if some_path.endswith(ext):  # Путь заканчивается на файл
             some_path = os.path.dirname(some_path)
@@ -84,3 +84,5 @@ def linregress(x, y, w=None, b=None):
         k = (wxy - wx*b) / wx2
 
     return k, b
+
+
