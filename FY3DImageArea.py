@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from utils.utils import get_monochrome_image
 
 
 class FY3DImageArea:
@@ -36,3 +37,18 @@ class FY3DImageArea:
             df = pd.DataFrame(ch_area)
             df.to_excel(excel_writer)
         excel_writer.close()
+
+    def get_global_coords(self, x: int, y: int) -> tuple[int, int]:
+        return (
+            self.x + x,
+            self.y + y
+        )
+
+    def get_short_name(self):
+        """Возвращает имя области в формате x=... y=... w=... h=..."""
+        return f"x={self.x} y={self.y} w={self.width} h={self.height}"
+
+    def get_grayscale_ch_img(self, channel: int):
+        ch_area = self.get_vis_channel(channel)
+        img = get_monochrome_image(ch_area)
+        return img

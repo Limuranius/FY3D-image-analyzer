@@ -1,16 +1,15 @@
 import h5py
-import numpy as np
 from FY3DImageArea import FY3DImageArea
-from PIL import Image
-from utils import *
+from utils.utils import *
 import os
+import pandas as pd
 
 
 class FY3DImage:
     areas: list[FY3DImageArea]
     name: str
 
-    def __init__(self, path: str, name: str):
+    def __init__(self, path: str, name: str = ""):
         self.name = name
         self.areas = []
 
@@ -30,6 +29,7 @@ class FY3DImage:
         self.BB_DN_average = calibration["BB_DN_average"]
         self.SV_DN_average = calibration["SV_DN_average"]
         self.VOC_DN_average = calibration["VOC_DN_average"]
+        self.VIS_Cal_Coeff = calibration["VIS_Cal_Coeff"]
 
     def get_area(self, x: int, y: int, width: int, height: int) -> FY3DImageArea:
         name = os.path.join(self.name, f"{x} {y} {width} {height}")
@@ -52,6 +52,7 @@ class FY3DImage:
         return lat, long
 
     def get_colored_picture(self) -> Image:
+        """Возвращает цветное изображение, состоящее из каналов 3, 2 и 1"""
         r = self.EV_250_Aggr1KM_RefSB[2]  # 3 канал
         g = self.EV_250_Aggr1KM_RefSB[1]  # 2 канал
         b = self.EV_250_Aggr1KM_RefSB[0]  # 1 канал
@@ -63,6 +64,7 @@ class FY3DImage:
         return image
 
     def get_vis_channel_picture(self, channel: int) -> Image:
+        """Возвращает монохромное изображение определённого канала"""
         ch_i = channel - 5
         layer = self.EV_1KM_RefSB[ch_i]
         image = get_monochrome_image(layer)
@@ -71,3 +73,20 @@ class FY3DImage:
         for area in self.areas:
             draw_rectangle(image, area.x, area.y, area.width, area.height)
         return image
+
+    def get_name(self):
+        return self.name
+
+    def save_to_excel(self, file_name: str):
+        writer = pd.ExcelWriter(file_name)
+        for ch in range(5, 20):
+            sheet_data = []
+            for area in self.areas:
+                ch_area = area.get_vis_channel(ch)
+                sheet_data += [[area.get_short_name()]]
+                sheet_data += ch_area.tolist()
+                sheet_data += [[]]
+                sheet_data += [[]]
+                sheet_data += [[]]
+            pd.DataFrame(sheet_data).to_excel(writer, f"Канал {ch}", index_label=False, index=False)
+        writer.close()
