@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 import os
-import tasks
+from tasks import AreaTasks, ImageTasks, MultipleImagesTasks
 
 
 @dataclass
@@ -20,6 +20,10 @@ class ImageInfo:
     areas: list[AreaInfo]
     is_used: bool
 
+    def add_area(self, x, y, w, h):
+        area = AreaInfo(x, y, w, h, False)
+        self.areas.append(area)
+
 
 class ConfigManager:
     path: str
@@ -28,8 +32,9 @@ class ConfigManager:
     images_dir: str
     images: list[ImageInfo]
 
-    image_tasks: list[tasks.BaseImageTask]
-    area_tasks: list[tasks.BaseAreaTask]
+    area_tasks: list[AreaTasks.BaseAreaTask]
+    image_tasks: list[ImageTasks.BaseImageTask]
+    multi_image_tasks: list[MultipleImagesTasks.BaseMultipleImagesTask]
 
     def __init__(self, path: str):
         self.path = path
@@ -58,20 +63,24 @@ class ConfigManager:
             self.images.append(img)
 
         # Загружаем методы обработки
-        self.image_tasks = []
-        for img_task_name in data["USED_IMAGE_TASKS"]:
-            self.image_tasks.append(tasks.DICT_IMAGE_TASKS[img_task_name])
         self.area_tasks = []
         for area_task_name in data["USED_AREA_TASKS"]:
-            self.area_tasks.append(tasks.DICT_AREA_TASKS[area_task_name])
+            self.area_tasks.append(AreaTasks.DICT_AREA_TASKS[area_task_name])
+        self.image_tasks = []
+        for img_task_name in data["USED_IMAGE_TASKS"]:
+            self.image_tasks.append(ImageTasks.DICT_IMAGE_TASKS[img_task_name])
+        self.multi_image_tasks = []
+        for multi_img_task_name in data["USED_MULTI_IMAGE_TASKS"]:
+            self.multi_image_tasks.append(MultipleImagesTasks.DICT_MULTI_IMAGE_TASKS[multi_img_task_name])
 
     def to_dict(self) -> dict:
         d = {
             "IMAGES_DIR": self.images_dir,
             "DRAW_GRAPHS": self.draw_graphs,
             "SAVE_COLORED_IMAGES": self.save_colored_images,
-            "USED_IMAGE_TASKS": [],
             "USED_AREA_TASKS": [],
+            "USED_IMAGE_TASKS": [],
+            "USED_MULTI_IMAGE_TASKS": [],
             "IMAGES": [],
         }
         for img in self.images:
@@ -83,18 +92,21 @@ class ConfigManager:
             }
             for area in img.areas:
                 area_info = {
-                    "X": area.x,
-                    "Y": area.y,
-                    "WIDTH": area.width,
-                    "HEIGHT": area.height,
-                    "IS_USED": area.is_used,
+                    "X": int(area.x),
+                    "Y": int(area.y),
+                    "WIDTH": int(area.width),
+                    "HEIGHT": int(area.height),
+                    "IS_USED": bool(area.is_used),
                 }
                 img_info["AREAS"].append(area_info)
+            img_info["AREAS"].sort(key=lambda x: (x["X"], x["Y"]))
             d["IMAGES"].append(img_info)
-        for img_task in self.image_tasks:
-            d["USED_IMAGE_TASKS"].append(img_task.task_name)
         for area_task in self.area_tasks:
             d["USED_AREA_TASKS"].append(area_task.task_name)
+        for img_task in self.image_tasks:
+            d["USED_IMAGE_TASKS"].append(img_task.task_name)
+        for multi_img_task in self.multi_image_tasks:
+            d["USED_MULTI_IMAGE_TASKS"].append(multi_img_task.task_name)
         return d
 
     def save(self):
@@ -106,3 +118,5 @@ class ConfigManager:
                 ensure_ascii=False
             )
 
+    def del_area(self, img_i: int, area_i: int):
+        del self.images[img_i].areas[area_i]
