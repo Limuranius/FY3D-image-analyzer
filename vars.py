@@ -10,3 +10,5 @@ EXTENSIONS = [".txt", ".xlsx", ".png"]
 
 RESULTS_DIR = path.join(BASE_DIR, "Результаты")
 
+
+KMIRROR_SIDE = 1  # TODO: перенести эту ебань в config
