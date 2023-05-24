@@ -20,8 +20,8 @@ class ImageInfo:
     areas: list[AreaInfo]
     is_used: bool
 
-    def add_area(self, x, y, w, h):
-        area = AreaInfo(x, y, w, h, False)
+    def add_area(self, x, y, w, h, is_used=True):
+        area = AreaInfo(x, y, w, h, is_used)
         self.areas.append(area)
 
 
@@ -120,3 +120,9 @@ class ConfigManager:
 
     def del_area(self, img_i: int, area_i: int):
         del self.images[img_i].areas[area_i]
+
+    def add_image(self, path: str, name: str):
+        self.images.append(ImageInfo(path, name, [], False))
+
+    def areas_count(self, img_i: int):
+        return len(self.images[img_i].areas)

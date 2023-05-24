@@ -1,19 +1,17 @@
 {
   "IMAGES_DIR": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников",
-  "DRAW_GRAPHS": false,
+  "DRAW_GRAPHS": true,
   "SAVE_COLORED_IMAGES": false,
   "USED_AREA_TASKS": [],
-  "USED_IMAGE_TASKS": [
-    "Систематическое отклонение сенсоров"
-  ],
+  "USED_IMAGE_TASKS": [],
   "USED_MULTI_IMAGE_TASKS": [
-    "Сравнение датчиков по снимкам"
+    "Линейная регрессия зависимости отклонения от яркости"
   ],
   "IMAGES": [
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 06.20 (Берег Австралии)/FY3D_MERSI_GBAL_L1_20230317_0620_1000M_MS.HDF",
       "NAME": "17.03.23 06.20 (Берег Австралии)",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 650,
@@ -86,27 +84,6 @@
           "IS_USED": true
         },
         {
-          "X": 705,
-          "Y": 1660,
-          "WIDTH": 100,
-          "HEIGHT": 10,
-          "IS_USED": true
-        },
-        {
-          "X": 729,
-          "Y": 1670,
-          "WIDTH": 100,
-          "HEIGHT": 10,
-          "IS_USED": true
-        },
-        {
-          "X": 819,
-          "Y": 1570,
-          "WIDTH": 100,
-          "HEIGHT": 10,
-          "IS_USED": true
-        },
-        {
           "X": 1100,
           "Y": 1200,
           "WIDTH": 100,
@@ -167,7 +144,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 06.30 (Индокитай)/FY3D_MERSI_GBAL_L1_20230317_0630_1000M_MS.HDF",
       "NAME": "17.03.23 06.30 (Индокитай)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
           "X": 129,
@@ -223,7 +200,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 06.50 (Антарктида)/FY3D_MERSI_GBAL_L1_20230317_0650_1000M_MS.HDF",
       "NAME": "17.03.23 06.50 (Антарктида)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
           "X": 910,
@@ -272,13 +249,13 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 07.10 (Куба, ночь)/FY3D_MERSI_GBAL_L1_20230317_0710_1000M_MS.HDF",
       "NAME": "17.03.23 07.10 (Куба, ночь)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": []
     },
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 08.00 (Индийский океан)/FY3D_MERSI_GBAL_L1_20230317_0800_1000M_MS.HDF",
       "NAME": "17.03.23 08.00 (Индийский океан)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
           "X": 682,
@@ -334,13 +311,13 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 08.50 (Ночь)/FY3D_MERSI_GBAL_L1_20230317_0850_1000M_MS.HDF",
       "NAME": "17.03.23 08.50 (Ночь)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": []
     },
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\17.03.23 09.55 (Персидский залив)/FY3D_MERSI_GBAL_L1_20230317_0955_1000M_MS.HDF",
       "NAME": "17.03.23 09.55 (Персидский залив)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
           "X": 400,
@@ -438,7 +415,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\23.02.23 06.00 (Филиппины)/FY3D_MERSI_GBAL_L1_20230203_0600_1000M_MS.HDF",
       "NAME": "23.02.23 06.00 (Филиппины)",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
           "X": 484,
@@ -511,6 +488,76 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 635,
+          "Y": 350,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 639,
+          "Y": 340,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 639,
+          "Y": 1670,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 640,
+          "Y": 330,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 640,
+          "Y": 1680,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 652,
+          "Y": 1830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 658,
+          "Y": 1820,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 661,
+          "Y": 1810,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 674,
+          "Y": 1690,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 675,
+          "Y": 1800,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 688,
           "Y": 1700,
           "WIDTH": 100,
@@ -546,6 +593,13 @@
           "IS_USED": true
         },
         {
+          "X": 719,
+          "Y": 1750,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 950,
           "Y": 910,
           "WIDTH": 100,
@@ -558,6 +612,20 @@
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
+        },
+        {
+          "X": 1033,
+          "Y": 920,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1380,
+          "Y": 610,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
@@ -567,8 +635,71 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 327,
+          "Y": 1780,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 334,
+          "Y": 1760,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 346,
+          "Y": 1770,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 458,
+          "Y": 1850,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 465,
+          "Y": 1840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 475,
+          "Y": 1830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 487,
           "Y": 1820,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 504,
+          "Y": 1880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 509,
+          "Y": 1910,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 513,
+          "Y": 1920,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -581,8 +712,22 @@
           "IS_USED": true
         },
         {
+          "X": 518,
+          "Y": 1900,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 547,
           "Y": 1670,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 557,
+          "Y": 1660,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -602,6 +747,13 @@
           "IS_USED": true
         },
         {
+          "X": 1650,
+          "Y": 700,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1652,
           "Y": 680,
           "WIDTH": 100,
@@ -611,6 +763,13 @@
         {
           "X": 1658,
           "Y": 690,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1683,
+          "Y": 670,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -651,6 +810,27 @@
           "IS_USED": true
         },
         {
+          "X": 770,
+          "Y": 760,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 829,
+          "Y": 270,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 835,
+          "Y": 970,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 837,
           "Y": 960,
           "WIDTH": 100,
@@ -665,8 +845,78 @@
           "IS_USED": true
         },
         {
+          "X": 844,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 849,
+          "Y": 910,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 849,
+          "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 850,
+          "Y": 920,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 855,
+          "Y": 870,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 858,
+          "Y": 880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1643,
+          "Y": 590,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1646,
+          "Y": 580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1650,
+          "Y": 570,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1673,
           "Y": 620,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1676,
+          "Y": 630,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -679,8 +929,64 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 549,
+          "Y": 180,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 559,
+          "Y": 190,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 564,
           "Y": 170,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 576,
+          "Y": 160,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 638,
+          "Y": 700,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 642,
+          "Y": 690,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 643,
+          "Y": 680,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 654,
+          "Y": 790,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 655,
+          "Y": 780,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -721,8 +1027,43 @@
           "IS_USED": true
         },
         {
+          "X": 675,
+          "Y": 710,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 680,
           "Y": 740,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 709,
+          "Y": 850,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 718,
+          "Y": 630,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 721,
+          "Y": 860,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 723,
+          "Y": 640,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -735,8 +1076,64 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 866,
+          "Y": 270,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 932,
+          "Y": 290,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 942,
           "Y": 250,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 949,
+          "Y": 300,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 976,
+          "Y": 110,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 981,
+          "Y": 70,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 983,
+          "Y": 230,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 992,
+          "Y": 220,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1000,
+          "Y": 90,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -756,6 +1153,20 @@
           "IS_USED": true
         },
         {
+          "X": 1015,
+          "Y": 190,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1030,
+          "Y": 140,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1032,
           "Y": 150,
           "WIDTH": 100,
@@ -770,6 +1181,13 @@
           "IS_USED": true
         },
         {
+          "X": 1148,
+          "Y": 130,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1172,
           "Y": 190,
           "WIDTH": 100,
@@ -777,8 +1195,22 @@
           "IS_USED": true
         },
         {
+          "X": 1177,
+          "Y": 150,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1178,
           "Y": 200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1210,
+          "Y": 110,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -798,8 +1230,22 @@
           "IS_USED": true
         },
         {
+          "X": 388,
+          "Y": 830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 394,
           "Y": 840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 396,
+          "Y": 1080,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -812,8 +1258,64 @@
           "IS_USED": true
         },
         {
+          "X": 401,
+          "Y": 1030,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 402,
+          "Y": 1020,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 403,
+          "Y": 860,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 403,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 420,
           "Y": 960,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 423,
+          "Y": 990,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 425,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 426,
+          "Y": 950,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 429,
+          "Y": 870,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -833,6 +1335,27 @@
           "IS_USED": true
         },
         {
+          "X": 446,
+          "Y": 880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 455,
+          "Y": 910,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 619,
+          "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 623,
           "Y": 1050,
           "WIDTH": 100,
@@ -847,8 +1370,64 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 856,
+          "Y": 970,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 857,
+          "Y": 980,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 861,
+          "Y": 960,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 864,
+          "Y": 1670,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 869,
           "Y": 950,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 875,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 941,
+          "Y": 850,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 946,
+          "Y": 1730,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 946,
+          "Y": 1740,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -882,6 +1461,13 @@
           "IS_USED": true
         },
         {
+          "X": 1249,
+          "Y": 1910,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1250,
           "Y": 1950,
           "WIDTH": 100,
@@ -889,8 +1475,36 @@
           "IS_USED": true
         },
         {
+          "X": 1252,
+          "Y": 1940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1260,
+          "Y": 1880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1264,
           "Y": 1930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1268,
+          "Y": 1870,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1269,
+          "Y": 1900,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -902,6 +1516,48 @@
       "NAME": "(2021) 20.03 18.30",
       "IS_USED": false,
       "AREAS": [
+        {
+          "X": 384,
+          "Y": 860,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 389,
+          "Y": 870,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 405,
+          "Y": 900,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 407,
+          "Y": 880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 411,
+          "Y": 510,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 485,
+          "Y": 860,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
         {
           "X": 500,
           "Y": 870,
@@ -938,6 +1594,13 @@
           "IS_USED": true
         },
         {
+          "X": 531,
+          "Y": 1220,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 541,
           "Y": 740,
           "WIDTH": 100,
@@ -945,8 +1608,50 @@
           "IS_USED": true
         },
         {
+          "X": 573,
+          "Y": 750,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 585,
+          "Y": 770,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 590,
+          "Y": 730,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 591,
+          "Y": 780,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 673,
+          "Y": 810,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 697,
           "Y": 800,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 745,
+          "Y": 830,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -959,8 +1664,57 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 717,
+          "Y": 850,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 719,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 723,
+          "Y": 1020,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 724,
+          "Y": 870,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 725,
           "Y": 1030,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 734,
+          "Y": 840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 739,
+          "Y": 970,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 745,
+          "Y": 980,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -980,8 +1734,22 @@
           "IS_USED": true
         },
         {
+          "X": 797,
+          "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 800,
           "Y": 960,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 841,
+          "Y": 940,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1006,6 +1774,34 @@
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
+        },
+        {
+          "X": 972,
+          "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1062,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1063,
+          "Y": 990,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1074,
+          "Y": 1000,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
@@ -1015,8 +1811,57 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 386,
+          "Y": 1540,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 396,
           "Y": 1530,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 401,
+          "Y": 1520,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 423,
+          "Y": 1500,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 427,
+          "Y": 1510,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 579,
+          "Y": 1490,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 597,
+          "Y": 1480,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 598,
+          "Y": 1620,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1036,8 +1881,50 @@
           "IS_USED": true
         },
         {
+          "X": 609,
+          "Y": 1470,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 611,
+          "Y": 1600,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 612,
           "Y": 1460,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 633,
+          "Y": 1630,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 642,
+          "Y": 710,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 643,
+          "Y": 700,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 643,
+          "Y": 720,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1071,6 +1958,27 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 699,
+          "Y": 680,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 726,
+          "Y": 900,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 728,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 729,
           "Y": 920,
           "WIDTH": 100,
@@ -1086,7 +1994,35 @@
         },
         {
           "X": 731,
+          "Y": 670,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 731,
           "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 737,
+          "Y": 700,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 746,
+          "Y": 710,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 751,
+          "Y": 1950,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1099,6 +2035,13 @@
           "IS_USED": true
         },
         {
+          "X": 792,
+          "Y": 1320,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 827,
           "Y": 790,
           "WIDTH": 100,
@@ -1106,8 +2049,43 @@
           "IS_USED": true
         },
         {
+          "X": 828,
+          "Y": 800,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 829,
           "Y": 810,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 830,
+          "Y": 780,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 858,
+          "Y": 830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 863,
+          "Y": 840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 886,
+          "Y": 850,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1127,6 +2105,69 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 461,
+          "Y": 1530,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 462,
+          "Y": 1540,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 468,
+          "Y": 1550,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 475,
+          "Y": 1510,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 570,
+          "Y": 1980,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 594,
+          "Y": 1970,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 601,
+          "Y": 1940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 610,
+          "Y": 1930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 611,
+          "Y": 1950,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 737,
           "Y": 1840,
           "WIDTH": 100,
@@ -1143,6 +2184,20 @@
         {
           "X": 756,
           "Y": 1820,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 758,
+          "Y": 1870,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 762,
+          "Y": 1960,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1169,6 +2224,20 @@
           "IS_USED": true
         },
         {
+          "X": 772,
+          "Y": 1940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 975,
+          "Y": 1980,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1453,
           "Y": 1980,
           "WIDTH": 100,
@@ -1183,6 +2252,13 @@
       "IS_USED": false,
       "AREAS": [
         {
+          "X": 615,
+          "Y": 20,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 650,
           "Y": 540,
           "WIDTH": 100,
@@ -1190,8 +2266,43 @@
           "IS_USED": true
         },
         {
+          "X": 670,
+          "Y": 1070,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 674,
+          "Y": 1060,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 677,
           "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 682,
+          "Y": 1090,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 684,
+          "Y": 0,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 687,
+          "Y": 10,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1230,6 +2341,55 @@
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
+        },
+        {
+          "X": 712,
+          "Y": 30,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 716,
+          "Y": 20,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 719,
+          "Y": 1110,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 723,
+          "Y": 1000,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 725,
+          "Y": 1100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 733,
+          "Y": 1120,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 827,
+          "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
@@ -1260,8 +2420,64 @@
           "IS_USED": true
         },
         {
+          "X": 579,
+          "Y": 300,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 580,
           "Y": 1120,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 583,
+          "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 591,
+          "Y": 290,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 601,
+          "Y": 1070,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 606,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 610,
+          "Y": 1060,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 638,
+          "Y": 1190,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 656,
+          "Y": 950,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1274,8 +2490,29 @@
           "IS_USED": true
         },
         {
+          "X": 670,
+          "Y": 1240,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 680,
           "Y": 1250,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 696,
+          "Y": 100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 734,
+          "Y": 220,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1286,24 +2523,31 @@
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
+        },
+        {
+          "X": 742,
+          "Y": 1270,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 826,
+          "Y": 1240,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
     {
       "PATH": "C:\\Users\\Gleb\\Desktop\\Диплом\\Снимки со спутников\\Белые снимки\\FY3D_MERSI_GBAL_L1_20230115_2135_1000M_MS.HDF",
       "NAME": "(2023) Белый снимок 1",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
-          "X": 1000,
-          "Y": 1300,
-          "WIDTH": 100,
-          "HEIGHT": 10,
-          "IS_USED": true
-        },
-        {
-          "X": 1000,
-          "Y": 1310,
+          "X": 829,
+          "Y": 760,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1311,6 +2555,20 @@
         {
           "X": 1138,
           "Y": 1500,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1153,
+          "Y": 1490,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1209,
+          "Y": 1380,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1344,8 +2602,71 @@
           "IS_USED": true
         },
         {
+          "X": 1240,
+          "Y": 1330,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1241,
+          "Y": 1320,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1483,
+          "Y": 1790,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1572,
+          "Y": 1740,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1594,
+          "Y": 1750,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1640,
+          "Y": 1760,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1648,
+          "Y": 1700,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1649,
+          "Y": 1710,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
           "X": 1653,
           "Y": 1720,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1668,
+          "Y": 1730,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1356,52 +2677,157 @@
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
+        },
+        {
+          "X": 1702,
+          "Y": 1830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
         }
       ]
     },
     {
       "PATH": "C:\\Users\\Gleb\\Desktop\\Диплом\\Снимки со спутников\\Белые снимки\\FY3D_MERSI_GBAL_L1_20230115_2320_1000M_MS.HDF",
       "NAME": "(2023) Белый снимок 2",
-      "IS_USED": false,
+      "IS_USED": true,
       "AREAS": [
         {
-          "X": 920,
-          "Y": 60,
+          "X": 966,
+          "Y": 130,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
         },
         {
-          "X": 920,
-          "Y": 70,
-          "WIDTH": 100,
-          "HEIGHT": 10,
-          "IS_USED": true
-        },
-        {
-          "X": 1050,
-          "Y": 400,
-          "WIDTH": 100,
-          "HEIGHT": 10,
-          "IS_USED": true
-        },
-        {
-          "X": 1050,
+          "X": 996,
           "Y": 410,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
         },
         {
-          "X": 1400,
+          "X": 1010,
           "Y": 400,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
         },
         {
-          "X": 1400,
-          "Y": 410,
+          "X": 1029,
+          "Y": 460,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1036,
+          "Y": 450,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1037,
+          "Y": 440,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1039,
+          "Y": 470,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1040,
+          "Y": 420,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1048,
+          "Y": 390,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1069,
+          "Y": 380,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1255,
+          "Y": 20,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1299,
+          "Y": 100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1337,
+          "Y": 430,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1364,
+          "Y": 10,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1366,
+          "Y": 0,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1378,
+          "Y": 400,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1381,
+          "Y": 390,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1384,
+          "Y": 380,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1396,
+          "Y": 420,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1490,
+          "Y": 30,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
@@ -1451,6 +2877,1308 @@
         {
           "X": 1400,
           "Y": 1210,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:\\Users\\Gleb\\Desktop\\Диплом\\Снимки со спутников\\Белые снимки\\FY3D_MERSI_GBAL_L1_20230121_1940_1000M_MS.HDF",
+      "NAME": "(2023) Белый снимок 4",
+      "IS_USED": true,
+      "AREAS": [
+        {
+          "X": 575,
+          "Y": 1940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 616,
+          "Y": 1160,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 627,
+          "Y": 1150,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 635,
+          "Y": 1140,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 638,
+          "Y": 1010,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 639,
+          "Y": 1130,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 642,
+          "Y": 1120,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 656,
+          "Y": 1000,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 674,
+          "Y": 1020,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 674,
+          "Y": 1100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 681,
+          "Y": 1110,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 686,
+          "Y": 1090,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 694,
+          "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 736,
+          "Y": 1070,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 741,
+          "Y": 1060,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 750,
+          "Y": 1050,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 752,
+          "Y": 1030,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 754,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 781,
+          "Y": 1020,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 802,
+          "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:\\Users\\Gleb\\Desktop\\Диплом\\Снимки со спутников\\Белые снимки\\FY3D_MERSI_GBAL_L1_20230121_2125_1000M_MS.HDF",
+      "NAME": "(2023) Белый снимок 5",
+      "IS_USED": true,
+      "AREAS": [
+        {
+          "X": 383,
+          "Y": 720,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 446,
+          "Y": 120,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 468,
+          "Y": 100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 472,
+          "Y": 110,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 521,
+          "Y": 80,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 551,
+          "Y": 210,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 554,
+          "Y": 200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 561,
+          "Y": 190,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 566,
+          "Y": 180,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 571,
+          "Y": 380,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 610,
+          "Y": 450,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 622,
+          "Y": 60,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 625,
+          "Y": 120,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 632,
+          "Y": 100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 643,
+          "Y": 40,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 688,
+          "Y": 30,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 698,
+          "Y": 20,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 707,
+          "Y": 10,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 722,
+          "Y": 150,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 733,
+          "Y": 0,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:\\Users\\Gleb\\Desktop\\Диплом\\Снимки со спутников\\Белые снимки\\FY3D_MERSI_GBAL_L1_20230121_2305_1000M_MS.HDF",
+      "NAME": "(2023) Белый снимок 6",
+      "IS_USED": true,
+      "AREAS": [
+        {
+          "X": 420,
+          "Y": 670,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 675,
+          "Y": 600,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 692,
+          "Y": 580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 697,
+          "Y": 490,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 700,
+          "Y": 540,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 713,
+          "Y": 470,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 722,
+          "Y": 530,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 725,
+          "Y": 430,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 728,
+          "Y": 480,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 730,
+          "Y": 420,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 741,
+          "Y": 500,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 742,
+          "Y": 510,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 748,
+          "Y": 410,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 749,
+          "Y": 770,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 751,
+          "Y": 760,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 757,
+          "Y": 520,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 758,
+          "Y": 400,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 767,
+          "Y": 460,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1088,
+          "Y": 1420,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1171,
+          "Y": 1470,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2020/FY3D_MERSI_GBAL_L1_20200321_1340_1000M_MS.HDF",
+      "NAME": "(2020) Белый снимок 1",
+      "IS_USED": false,
+      "AREAS": [
+        {
+          "X": 540,
+          "Y": 1280,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 545,
+          "Y": 1290,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 549,
+          "Y": 1260,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 557,
+          "Y": 1270,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 567,
+          "Y": 1300,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 568,
+          "Y": 1340,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 574,
+          "Y": 1310,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 602,
+          "Y": 1450,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 603,
+          "Y": 1460,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 760,
+          "Y": 1180,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 915,
+          "Y": 1560,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 957,
+          "Y": 1480,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 986,
+          "Y": 1580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1049,
+          "Y": 1560,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1102,
+          "Y": 1570,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1104,
+          "Y": 1580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1111,
+          "Y": 1590,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2020/FY3D_MERSI_GBAL_L1_20200321_2350_1000M_MS.HDF",
+      "NAME": "(2020) Белый снимок 2",
+      "IS_USED": false,
+      "AREAS": [
+        {
+          "X": 146,
+          "Y": 740,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 234,
+          "Y": 450,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 264,
+          "Y": 610,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 276,
+          "Y": 600,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 308,
+          "Y": 350,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 315,
+          "Y": 960,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 325,
+          "Y": 860,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 331,
+          "Y": 830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 331,
+          "Y": 840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 456,
+          "Y": 460,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 535,
+          "Y": 480,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 559,
+          "Y": 580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 574,
+          "Y": 590,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 836,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 854,
+          "Y": 1050,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 882,
+          "Y": 1060,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 911,
+          "Y": 960,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 917,
+          "Y": 990,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 927,
+          "Y": 980,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 943,
+          "Y": 1000,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2021/FY3D_MERSI_GBAL_L1_20210321_1825_1000M_MS.HDF",
+      "NAME": "(2021) Белый снимок 1",
+      "IS_USED": false,
+      "AREAS": [
+        {
+          "X": 905,
+          "Y": 890,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 910,
+          "Y": 880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 967,
+          "Y": 1020,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 975,
+          "Y": 1150,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1004,
+          "Y": 1050,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1008,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1009,
+          "Y": 1060,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1012,
+          "Y": 1230,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1037,
+          "Y": 1070,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1039,
+          "Y": 1240,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1043,
+          "Y": 1250,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1050,
+          "Y": 1200,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1059,
+          "Y": 1290,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1063,
+          "Y": 1280,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1080,
+          "Y": 1260,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1139,
+          "Y": 1570,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1152,
+          "Y": 1580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1159,
+          "Y": 1590,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1159,
+          "Y": 1600,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1162,
+          "Y": 1610,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2021/FY3D_MERSI_GBAL_L1_20210321_1925_1000M_MS.HDF",
+      "NAME": "(2021) Белый снимок 2",
+      "IS_USED": false,
+      "AREAS": [
+        {
+          "X": 756,
+          "Y": 1090,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 760,
+          "Y": 1110,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 761,
+          "Y": 1100,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 763,
+          "Y": 1080,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 791,
+          "Y": 1120,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 794,
+          "Y": 1130,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 812,
+          "Y": 1590,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 818,
+          "Y": 1580,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 819,
+          "Y": 1150,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 819,
+          "Y": 1160,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 835,
+          "Y": 1540,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 851,
+          "Y": 1550,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 913,
+          "Y": 1590,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 925,
+          "Y": 1060,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 938,
+          "Y": 1020,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 943,
+          "Y": 1040,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 944,
+          "Y": 1000,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 944,
+          "Y": 1050,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 945,
+          "Y": 1030,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1406,
+          "Y": 1290,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2022/FY3D_MERSI_GBAL_L1_20220321_1735_1000M_MS.HDF",
+      "NAME": "(2022) Белый снимок 1",
+      "IS_USED": false,
+      "AREAS": [
+        {
+          "X": 1126,
+          "Y": 670,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1134,
+          "Y": 640,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1277,
+          "Y": 750,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1285,
+          "Y": 760,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1292,
+          "Y": 770,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1294,
+          "Y": 780,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1318,
+          "Y": 840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1331,
+          "Y": 820,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1331,
+          "Y": 830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1333,
+          "Y": 800,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1352,
+          "Y": 810,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1434,
+          "Y": 800,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1453,
+          "Y": 810,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1462,
+          "Y": 830,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1467,
+          "Y": 820,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1470,
+          "Y": 840,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1481,
+          "Y": 850,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1483,
+          "Y": 880,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1527,
+          "Y": 900,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 1547,
+          "Y": 860,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        }
+      ]
+    },
+    {
+      "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2022/FY3D_MERSI_GBAL_L1_20220321_1915_1000M_MS.HDF",
+      "NAME": "(2022) Белый снимок 2",
+      "IS_USED": false,
+      "AREAS": [
+        {
+          "X": 537,
+          "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 647,
+          "Y": 1470,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 666,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 687,
+          "Y": 920,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 687,
+          "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 723,
+          "Y": 900,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 724,
+          "Y": 910,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 802,
+          "Y": 970,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 808,
+          "Y": 950,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 821,
+          "Y": 960,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 863,
+          "Y": 940,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 882,
+          "Y": 1480,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 894,
+          "Y": 910,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 901,
+          "Y": 890,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 905,
+          "Y": 900,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 910,
+          "Y": 920,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 911,
+          "Y": 930,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 911,
+          "Y": 1460,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 942,
+          "Y": 1000,
+          "WIDTH": 100,
+          "HEIGHT": 10,
+          "IS_USED": true
+        },
+        {
+          "X": 964,
+          "Y": 1490,
           "WIDTH": 100,
           "HEIGHT": 10,
           "IS_USED": true
