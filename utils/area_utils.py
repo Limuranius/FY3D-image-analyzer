@@ -14,7 +14,11 @@ def ch_area_rows_deviations(area: np.ndarray) -> list[float]:
 
 
 def img_area_rows_deviations(area: FY3DImageArea) -> dict[int, list[float]]:
-    """Находит отклонение строк в области для всех каналов"""
+    """Находит отклонение строк в области для всех каналов
+    Возвращает словарь: {
+        Канал: [Отклонения датчиков]
+    }
+    """
     res = dict()
     for ch in range(5, 20):
         ch_area = area.get_vis_channel(ch)
@@ -49,7 +53,14 @@ def find_neighbor_areas(areas: list[FY3DImageArea]) -> list[tuple[FY3DImageArea,
 
 
 def filter_areas_by_mirror_side(areas: list[FY3DImageArea], side: int):
-    """Отбираем области, снятые определённой стороной зеркала"""
+    """Отбираем области, снятые определённой стороной зеркала
+    side:
+        0 - сторона зеркала 0
+        1 - сторона зеркала 1
+        2 - обе стороны зеркала
+    """
+    if side == 2:
+        return areas
 
     def filter_func(area):
         return (area.y // 10) % 2 == side
