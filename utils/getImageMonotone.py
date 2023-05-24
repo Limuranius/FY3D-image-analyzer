@@ -3,7 +3,6 @@ from FY3DImage import FY3DImage
 import numpy as np
 import math
 import numba
-from time import time
 
 
 @cuda.jit
@@ -27,9 +26,9 @@ def calc_std(img, w: int, h: int, out):
 
 
 @numba.njit
-def calc_std_cpu(img, w: int, h: int, out):
-    for x in numba.prange(2048 - w):
-        for y in numba.prange(0, 2000 - h, 10):
+def calc_std_cpu(img, w: int, h: int, out, x_min, x_max, y_min, y_max):
+    for x in numba.prange(x_min, min(x_max, 2048 - w)):
+        for y in numba.prange(y_min, min(y_max, 2000 - h), 10):
             std_sum = 0
             for ch in numba.prange(15):
                 std_sum += img[ch, y: y + h, x: x + w].std()
@@ -60,22 +59,22 @@ def get_n_min(arr, n: int, win_w: int, win_h: int) -> list[tuple[int, int]]:
     return res
 
 
-def get_min_monotone(image: FY3DImage, count: int) -> list[tuple[int, int]]:
+def get_min_monotone(image: FY3DImage, count: int, x_min=0, x_max=2048, y_min=0, y_max=2000) -> list[tuple[int, int]]:
+    # img = image.EV_1KM_RefSB[:, y_min:y_max, x_min:x_max].astype(np.float64)
     img = image.EV_1KM_RefSB[:, :, :].astype(np.float64)
     h = 10
     w = 100
     out = np.ones((2000, 2048), dtype=np.float64) * np.inf
 
-    treadsperblock = (16, 16)
-    blockspergrid = (128, 128)
-    calc_std[blockspergrid, treadsperblock](img, w, h, out)
+    # treadsperblock = (16, 16)
+    # blockspergrid = (128, 128)
+    # calc_std[blockspergrid, treadsperblock](img, w, h, out)
 
-    # calc_std_cpu(img, w, h, out)
+    calc_std_cpu(img, w, h, out, x_min, x_max, y_min, y_max)
 
     areas = get_n_min(out, count, w, h)
     for x, y in areas:
         image.add_area(x, y, w, h)
-    image.get_colored_picture().save("aboba_all_channels.png")
     return areas
 
 
