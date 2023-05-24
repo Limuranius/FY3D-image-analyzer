@@ -59,9 +59,14 @@ def draw_rectangle(image: Image, x: int, y: int, width: int, height: int):
 
 
 def linregress(x, y, w=None, b=None):
-    """Линейная регрессия методом наименьших квадратов"""
+    """Линейная регрессия методом наименьших квадратов.
+    Возвращает угловой коэффициент, свободный коэффициент и коэффициент детерминации R^2
+    """
     x = np.array(x, dtype=np.float64)
     y = np.array(y, dtype=np.float64)
+
+    cov = ((x - x.mean()) * (y - y.mean())).sum() / len(x)
+    corr = cov / (x.std() * y.std())
 
     if w is None:
         w = np.ones(x.size, dtype=np.float64)
@@ -83,6 +88,6 @@ def linregress(x, y, w=None, b=None):
     else:
         k = (wxy - wx*b) / wx2
 
-    return k, b
+    return k, b, corr**2
 
 
