@@ -2,7 +2,8 @@ import json
 from dataclasses import dataclass
 import os
 from tasks import AreaTasks, ImageTasks, MultipleImagesTasks
-
+from vars import SurfaceType, KMIRROR_SIDE
+from utils.area_utils import get_area_mirror_side
 
 @dataclass
 class AreaInfo:
@@ -11,6 +12,11 @@ class AreaInfo:
     width: int
     height: int
     is_used: bool
+    surface_type: SurfaceType = SurfaceType.UNKNOWN
+    mirror_side: KMIRROR_SIDE = None
+
+    def __post_init__(self):
+        self.mirror_side = get_area_mirror_side(self.y, self.height)
 
 
 @dataclass
@@ -57,7 +63,8 @@ class ConfigManager:
                 width = area_info["WIDTH"]
                 height = area_info["HEIGHT"]
                 is_area_used = area_info["IS_USED"]
-                area = AreaInfo(x, y, width, height, is_area_used)
+                surface_type = SurfaceType(area_info["SURFACE_TYPE"])
+                area = AreaInfo(x, y, width, height, is_area_used, surface_type)
                 areas.append(area)
             img = ImageInfo(path, name, areas, is_img_used)
             self.images.append(img)
@@ -97,6 +104,7 @@ class ConfigManager:
                     "WIDTH": int(area.width),
                     "HEIGHT": int(area.height),
                     "IS_USED": bool(area.is_used),
+                    "SURFACE_TYPE": area.surface_type.value,
                 }
                 img_info["AREAS"].append(area_info)
             img_info["AREAS"].sort(key=lambda x: (x["X"], x["Y"]))
@@ -126,3 +134,36 @@ class ConfigManager:
 
     def areas_count(self, img_i: int):
         return len(self.images[img_i].areas)
+
+    def set_image_areas_surface_type(self, img_i: int, surf_type: SurfaceType):
+        """
+        1 - море
+        2 - снег
+        """
+        for area in self.images[img_i].areas:
+            area.surface_type = surf_type
+
+
+if __name__ == "__main__":
+    c = ConfigManager("config.json")
+    # ocean_names = ['17.03.23 06.20 (Берег Австралии)', '17.03.23 06.30 (Индокитай)', '17.03.23 08.00 (Индийский океан)',
+    #                '17.03.23 09.55 (Персидский залив)', '23.02.23 06.00 (Филиппины)', '(2020) 20.03 16.50',
+    #                '(2020) 20.03 18.45', '(2020) 20.03 18.50', '(2020) 20.03 20.30', '(2020) 20.03 21.55',
+    #                '(2020) 20.03 23.45', '(2021) 20.03 16.30', '(2021) 20.03 18.30', '(2021) 20.03 20.10',
+    #                '(2021) 20.03 21.50', '(2022) 20.03 15.40', '(2022) 20.03 15.55', '(2022) 20.03 17.35',
+    #                '(2022) 20.03 19.20', ]
+    # snow_names = ['17.03.23 06.50 (Антарктида)', '(2023) Белый снимок 1', '(2023) Белый снимок 2',
+    #               '(2023) Белый снимок 3',
+    #               '(2023) Белый снимок 4', '(2023) Белый снимок 5', '(2023) Белый снимок 6', '(2020) Белый снимок 1',
+    #               '(2020) Белый снимок 2', '(2021) Белый снимок 1', '(2021) Белый снимок 2', '(2022) Белый снимок 1',
+    #               '(2022) Белый снимок 2']
+    # for img in c.images:
+    #     for area in img.areas:
+    #         if img.name in ocean_names:
+    #             area.surface_type = SurfaceType.SEA
+    #         elif img.name in snow_names:
+    #             area.surface_type = SurfaceType.SNOW
+    for img in c.images:
+        for area in img.areas:
+            pass
+    c.save()

@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from utils.utils import get_monochrome_image
+from vars import SurfaceType, KMirrorSide
 
 
 class FY3DImageArea:
@@ -12,9 +13,11 @@ class FY3DImageArea:
     EV_1KM_RefSB: np.ndarray  # Каналы 5 - 19
     Latitude: np.ndarray
     Longitude: np.ndarray
+    surface_type: SurfaceType
 
     def __init__(self, x: int, y: int, width: int, height: int, name: str,
-                 EV_1KM_RefSB: np.ndarray = None, Latitude: np.ndarray = None, Longitude: np.ndarray = None):
+                 EV_1KM_RefSB: np.ndarray = None, Latitude: np.ndarray = None, Longitude: np.ndarray = None,
+                 surface_type: SurfaceType = SurfaceType.UNKNOWN):
         self.x = x
         self.y = y
         self.width = width
@@ -24,6 +27,7 @@ class FY3DImageArea:
         self.EV_1KM_RefSB = EV_1KM_RefSB
         self.Latitude = Latitude
         self.Longitude = Longitude
+        self.surface_type = surface_type
 
     def get_vis_channel(self, channel: int) -> np.ndarray:
         """channel - канал от 5 до 19"""
@@ -52,3 +56,11 @@ class FY3DImageArea:
         ch_area = self.get_vis_channel(channel)
         img = get_monochrome_image(ch_area)
         return img
+
+    def get_mirror_side(self) -> KMirrorSide:
+        if self.y % 10 + self.height > 10:
+            return KMirrorSide.MIXED
+        if (self.y // 10) % 2 == 0:
+            return KMirrorSide.SIDE_1
+        else:
+            return KMirrorSide.SIDE_2
