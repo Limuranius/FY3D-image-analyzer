@@ -46,9 +46,41 @@ class BBTask(BaseImageTask):
             logging.info(f"Канал {channel_number}")
             bb_row = bb[ch_i]
             x = list(range(len(bb_row)))
-            path = self.get_graph_img_path(f"Канал {channel_number}")
+            path = self.get_graph_img_path(f"Канал {channel_number}/{self.obj_name}")
             create_and_save_figure(path, [bb_row], [x],
                                    title=f"График среднего значения чёрного тела для 10 строк\nдля канала {channel_number}",
+                                   xlabel="Номер десятка строк", ylabel="Среднее значение чёрного тела по 10 строкам",
+                                   lim=(min_bb, max_bb))
+
+
+class SVTask(BaseImageTask):
+    """Просмотр яркости чёрного тела для разных каналов"""
+    task_name = "Space View"
+
+    def calculate_data(self):
+        logging.info(f"Рассматриваем чёрное тело...")
+        bb = self.image.SV_DN_average
+        return bb
+
+    def save_excel(self, bb: np.ndarray):
+        sheets = [
+            ("Space View", bb)
+        ]
+        path = self.get_excel_path(self.obj_name)
+        save_excel(path, sheets)
+
+    def save_graphs(self, bb: np.ndarray):
+        logging.info("Создаём графики чёрного тела для каналов:")
+        min_bb = bb[0:19].min()
+        max_bb = bb[0:19].max()
+        for ch_i in range(19):
+            channel_number = ch_i + 1
+            logging.info(f"Канал {channel_number}")
+            bb_row = bb[ch_i]
+            x = list(range(len(bb_row)))
+            path = self.get_graph_img_path(f"Канал {channel_number}/{self.obj_name}")
+            create_and_save_figure(path, [bb_row], [x],
+                                   title=f"График среднего значения Space View для 10 строк\nдля канала {channel_number}",
                                    xlabel="Номер десятка строк", ylabel="Среднее значение чёрного тела по 10 строкам",
                                    lim=(min_bb, max_bb))
 
@@ -444,5 +476,6 @@ IMAGE_TASKS = [
     # KMirrorRawData,
     # SensorSystemErrorTask,
     SensorSystemErrorTask2,
+    SVTask,
 ]
 DICT_IMAGE_TASKS = {task.task_name: task for task in IMAGE_TASKS}
