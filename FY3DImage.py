@@ -3,6 +3,9 @@ from FY3DImageArea import FY3DImageArea
 from utils.utils import *
 import os
 import pandas as pd
+from datetime import datetime
+
+from vars import SurfaceType
 
 
 class FY3DImage:
@@ -14,6 +17,7 @@ class FY3DImage:
         self.areas = []
 
         self.file = h5py.File(path, "r")
+        self.file_attrs = self.file.attrs
         geolocation = self.file["Geolocation"]
         self.Latitude = geolocation["Latitude"]
         self.Longitude = geolocation["Longitude"]
@@ -31,17 +35,20 @@ class FY3DImage:
         self.VOC_DN_average = calibration["VOC_DN_average"]
         self.VIS_Cal_Coeff = calibration["VIS_Cal_Coeff"]
 
-    def get_area(self, x: int, y: int, width: int, height: int) -> FY3DImageArea:
+    def get_area(self, x: int, y: int, width: int, height: int,
+                 surface_type: SurfaceType = SurfaceType.UNKNOWN) -> FY3DImageArea:
         name = os.path.join(self.name, f"{x} {y} {width} {height}")
         return FY3DImageArea(
             x, y, width, height, name,
             EV_1KM_RefSB=self.EV_1KM_RefSB[:, y: y + height, x: x + width],
             Latitude=self.Latitude[y: y + height, x: x + width],
-            Longitude=self.Longitude[y: y + height, x: x + width]
+            Longitude=self.Longitude[y: y + height, x: x + width],
+            surface_type=surface_type
         )
 
-    def add_area(self, x: int, y: int, width: int, height: int):
-        self.areas.append(self.get_area(x, y, width, height))
+    def add_area(self, x: int, y: int, width: int, height: int,
+                 surface_type: SurfaceType = SurfaceType.UNKNOWN):
+        self.areas.append(self.get_area(x, y, width, height, surface_type))
 
     def get_center_coords(self) -> tuple[float, float]:
         """Возвращает широту и долготу центрального пикселя"""
@@ -90,3 +97,11 @@ class FY3DImage:
                 sheet_data += [[]]
             pd.DataFrame(sheet_data).to_excel(writer, f"Канал {ch}", index_label=False, index=False)
         writer.close()
+
+    def get_date(self) -> datetime:
+        date_str = self.file_attrs["Data Creating Date"].decode()
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+        return date
+
+    def get_year(self) -> int:
+        return self.get_date().year
