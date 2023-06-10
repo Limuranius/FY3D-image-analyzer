@@ -31,7 +31,8 @@ class FY3DImageManager:
                     continue
                 image.add_area(
                     area_info.x, area_info.y,
-                    area_info.width, area_info.height
+                    area_info.width, area_info.height,
+                    surface_type=area_info.surface_type
                 )
             self.images.append(image)
 
