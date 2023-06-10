@@ -1,5 +1,6 @@
 import numpy as np
 from FY3DImageArea import FY3DImageArea
+from vars import KMirrorSide
 
 
 def ch_area_rows_deviations(area: np.ndarray) -> list[float]:
@@ -67,3 +68,12 @@ def filter_areas_by_mirror_side(areas: list[FY3DImageArea], side: int):
 
     filtered_areas = list(filter(lambda area: filter_func(area), areas))
     return filtered_areas
+
+
+def get_area_mirror_side(y: int, height: int) -> KMirrorSide:
+    if y % 10 + height > 10:
+        return KMirrorSide.MIXED
+    if (y // 10) % 2 == 0:
+        return KMirrorSide.SIDE_1
+    else:
+        return KMirrorSide.SIDE_2
