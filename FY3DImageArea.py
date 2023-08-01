@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from utils.utils import get_monochrome_image
 from vars import SurfaceType, KMirrorSide
+import os
 
 
 class FY3DImageArea:
@@ -56,6 +57,12 @@ class FY3DImageArea:
         ch_area = self.get_vis_channel(channel)
         img = get_monochrome_image(ch_area)
         return img
+
+    def save_channels_img_to_dir(self, dir_path: str):
+        for channel in range(5, 20):
+            img = self.get_grayscale_ch_img(channel)
+            path = os.path.join(dir_path, f"{channel}.jpg")
+            img.save(path)
 
     def get_mirror_side(self) -> KMirrorSide:
         if self.y % 10 + self.height > 10:

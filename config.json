@@ -1,11 +1,12 @@
 {
   "IMAGES_DIR": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников",
   "DRAW_GRAPHS": true,
-  "SAVE_COLORED_IMAGES": false,
+  "SAVE_COLORED_IMAGES": true,
   "USED_AREA_TASKS": [],
   "USED_IMAGE_TASKS": [],
   "USED_MULTI_IMAGE_TASKS": [
-    "Линии регрессии по годам"
+    "Отклонения в зависимости от яркости и поверхности",
+    "Отклонения в зависимости от яркости и зеркала"
   ],
   "IMAGES": [
     {
@@ -545,7 +546,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2020/FY3D_MERSI_GBAL_L1_20200320_1650_1000M_MS.HDF",
       "NAME": "(2020) 20.03 16.50",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 635,
@@ -712,7 +713,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2020/FY3D_MERSI_GBAL_L1_20200320_1845_1000M_MS.HDF",
       "NAME": "(2020) 20.03 18.45",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 327,
@@ -879,7 +880,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2020/FY3D_MERSI_GBAL_L1_20200320_1850_1000M_MS.HDF",
       "NAME": "(2020) 20.03 18.50",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 557,
@@ -1046,7 +1047,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2020/FY3D_MERSI_GBAL_L1_20200320_2030_1000M_MS.HDF",
       "NAME": "(2020) 20.03 20.30",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 549,
@@ -1213,7 +1214,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2020/FY3D_MERSI_GBAL_L1_20200320_2155_1000M_MS.HDF",
       "NAME": "(2020) 20.03 21.55",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 866,
@@ -1380,7 +1381,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2020/FY3D_MERSI_GBAL_L1_20200320_2345_1000M_MS.HDF",
       "NAME": "(2020) 20.03 23.45",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 384,
@@ -1547,7 +1548,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2021/FY3D_MERSI_GBAL_L1_20210320_1630_1000M_MS.HDF",
       "NAME": "(2021) 20.03 16.30",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 856,
@@ -1714,7 +1715,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2021/FY3D_MERSI_GBAL_L1_20210320_1830_1000M_MS.HDF",
       "NAME": "(2021) 20.03 18.30",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 384,
@@ -1881,7 +1882,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2021/FY3D_MERSI_GBAL_L1_20210320_2010_1000M_MS.HDF",
       "NAME": "(2021) 20.03 20.10",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 717,
@@ -2048,7 +2049,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2021/FY3D_MERSI_GBAL_L1_20210320_2150_1000M_MS.HDF",
       "NAME": "(2021) 20.03 21.50",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 386,
@@ -2215,7 +2216,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2022/FY3D_MERSI_GBAL_L1_20220320_1540_1000M_MS.HDF",
       "NAME": "(2022) 20.03 15.40",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 699,
@@ -2382,7 +2383,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2022/FY3D_MERSI_GBAL_L1_20220320_1555_1000M_MS.HDF",
       "NAME": "(2022) 20.03 15.55",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 461,
@@ -2549,7 +2550,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2022/FY3D_MERSI_GBAL_L1_20220320_1735_1000M_MS.HDF",
       "NAME": "(2022) 20.03 17.35",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 615,
@@ -2716,7 +2717,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников\\2022/FY3D_MERSI_GBAL_L1_20220320_1920_1000M_MS.HDF",
       "NAME": "(2022) 20.03 19.20",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 573,
@@ -3757,7 +3758,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2020/FY3D_MERSI_GBAL_L1_20200321_1340_1000M_MS.HDF",
       "NAME": "(2020) Белый снимок 1",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 540,
@@ -3900,7 +3901,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2020/FY3D_MERSI_GBAL_L1_20200321_2350_1000M_MS.HDF",
       "NAME": "(2020) Белый снимок 2",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 146,
@@ -4067,7 +4068,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2021/FY3D_MERSI_GBAL_L1_20210321_1825_1000M_MS.HDF",
       "NAME": "(2021) Белый снимок 1",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 905,
@@ -4234,7 +4235,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2021/FY3D_MERSI_GBAL_L1_20210321_1925_1000M_MS.HDF",
       "NAME": "(2021) Белый снимок 2",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 756,
@@ -4401,7 +4402,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2022/FY3D_MERSI_GBAL_L1_20220321_1735_1000M_MS.HDF",
       "NAME": "(2022) Белый снимок 1",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 1126,
@@ -4568,7 +4569,7 @@
     {
       "PATH": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников/2022/FY3D_MERSI_GBAL_L1_20220321_1915_1000M_MS.HDF",
       "NAME": "(2022) Белый снимок 2",
-      "IS_USED": true,
+      "IS_USED": false,
       "AREAS": [
         {
           "X": 537,
