@@ -1,4 +1,3 @@
-import tasks
 from FY3DImage import FY3DImage
 import vars
 import os
@@ -18,23 +17,15 @@ class FY3DImageManager:
             self.config = config
         self.images = []
 
-    def load_config(self):
-        for img_info in self.config.images:
-            if not img_info.is_used:
-                continue
-            image = FY3DImage(
-                img_info.path,
-                img_info.name
-            )
-            for area_info in img_info.areas:
-                if not area_info.is_used:
-                    continue
-                image.add_area(
-                    area_info.x, area_info.y,
-                    area_info.width, area_info.height,
-                    surface_type=area_info.surface_type
-                )
-            self.images.append(image)
+    def load_images(self):
+        self.__calculate_std_maps()
+        self.images = list(FY3DImage.select().where(FY3DImage.is_selected == True))
+
+    def __calculate_std_maps(self):
+        all_images = FY3DImage.select()
+        for img in all_images:
+            if not img.is_std_map_calculated:
+                img.calculate_std_map()
 
     def save_colored_images(self):
         logging.info(f"Сохраняем цветные изображения с областями")
@@ -66,8 +57,7 @@ class FY3DImageManager:
             multi_image_task(self.images).run(self.config.draw_graphs)
 
     def run(self):
-        self.images = []
-        self.load_config()
+        self.load_images()
         if self.config.save_colored_images:
             self.save_colored_images()
         self.analyze_images()
