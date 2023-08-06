@@ -49,11 +49,11 @@ def is_image_colored(image: Image) -> bool:
         return False
 
 
-def draw_rectangle(image: Image, x: int, y: int, width: int, height: int):
+def draw_rectangle(image: Image, x: int, y: int, width: int, height: int, color: str):
     drawer = ImageDraw.Draw(image)
     shape = (x, y, x + width, y + height)
     if is_image_colored(image):
-        drawer.rectangle(shape, outline="#FF0000")
+        drawer.rectangle(shape, outline=color)
     else:
         drawer.rectangle(shape, fill="#FFFFFF")
 
@@ -71,23 +71,23 @@ def linregress(x, y, w=None, b=None):
     if w is None:
         w = np.ones(x.size, dtype=np.float64)
 
-    wxy = np.sum(w*y*x)
-    wx = np.sum(w*x)
-    wy = np.sum(w*y)
-    wx2 = np.sum(w*x*x)
+    wxy = np.sum(w * y * x)
+    wx = np.sum(w * x)
+    wy = np.sum(w * y)
+    wx2 = np.sum(w * x * x)
     sw = np.sum(w)
 
-    den = wx2*sw - wx*wx
+    den = wx2 * sw - wx * wx
 
     if den == 0:
         den = np.finfo(np.float64).eps
 
     if b is None:
-        k = (sw*wxy - wx*wy) / den
-        b = (wy - k*wx) / sw
+        k = (sw * wxy - wx * wy) / den
+        b = (wy - k * wx) / sw
     else:
-        k = (wxy - wx*b) / wx2
+        k = (wxy - wx * b) / wx2
 
-    return k, b, corr**2
+    return k, b, corr ** 2
 
 
