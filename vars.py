@@ -1,18 +1,16 @@
 from os import path
 from enum import Enum
 
-BASE_DIR = path.dirname(__file__)
+ROOT_DIR = path.dirname(__file__)
 
-CONFIG_PATH = path.join(BASE_DIR, "config.json")
-COLORED_PICTURES_PATH = path.join(BASE_DIR, "Изображения/Цветные")
-MONOCHROME_PICTURES_PATH = path.join(BASE_DIR, "Изображения/Однотонные")
+CONFIG_PATH = path.join(ROOT_DIR, "config.json")
+COLORED_PICTURES_PATH = path.join(ROOT_DIR, "Изображения/Цветные")
+MONOCHROME_PICTURES_PATH = path.join(ROOT_DIR, "Изображения/Однотонные")
+DATABASE_PATH = path.join(ROOT_DIR, "database.db")
 
 EXTENSIONS = [".txt", ".xlsx", ".png"]
 
-RESULTS_DIR = path.join(BASE_DIR, "Результаты")
-
-
-KMIRROR_SIDE = 2  # TODO: перенести эту ебань в config
+RESULTS_DIR = path.join(ROOT_DIR, "Результаты")
 
 
 class SurfaceType(Enum):
