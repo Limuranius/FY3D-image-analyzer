@@ -1,6 +1,7 @@
 import numpy as np
 from FY3DImageArea import FY3DImageArea
-from vars import KMirrorSide
+from vars import KMirrorSide, SurfaceType
+import cv2
 
 
 def ch_area_rows_deviations(area: np.ndarray) -> list[float]:
@@ -77,3 +78,38 @@ def get_area_mirror_side(y: int, height: int) -> KMirrorSide:
         return KMirrorSide.SIDE_1
     else:
         return KMirrorSide.SIDE_2
+
+
+def mean_area_color(area: FY3DImageArea) -> tuple[int, int, int]:
+    """Находит средний rgb-цвет области"""
+    colored_img = np.array(area.get_colored_picture())
+    mean_r = int(colored_img[:, :, 0].mean())
+    mean_g = int(colored_img[:, :, 1].mean())
+    mean_b = int(colored_img[:, :, 2].mean())
+    return mean_r, mean_g, mean_b
+
+
+def pixel_in_hsv_range(rgb_pixel, hsv_low, hsv_high) -> bool:
+    pixel = np.array([[rgb_pixel]], dtype=np.uint8)
+    pixel_hsv = cv2.cvtColor(pixel, cv2.COLOR_RGB2HSV)
+    mask = cv2.inRange(pixel_hsv, hsv_low, hsv_high)
+    return mask[0][0] == 255
+
+
+def determine_surface_type(area: FY3DImageArea) -> SurfaceType:
+    sea_hsv_range = [
+        np.array([90, 25, 20]),
+        np.array([140, 255, 100])
+    ]
+    snow_hsv_range = [
+        np.array([0, 0, 40]),
+        np.array([180, 50, 255])
+    ]
+    area.load_arrays()
+    mean_color = mean_area_color(area)
+    is_sea = pixel_in_hsv_range(mean_color, sea_hsv_range[0], sea_hsv_range[1])
+
+    if is_sea:
+        return SurfaceType.SEA
+    else:
+        return SurfaceType.SNOW

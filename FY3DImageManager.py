@@ -1,9 +1,12 @@
 from FY3DImage import FY3DImage
+from FY3DImageArea import FY3DImageArea
 import vars
 import os
 import logging
-from utils import utils
+from utils import some_utils
+from utils import area_utils
 from ConfigManager import ConfigManager
+import tqdm
 
 
 class FY3DImageManager:
@@ -17,15 +20,22 @@ class FY3DImageManager:
             self.config = config
         self.images = []
 
-    def load_images(self):
+    def load(self):
         self.__calculate_std_maps()
+        self.__determine_areas_surfaces()
         self.images = list(FY3DImage.select().where(FY3DImage.is_selected == True))
 
     def __calculate_std_maps(self):
-        all_images = FY3DImage.select()
-        for img in all_images:
-            if not img.is_std_map_calculated:
-                img.calculate_std_map()
+        uncalculated_images = FY3DImage.select().where(FY3DImage.is_std_map_calculated == False)
+        for img in tqdm.tqdm(uncalculated_images, desc="Calculating std maps"):
+            img.calculate_std_map()
+
+    def __determine_areas_surfaces(self):
+        undetermined_areas = FY3DImageArea.select().where(FY3DImageArea.surface_type == vars.SurfaceType.UNKNOWN.value)
+        for area in tqdm.tqdm(undetermined_areas, desc="Determining areas surface types"):
+            surface_type = area_utils.determine_surface_type(area)
+            area.surface_type = surface_type.value
+            area.save()
 
     def save_colored_images(self):
         logging.info(f"Сохраняем цветные изображения с областями")
@@ -57,7 +67,7 @@ class FY3DImageManager:
             multi_image_task(self.images).run(self.config.draw_graphs)
 
     def run(self):
-        self.load_images()
+        self.load()
         if self.config.save_colored_images:
             self.save_colored_images()
         self.analyze_images()
