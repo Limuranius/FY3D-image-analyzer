@@ -1,7 +1,7 @@
-from PIL import Image, ImageQt
-from PyQt5.QtGui import QPixmap
+from PIL import Image
+from PyQt5.QtGui import QPixmap, QImage
 from main_window import Ui_MainWindow
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QTreeWidgetItem
 from PyQt5.QtCore import Qt
 from ConfigManager import ConfigManager
 from FY3DImageManager import FY3DImageManager
@@ -9,27 +9,23 @@ from FY3DImage import FY3DImage
 from FY3DImageArea import FY3DImageArea
 import vars
 from tasks import AreaTasks, ImageTasks, MultipleImagesTasks
-from utils.utils import *
+from utils.some_utils import *
 from FY3DImage import FY3DImage
 import areaViewerView
 from utils import getImageMonotone
 import pickle
-import tqdm
-from time import time
 from utils import area_utils
+import multiprocessing
 
 
 def set_image_to_label(label, image: Image.Image):
-    qtimg = ImageQt.ImageQt(image)
-    label.setPixmap(QPixmap.fromImage(qtimg))
-
+    arr = np.array(image, dtype=np.uint8)
+    qimg = QImage(arr.data, image.width, image.height, image.width * 3, QImage.Format_RGB888)
+    label.setPixmap(QPixmap(qimg))
 
 class View(QMainWindow):
     config: ConfigManager
     image_manager: FY3DImageManager
-
-    # curr_img_index: int  # Индекс текущего выбранного снимка
-    # curr_area_index: int  # Индекс текущей выбранной области
 
     curr_img: FY3DImage
     curr_area: FY3DImageArea
@@ -41,7 +37,7 @@ class View(QMainWindow):
         self.config = ConfigManager(vars.CONFIG_PATH)
         self.image_manager = FY3DImageManager(self.config)
         self.setup()
-        self.image_manager.load_images()
+        self.image_manager.load()
 
     def setup(self):
         self.ui.checkBox_draw_graphs.setChecked(self.config.draw_graphs)
@@ -75,27 +71,34 @@ class View(QMainWindow):
 
     def update_image_list(self):
         """Заполняет список снимков"""
-        self.ui.listWidget_images.clear()
-        for img in FY3DImage.all_images():
-            item = QListWidgetItem(img.name)
-            item.setData(Qt.UserRole, img)
+        self.ui.treeWidget_images.clear()
+        for img in FY3DImage.select():
+            item = QTreeWidgetItem(None)
+            item.setText(0, img.name)
+            item.setText(1, str(img.get_datetime()))
+
+            item.setData(0, Qt.UserRole, img)
             if img.is_selected:
-                item.setCheckState(Qt.Checked)
+                item.setCheckState(0, Qt.Checked)
             else:
-                item.setCheckState(Qt.Unchecked)
-            self.ui.listWidget_images.addItem(item)
+                item.setCheckState(0, Qt.Unchecked)
+            self.ui.treeWidget_images.addTopLevelItem(item)
 
     def load_current_image_areas(self):
         """Заполняет список областей выбранного снимка"""
-        self.ui.listWidget_areas.clear()
+        self.ui.treeWidget_areas.clear()
         for area in self.curr_img.areas:
-            item = QListWidgetItem(f"x={area.x} y={area.y} w={area.width} h={area.height}")
-            item.setData(Qt.UserRole, area)
+            item = QTreeWidgetItem(None)
+            item.setText(0, str(area.x))
+            item.setText(1, str(area.y))
+            item.setText(2, area.get_surface_type().name)
+
+            item.setData(0, Qt.UserRole, area)
             if area.is_selected:
-                item.setCheckState(Qt.Checked)
+                item.setCheckState(0, Qt.Checked)
             else:
-                item.setCheckState(Qt.Unchecked)
-            self.ui.listWidget_areas.addItem(item)
+                item.setCheckState(0, Qt.Unchecked)
+            self.ui.treeWidget_areas.addTopLevelItem(item)
 
     def load_current_image(self) -> Image.Image:
         return self.curr_img.get_colored_picture()
@@ -104,38 +107,39 @@ class View(QMainWindow):
 
     def on_img_select(self):
         """Выделение изображения"""
-        item = self.ui.listWidget_images.selectedItems()[0]
-        self.curr_img = item.data(Qt.UserRole)
+        item = self.ui.treeWidget_images.selectedItems()[0]
+        self.curr_img = item.data(0, Qt.UserRole)
+        self.show_img_preview()
         self.load_current_image_areas()
 
     def on_area_select(self):
         """Выделение области"""
-        items = self.ui.listWidget_areas.selectedItems()
+        items = self.ui.treeWidget_areas.selectedItems()
         if items:  # Если что-то выделили
             self.ui.pushButton_del_area.setEnabled(True)
-            self.curr_area = items[0].data(Qt.UserRole)
+            self.curr_area = items[0].data(0, Qt.UserRole)
         else:  # Если выделение исчезло
             self.ui.pushButton_del_area.setEnabled(False)
 
-    def on_img_changed(self, item: QListWidgetItem):
+    def on_img_changed(self, item: QTreeWidgetItem):
         """Переключение выбора изображений"""
-        state = item.checkState()
+        state = item.checkState(0)
         if state == Qt.Checked:
             is_selected = True
         else:
             is_selected = False
-        img = item.data(Qt.UserRole)
+        img = item.data(0, Qt.UserRole)
         img.is_selected = is_selected
         img.save()
 
-    def on_area_changed(self, item: QListWidgetItem):
+    def on_area_changed(self, item: QTreeWidgetItem):
         """Переключение выбора областей"""
-        state = item.checkState()
+        state = item.checkState(0)
         if state == Qt.Checked:
             is_selected = True
         else:
             is_selected = False
-        area = item.data(Qt.UserRole)
+        area = item.data(0, Qt.UserRole)
         area.is_selected = is_selected
         area.save()
 
@@ -204,11 +208,13 @@ class View(QMainWindow):
         """Нажатие "Удалить область" """
         self.curr_area.delete_instance()
         self.load_current_image_areas()
+        self.show_img_preview()
 
     def del_all_areas_clicked(self):
         """Нажатие "Удалить все области" """
         FY3DImageArea.delete().where(FY3DImageArea.image == self.curr_img).execute()
         self.load_current_image_areas()
+        self.show_img_preview()
 
     def on_add_mono_areas_clicked(self):
         """Нажатие "Найти однородные области" """
@@ -226,6 +232,7 @@ class View(QMainWindow):
                                 "k_mirror_side": area_utils.get_area_mirror_side(y, 10).value})
         FY3DImageArea.insert_many(insert_data).execute()
         self.load_current_image_areas()
+        self.show_img_preview()
 
     def open_area_clicked(self):
         """Нажатие "Открыть область" """
@@ -234,7 +241,9 @@ class View(QMainWindow):
 
     def see_image_clicked(self):
         """Нажатие "Смотреть изображение" """
-        self.load_current_image().show()
+        img = self.load_current_image()
+        show_im_process = multiprocessing.Process(target=img.show)
+        show_im_process.start()
 
     def img_path_clicked(self):
         """Нажатие "Путь" у снимков """
@@ -248,11 +257,15 @@ class View(QMainWindow):
         FY3DImage.create(path=path, name=name)
         self.update_image_list()
 
+    def show_img_preview(self):
+        preview = self.curr_img.get_preview()
+        set_image_to_label(self.ui.label_preview, preview)
+
     def connect_widgets(self):
-        self.ui.listWidget_images.itemSelectionChanged.connect(self.on_img_select)
-        self.ui.listWidget_areas.itemSelectionChanged.connect(self.on_area_select)
-        self.ui.listWidget_images.itemChanged.connect(self.on_img_changed)
-        self.ui.listWidget_areas.itemChanged.connect(self.on_area_changed)
+        self.ui.treeWidget_images.itemSelectionChanged.connect(self.on_img_select)
+        self.ui.treeWidget_areas.itemSelectionChanged.connect(self.on_area_select)
+        self.ui.treeWidget_images.itemChanged.connect(self.on_img_changed)
+        self.ui.treeWidget_areas.itemChanged.connect(self.on_area_changed)
         self.ui.listWidget_tasks_images.itemChanged.connect(self.on_img_task_changed)
         self.ui.listWidget_tasks_areas.itemChanged.connect(self.on_area_task_changed)
         self.ui.listWidget_tasks_multi_images.itemChanged.connect(self.on_multi_img_task_changed)

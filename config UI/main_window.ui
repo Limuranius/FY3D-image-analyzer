@@ -47,7 +47,18 @@
             </widget>
            </item>
            <item>
-            <widget class="QListWidget" name="listWidget_images"/>
+            <widget class="QTreeWidget" name="treeWidget_images">
+             <column>
+              <property name="text">
+               <string>Название</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Дата</string>
+              </property>
+             </column>
+            </widget>
            </item>
            <item>
             <widget class="QFrame" name="frame_9">
@@ -120,7 +131,23 @@
             </widget>
            </item>
            <item>
-            <widget class="QListWidget" name="listWidget_areas"/>
+            <widget class="QTreeWidget" name="treeWidget_areas">
+             <column>
+              <property name="text">
+               <string>x</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>y</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Поверхность</string>
+              </property>
+             </column>
+            </widget>
            </item>
            <item>
             <widget class="QFrame" name="frame_7">
@@ -298,17 +325,10 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_3">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_12">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_14">
                    <property name="text">
-                    <string>X_min</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="label_13">
-                   <property name="text">
-                    <string>X_max</string>
+                    <string>Y_min</string>
                    </property>
                   </widget>
                  </item>
@@ -329,24 +349,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_14">
-                   <property name="text">
-                    <string>Y_min</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="1" column="1">
                   <widget class="QSpinBox" name="spinBox_ymin">
                    <property name="maximum">
                     <number>2000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="label_15">
-                   <property name="text">
-                    <string>Y_max</string>
                    </property>
                   </widget>
                  </item>
@@ -360,14 +366,56 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0" colspan="4">
+                 <item row="3" column="0" colspan="4">
                   <widget class="QPushButton" name="pushButton_add_monotone_areas">
                    <property name="text">
                     <string>Найти однородные области</string>
                    </property>
                   </widget>
                  </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="label_15">
+                   <property name="text">
+                    <string>Y_max</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="label_13">
+                   <property name="text">
+                    <string>X_max</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_12">
+                   <property name="text">
+                    <string>X_min</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_16">
+                   <property name="text">
+                    <string>Количество</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="spinBox_areas_count">
+                   <property name="maximum">
+                    <number>2000</number>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QLabel" name="label_preview">
+                <property name="text">
+                 <string>Превью</string>
+                </property>
                </widget>
               </item>
              </layout>
