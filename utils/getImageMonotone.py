@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 from time import time
+import pyopencl as cl
 
 
 def calc_area_sum_std(img, w: int, h: int, out, x_min, x_max, y_min, y_max):
@@ -53,6 +54,61 @@ def calc_std_sum_map(img: np.ndarray):
     return out
 
 
+def calc_std_sum_map_gpu(img: np.ndarray):
+    # img: [15, 2000, 2048]
+    img = img[:]
+    flat_img = img.flatten().astype(np.uint16)
+
+    ctx = cl.create_some_context()
+    queue = cl.CommandQueue(ctx)
+
+    mf = cl.mem_flags
+    flat_g = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=flat_img)
+
+    res_np = np.ones(2000 * 2048, dtype=np.float32) * np.inf
+    res_g = cl.Buffer(ctx, mf.WRITE_ONLY | mf.COPY_HOST_PTR, hostbuf=res_np)
+
+    prg = cl.Program(ctx, """
+    __kernel void std_sum_map(
+        __global const ushort *img_g, __global float *res_g)
+    {
+        int gid = get_global_id(0);
+        int y = gid / 2048;
+        int x = gid % 2048;
+        if (y < 2000 - 10 && x < 2048 - 100 && y % 10 == 0) {
+            float std_sum = 0;
+
+            for (int ch = 0; ch < 15; ch++) {
+                int area_sum = 0;
+                for (int i = y; i < y + 10; i++) {
+                    for (int j = x; j < x + 100; j++) {
+                        int index = ch * (2000 * 2048) + i * (2048) + j;
+                        area_sum += img_g[index];
+                    }
+                }
+                float area_avg = (float)area_sum / (100.0 * 10.0);
+                float dev = 0;
+                for (int i = y; i < y + 10; i++) {
+                    for (int j = x; j < x + 100; j++) {
+                        int index = ch * (2000 * 2048) + i * (2048) + j;
+                        dev += (img_g[index] - area_avg) * (img_g[index] - area_avg);
+                    }
+                }
+                float std = sqrt(dev / (100.0 * 10.0));
+                std_sum += std;
+            }
+            res_g[gid] = std_sum;
+        }
+    }
+    """).build()
+
+    knl = prg.std_sum_map  # Use this Kernel object for repeated calls
+    knl(queue, (2000 * 2048,), None, flat_g, res_g)
+
+    cl.enqueue_copy(queue, res_np, res_g)
+    return res_np.reshape((2000, 2048))
+
+
 def compress_std_sum_map(std_map: np.ndarray):
     compressed = std_map[0:2000:10]
     return compressed
@@ -74,14 +130,3 @@ def get_monotone_areas(comp_std_map: np.ndarray, count=30,
     std_sum_map[y_max:, :] = np.inf
     areas = get_n_min(std_sum_map, count, 100, 10)
     return areas
-
-
-# def get_min_monotone(image: FY3DImage, count: int, x_min=0, x_max=2048, y_min=0, y_max=2000) -> list[tuple[int, int]]:
-#     img = image.EV_1KM_RefSB[:, :, :].astype(np.float64)
-#     h = 10
-#     w = 100
-#
-#     areas = get_n_min(out, count, w, h)
-#     for x, y in areas:
-#         image.add_area(x, y, w, h)
-#     return areas

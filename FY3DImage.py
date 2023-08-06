@@ -135,7 +135,7 @@ class FY3DImage(BaseModel):
         return dt
 
     def calculate_std_map(self) -> None:
-        std_map = getImageMonotone.calc_std_sum_map(self.EV_1KM_RefSB)
+        std_map = getImageMonotone.calc_std_sum_map_gpu(self.EV_1KM_RefSB)
         compressed = getImageMonotone.compress_std_sum_map(std_map)
         pkl = pickle.dumps(compressed)
         self.std_sum_map = pkl
