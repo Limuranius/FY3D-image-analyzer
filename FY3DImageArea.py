@@ -3,9 +3,19 @@ import pandas as pd
 from vars import SurfaceType, KMirrorSide
 import os
 from database import *
-from FY3DImage import FY3DImage
+import FY3DImage
 from utils import some_utils
 from PIL import Image
+from dataclasses import dataclass
+from collections import defaultdict
+
+
+@dataclass
+class CacheAreaData:
+    EV_1KM_RefSB: np.ndarray = None
+    EV_250_Aggr1KM_RefSB: np.ndarray = None
+    Latitude: np.ndarray = None
+    Longitude: np.ndarray = None
 
 
 class FY3DImageArea(BaseModel):
@@ -16,13 +26,10 @@ class FY3DImageArea(BaseModel):
     height = IntegerField()
     surface_type = IntegerField(default=SurfaceType.UNKNOWN.value)
     k_mirror_side = IntegerField()
-    image = ForeignKeyField(FY3DImage, backref="areas")
+    image = ForeignKeyField(FY3DImage.FY3DImage, backref="areas")
     is_selected = BooleanField(default=True)
 
-    EV_1KM_RefSB: np.ndarray  # Каналы 5 - 19
-    EV_250_Aggr1KM_RefSB: np.ndarray  # Каналы 1 - 3
-    Latitude: np.ndarray
-    Longitude: np.ndarray
+    cached_data: dict[int, CacheAreaData] = defaultdict(CacheAreaData)  # id: data
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -74,18 +81,40 @@ class FY3DImageArea(BaseModel):
     def get_mirror_side(self) -> KMirrorSide:
         return KMirrorSide(self.k_mirror_side)
 
-    def load_arrays(self):
-        self.EV_1KM_RefSB = self.image.EV_1KM_RefSB[:, self.y: self.y + self.height, self.x: self.x + self.width]
-        self.EV_250_Aggr1KM_RefSB = self.image.EV_250_Aggr1KM_RefSB[:, self.y: self.y + self.height, self.x: self.x + self.width]
-        self.Latitude = self.image.Latitude[self.y: self.y + self.height, self.x: self.x + self.width]
-        self.Longitude = self.image.Longitude[self.y: self.y + self.height, self.x: self.x + self.width]
-
     def get_colored_picture(self) -> Image:
         r = self.EV_250_Aggr1KM_RefSB[2]  # 3 канал
         g = self.EV_250_Aggr1KM_RefSB[1]  # 2 канал
         b = self.EV_250_Aggr1KM_RefSB[0]  # 1 канал
         image = some_utils.get_colored_image(r, g, b)
         return image
+
+    @property
+    def EV_1KM_RefSB(self):
+        if FY3DImageArea.cached_data[self.id].EV_1KM_RefSB is None:
+            area = self.image.EV_1KM_RefSB[:, self.y: self.y + self.height, self.x: self.x + self.width]
+            FY3DImageArea.cached_data[self.id].EV_1KM_RefSB = area
+        return FY3DImageArea.cached_data[self.id].EV_1KM_RefSB
+
+    @property
+    def EV_250_Aggr1KM_RefSB(self):
+        if FY3DImageArea.cached_data[self.id].EV_250_Aggr1KM_RefSB is None:
+            area = self.image.EV_250_Aggr1KM_RefSB[:, self.y: self.y + self.height, self.x: self.x + self.width]
+            FY3DImageArea.cached_data[self.id].EV_250_Aggr1KM_RefSB = area
+        return FY3DImageArea.cached_data[self.id].EV_250_Aggr1KM_RefSB
+
+    @property
+    def Latitude(self):
+        if FY3DImageArea.cached_data[self.id].Latitude is None:
+            area = self.image.Latitude[:, self.y: self.y + self.height, self.x: self.x + self.width]
+            FY3DImageArea.cached_data[self.id].Latitude = area
+        return FY3DImageArea.cached_data[self.id].Latitude
+
+    @property
+    def Longitude(self):
+        if FY3DImageArea.cached_data[self.id].Longitude is None:
+            area = self.image.Longitude[:, self.y: self.y + self.height, self.x: self.x + self.width]
+            FY3DImageArea.cached_data[self.id].Longitude = area
+        return FY3DImageArea.cached_data[self.id].Longitude
 
 
 FY3DImageArea.create_table()
