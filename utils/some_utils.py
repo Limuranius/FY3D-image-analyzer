@@ -2,14 +2,6 @@ import numpy as np
 from PIL import Image, ImageDraw
 import os
 import shutil
-from vars import EXTENSIONS
-
-
-def create_dir(some_path: str):
-    for ext in EXTENSIONS:
-        if some_path.endswith(ext):  # Путь заканчивается на файл
-            some_path = os.path.dirname(some_path)
-    os.makedirs(some_path, exist_ok=True)
 
 
 def remove_dir(dir_path: str):

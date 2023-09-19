@@ -1,7 +1,12 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
 import numpy as np
-from FY3DImageArea import FY3DImageArea
 from vars import KMirrorSide, SurfaceType
 import cv2
+
+
+if TYPE_CHECKING:
+    from FY3DImageArea import FY3DImageArea
 
 
 def ch_area_rows_deviations(area: np.ndarray) -> list[float]:
