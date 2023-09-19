@@ -1,9 +1,9 @@
 import h5py
 from utils import some_utils
+from utils import getImageMonotone
 import pandas as pd
 import datetime
 from database import *
-from utils import getImageMonotone
 import pickle
 from PIL import Image
 import numpy as np
@@ -20,7 +20,6 @@ class FY3DImage(BaseModel):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.file = h5py.File(self.path, "r")
         self.file_attrs = self.file.attrs
         geolocation = self.file["Geolocation"]
@@ -101,9 +100,6 @@ class FY3DImage(BaseModel):
                 some_utils.draw_rectangle(image, area.x, area.y, area.width, area.height)
         return image
 
-    def get_name(self):
-        return self.name
-
     def save_to_excel(self, file_name: str):
         writer = pd.ExcelWriter(file_name)
         for ch in range(5, 20):
@@ -146,6 +142,14 @@ class FY3DImage(BaseModel):
         """channel - канал от 5 до 19"""
         ch_i = channel - 5
         return np.uint16(self.EV_1KM_RefSB[ch_i])
+
+    def selected_areas(self):
+        import FY3DImageArea
+        return self.areas.where(FY3DImageArea.FY3DImageArea.is_selected == True)
+
+    def get_unique_name(self) -> str:
+        dt_fmt = "%d-%m-%Y %H.%M"
+        return f"{self.name} ({self.get_datetime().strftime(dt_fmt)})"
 
 
 FY3DImage.create_table()

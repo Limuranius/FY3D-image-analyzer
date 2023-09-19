@@ -8,8 +8,6 @@ COLORED_PICTURES_PATH = path.join(ROOT_DIR, "Изображения/Цветны
 MONOCHROME_PICTURES_PATH = path.join(ROOT_DIR, "Изображения/Однотонные")
 DATABASE_PATH = path.join(ROOT_DIR, "database.db")
 
-EXTENSIONS = [".txt", ".xlsx", ".png"]
-
 RESULTS_DIR = path.join(ROOT_DIR, "Результаты")
 
 

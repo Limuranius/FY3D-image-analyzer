@@ -39,32 +39,51 @@ class FY3DImageManager:
 
     def save_colored_images(self):
         logging.info(f"Сохраняем цветные изображения с областями")
-        utils.remove_dir(vars.COLORED_PICTURES_PATH)
-        utils.create_dir(vars.COLORED_PICTURES_PATH)
+        some_utils.remove_dir(vars.COLORED_PICTURES_PATH)
+        some_utils.create_dir(vars.COLORED_PICTURES_PATH)
         for image in self.images:
             colored_image = image.get_colored_picture()
             file_name = image.name + ".png"
             file_path = os.path.join(vars.COLORED_PICTURES_PATH, file_name)
-            utils.create_dir(vars.COLORED_PICTURES_PATH)
+            some_utils.create_dir(vars.COLORED_PICTURES_PATH)
             colored_image.save(file_path)
             logging.info(f"Изображение \"{image.name}\" сохранено")
 
     def analyze_images(self):
-        utils.remove_dir(vars.RESULTS_DIR)
-        logging.info(f"Начинаем анализ изображений.")
-        for image in self.images:
-            logging.info(f"Анализируем изображение\"{image.name}\"...")
-            for image_task in self.config.image_tasks:
-                image_task(image).run(self.config.draw_graphs)
+        some_utils.remove_dir(vars.RESULTS_DIR)
 
-            logging.info(f"Анализируем области изображения:")
+        # areas = []
+        # for image in self.images:
+        #     for area in image.selected_areas():
+        #         areas.append(area)
+        # with tqdm.tqdm(total=len(areas), desc="Loading all areas") as pbar:
+        #     for area in areas:
+        #         area.EV_1KM_RefSB
+        #         pbar.update(1)
+
+        for image in tqdm.tqdm(self.images, desc="Running image and area tasks on images", unit="img"):
+            for image_task in self.config.image_tasks:
+                task = image_task(image)
+                task.run()
+                if self.config.draw_graphs:
+                    task.save_to_graphs()
+                task.save_to_excel()
+
             for area in image.areas:
-                logging.info(f"Анализируем область\"{area.name}\"...")
                 for area_task in self.config.area_tasks:
-                    area_task(area).run(self.config.draw_graphs)
+                    task = area_task(area)
+                    task.run()
+                    if self.config.draw_graphs:
+                        task.save_to_graphs()
+                    task.save_to_excel()
 
         for multi_image_task in self.config.multi_image_tasks:
-            multi_image_task(self.images).run(self.config.draw_graphs)
+            task = multi_image_task(self.images)
+            task.run()
+
+            if self.config.draw_graphs:
+                task.save_to_graphs()
+            task.save_to_excel()
 
     def run(self):
         self.load()

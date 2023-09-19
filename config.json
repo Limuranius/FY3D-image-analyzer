@@ -1,8 +1,10 @@
 {
   "IMAGES_DIR": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников",
   "DRAW_GRAPHS": true,
-  "SAVE_COLORED_IMAGES": true,
-  "USED_AREA_TASKS": [],
+  "SAVE_COLORED_IMAGES": false,
+  "USED_AREA_TASKS": [
+    "Способ 1 (Отклонение от среднего по строке)"
+  ],
   "USED_IMAGE_TASKS": [],
   "USED_MULTI_IMAGE_TASKS": []
 }
