@@ -1,12 +1,29 @@
 import FY3DImage
+import os
 
-
-img_path = r"C:\Users\Gleb\Desktop\Диплом\Снимки со спутников\2020\FY3D_MERSI_GBAL_L1_20200320_2345_1000M_MS.HDF"
 output_path = r"C:\Users\Gleb\PycharmProjects\FY3D-images-analyzer\quick tools\area img"
-img = FY3DImage.FY3DImage(img_path)
-# x1, y1, x2, y2 = 725, 988, 790, 1036
-x1, y1, x2, y2 = 530, 719, 680, 883
+img_id = 5
+img = FY3DImage.FY3DImage.get(id=img_id)
+
+width = 100
+height = 100
+
+# areas = [
+#     (0, 1000 - height),
+#     (1000 - width, 1000 - height),
+#     (2000 - width, 1000 - height)
+# ]
+
+areas = [
+    (878, 860),
+    (1050, 770)
+]
 
 
-area = img.get_area(x1, y1, x2-x1, y2-y1)
-area.save_channels_img_to_dir(output_path)
+os.mkdir(os.path.join(output_path))
+for i, (x, y) in enumerate(areas):
+    area = img.get_area(x, y, width, height)
+    dir_path = os.path.join(output_path, str(i))
+    os.mkdir(dir_path)
+    area.save_channels_img_to_dir(dir_path)
+    area.cached_data.clear()
