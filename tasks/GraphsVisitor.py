@@ -5,6 +5,7 @@ from scipy.stats import linregress
 from utils.save_data_utils import create_and_save_figure
 import tqdm
 import numpy as np
+from Deviations import Deviations
 
 
 def get_graphs_path_and_create(task, file_name: str, inner_dir: str = ""):
@@ -168,29 +169,29 @@ class GraphsVisitor(BaseVisitor):
                     pbar.update(1)
 
     def visit_DeviationsByMirrorSide(self, task: MultipleImagesTasks.DeviationsByMirrorSide):
-        data = task.result
         with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsByMirrorSide)") as pbar:
             for channel in range(5, 20):
                 for sensor_i in range(10):
                     path = get_graphs_path_and_create(task, f"Датчик {sensor_i}", inner_dir=f"Канал {channel}")
 
                     # Фильтруем данные по каналу и датчику
-                    filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i)
-                    ch_sens_data = data.loc[filt]
+                    ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
 
                     # Фильтруем данные по стороне зеркала
-                    filt_side_1 = ch_sens_data["mirror_side"] == vars.KMirrorSide.SIDE_1
-                    filt_side_2 = ch_sens_data["mirror_side"] == vars.KMirrorSide.SIDE_2
+                    filt_side_1 = ch_sens_data["k_mirror_side"] == vars.KMirrorSide.SIDE_1.value
+                    filt_side_2 = ch_sens_data["k_mirror_side"] == vars.KMirrorSide.SIDE_2.value
                     side_1_data = ch_sens_data.loc[filt_side_1]
                     side_2_data = ch_sens_data.loc[filt_side_2]
                     x_side_1 = side_1_data["area_avg"].to_numpy()
-                    y_side_1 = side_1_data["sensor_deviation"].to_numpy()
+                    y_side_1 = side_1_data["deviation"].to_numpy()
                     x_side_2 = side_2_data["area_avg"].to_numpy()
-                    y_side_2 = side_2_data["sensor_deviation"].to_numpy()
+                    y_side_2 = side_2_data["deviation"].to_numpy()
 
                     # Находим линии регрессии для первого и второго зеркала
-                    slope_side_1, intercept_side_1, *_ = linregress(x_side_1.astype(float), y_side_1.astype(float))
-                    slope_side_2, intercept_side_2, *_ = linregress(x_side_2.astype(float), y_side_2.astype(float))
+                    linreg_side_1 = linregress(x_side_1.astype(float), y_side_1.astype(float))
+                    linreg_side_2 = linregress(x_side_2.astype(float), y_side_2.astype(float))
+                    slope_side_1, intercept_side_1 = linreg_side_1.slope, linreg_side_1.intercept
+                    slope_side_2, intercept_side_2 = linreg_side_2.slope, linreg_side_2.intercept
                     line_x0_side_1 = x_side_1.min()
                     line_x1_side_1 = x_side_1.max()
                     line_y0_side_1 = line_x0_side_1 * slope_side_1 + intercept_side_1
@@ -199,6 +200,21 @@ class GraphsVisitor(BaseVisitor):
                     line_x1_side_2 = x_side_2.max()
                     line_y0_side_2 = line_x0_side_2 * slope_side_2 + intercept_side_2
                     line_y1_side_2 = line_x1_side_2 * slope_side_2 + intercept_side_2
+
+                    significance = 0.05
+                    text = f"""Первое зеркало:
+slope={round(slope_side_1, 5)} stderr={round(linreg_side_1.stderr, 3)}
+intercept={round(intercept_side_1, 3)} stderr={round(linreg_side_1.intercept_stderr, 3)}
+r^2={round(linreg_side_1.rvalue ** 2, 2)}
+pvalue={round(linreg_side_1.pvalue, 3)}
+Наклон значим? {"Да" if linreg_side_1.pvalue < significance else "Нет"}
+
+Второе зеркало:
+slope={round(slope_side_2, 5)} stderr={round(linreg_side_2.stderr, 3)}
+intercept={round(intercept_side_2, 3)} stderr={round(linreg_side_2.intercept_stderr, 3)}
+r^2={round(linreg_side_2.rvalue ** 2, 2)}
+pvalue={round(linreg_side_2.pvalue, 3)}
+Наклон значим? {"Да" if linreg_side_2.pvalue < significance else "Нет"}"""
 
                     create_and_save_figure(path,
                                            y_rows=[y_side_1, y_side_2, [line_y0_side_1, line_y1_side_1],
@@ -209,32 +225,66 @@ class GraphsVisitor(BaseVisitor):
                                            xlabel="Яркость", ylabel="Отклонение датчика",
                                            fmt_list=[".", ".", "--", "--"],
                                            legend_title="Сторона зеркала",
-                                           legend=["Первая", "Вторая", "Первая", "Вторая"])
+                                           legend=["Первая", "Вторая", "Первая", "Вторая"],
+                                           text=text)
                     pbar.update(1)
 
     def visit_DeviationsBySurface(self, task: MultipleImagesTasks.DeviationsBySurface):
-        data = task.result
         with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsBySurface)") as pbar:
             for channel in range(5, 20):
                 for sensor_i in range(10):
                     file_name = f"Датчик {sensor_i}.png"
                     path = get_graphs_path_and_create(task, file_name, inner_dir=f"Канал {channel}")
-                    filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i)
-                    ch_sens_data = data.loc[filt]
-                    filt_sea = ch_sens_data["surface_type"] == vars.SurfaceType.SEA
-                    filt_snow = ch_sens_data["surface_type"] == vars.SurfaceType.SNOW
+
+                    ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
+
+                    filt_sea = ch_sens_data["surface_type"] == vars.SurfaceType.SEA.value
+                    filt_snow = ch_sens_data["surface_type"] == vars.SurfaceType.SNOW.value
                     sea_data = ch_sens_data.loc[filt_sea]
                     snow_data = ch_sens_data.loc[filt_snow]
-
                     x_sea = sea_data["area_avg"].to_numpy()
-                    y_sea = sea_data["sensor_deviation"].to_numpy()
+                    y_sea = sea_data["deviation"].to_numpy()
                     x_snow = snow_data["area_avg"].to_numpy()
-                    y_snow = snow_data["sensor_deviation"].to_numpy()
+                    y_snow = snow_data["deviation"].to_numpy()
 
-                    create_and_save_figure(path, y_rows=[y_sea, y_snow], x_rows=[x_sea, x_snow],
+                    linreg_sea = linregress(x_sea.astype(float), y_sea.astype(float))
+                    linreg_snow = linregress(x_snow.astype(float), y_snow.astype(float))
+                    slope_sea, intercept_sea = linreg_sea.slope, linreg_sea.intercept
+                    slope_snow, intercept_snow = linreg_snow.slope, linreg_snow.intercept
+                    line_x0_sea = x_sea.min()
+                    line_x1_sea = x_sea.max()
+                    line_y0_sea = line_x0_sea * slope_sea + intercept_sea
+                    line_y1_sea = line_x1_sea * slope_sea + intercept_sea
+                    line_x0_snow = x_snow.min()
+                    line_x1_snow = x_snow.max()
+                    line_y0_snow = line_x0_snow * slope_snow + intercept_snow
+                    line_y1_snow = line_x1_snow * slope_snow + intercept_snow
+
+                    significance = 0.05
+                    text = f"""Море:
+slope={round(slope_sea, 5)} stderr={round(linreg_sea.stderr, 3)}
+intercept={round(intercept_sea, 3)} stderr={round(linreg_sea.intercept_stderr, 3)}
+r^2={round(linreg_sea.rvalue ** 2, 2)}
+pvalue={round(linreg_sea.pvalue, 3)}
+Наклон значим? {"Да" if linreg_sea.pvalue < significance else "Нет"}
+
+Снег:
+slope={round(slope_snow, 5)} stderr={round(linreg_snow.stderr, 3)}
+intercept={round(intercept_snow, 3)} stderr={round(linreg_snow.intercept_stderr, 3)}
+r^2={round(linreg_snow.rvalue ** 2, 2)}
+pvalue={round(linreg_snow.pvalue, 3)}
+Наклон значим? {"Да" if linreg_snow.pvalue < significance else "Нет"}"""
+
+                    create_and_save_figure(path,
+                                           y_rows=[y_sea, y_snow, [line_y0_sea, line_y1_sea],
+                                                   [line_y0_snow, line_y1_snow]],
+                                           x_rows=[x_sea, x_snow, [line_x0_sea, line_x1_sea],
+                                                   [line_x0_snow, line_x1_snow]],
                                            title=f"Зависимость отклонения датчика {sensor_i} канала {channel} от яркости",
-                                           xlabel="Яркость", ylabel="Отклонение датчика", fmt_list=[".", "."],
-                                           legend_title="Тип поверхности", legend=["Море", "Снег"])
+                                           xlabel="Яркость", ylabel="Отклонение датчика",
+                                           fmt_list=[".", ".", "--", "--"],
+                                           legend_title="Тип поверхности", legend=["Море", "Снег", "Море", "Снег"],
+                                           text=text)
                     pbar.update(1)
 
     def visit_DeviationsLinearRegression(self, task: MultipleImagesTasks.DeviationsLinearRegression):

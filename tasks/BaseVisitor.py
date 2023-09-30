@@ -12,7 +12,6 @@ class BaseVisitor(ABC):
             AreaTasks.SensorMeanRowDeviation: self.visit_AreaSensorMeanRowDeviation,
             AreaTasks.SensorMeanColumnDeviation: self.visit_AreaSensorMeanColumnDeviation,
             AreaTasks.AreaMean: self.visit_AreaAreaMean,
-            AreaTasks.SensorMeanAreaDeviation: self.visit_AreaSensorMeanAreaDeviation,
 
             # ImageTasks
             ImageTasks.BBTask: self.visit_ImageBBTask,
@@ -25,6 +24,7 @@ class BaseVisitor(ABC):
             MultipleImagesTasks.DeviationsByMirrorSide: self.visit_DeviationsByMirrorSide,
             MultipleImagesTasks.DeviationsMeanPerImage: self.visit_DeviationsMeanPerImage,
             MultipleImagesTasks.RegressByYear: self.visit_RegressByYear,
+            MultipleImagesTasks.SensorsCoefficientsTask: self.visit_SensorsCoefficientsTask,
         }
 
         for task_type, visitor_method in methods.items():
@@ -39,9 +39,6 @@ class BaseVisitor(ABC):
         pass
 
     def visit_AreaAreaMean(self, task: AreaTasks.AreaMean):
-        pass
-
-    def visit_AreaSensorMeanAreaDeviation(self, task: AreaTasks.SensorMeanAreaDeviation):
         pass
 
     def visit_ImageBBTask(self, task: ImageTasks.BBTask):
@@ -66,4 +63,7 @@ class BaseVisitor(ABC):
         pass
 
     def visit_MultipleImagesCalibrationTask(self, task: MultipleImagesTasks.MultipleImagesCalibrationTask):
+        pass
+
+    def visit_SensorsCoefficientsTask(self, task: MultipleImagesTasks.SensorsCoefficientsTask):
         pass

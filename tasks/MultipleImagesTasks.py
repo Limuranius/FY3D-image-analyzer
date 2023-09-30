@@ -5,6 +5,11 @@ from utils.area_utils import ch_area_rows_deviations
 from abc import ABC
 from utils.save_data_utils import *
 import tqdm
+import random
+from vars import SurfaceType
+from Deviations import Deviations
+from scipy.stats import linregress
+import vars
 
 
 class BaseMultipleImagesTask(BaseTask, ABC):
@@ -69,11 +74,20 @@ class AllAreasDeviations(BaseMultipleImagesTask):
 
         # Загружаем все области
         areas = []
+        sea = []
+        snow = []
         with tqdm.tqdm(total=self.count_total_areas(), desc="Loading all areas") as pbar:
             for image in self.images:
                 for area in image.selected_areas():
-                    areas.append(area)
+                    if area.get_surface_type() == SurfaceType.SEA:
+                        sea.append(area)
+                    elif area.get_surface_type() == SurfaceType.SNOW:
+                        snow.append(area)
                     pbar.update(1)
+        random.shuffle(sea)
+        random.shuffle(snow)
+        min_len = min(len(sea), len(snow))
+        areas = sea[:min_len] + snow[:min_len]
 
         # areas = FY3DImageArea.select().join(FY3DImage).where(
         #     (FY3DImageArea.is_selected == True) &
@@ -172,6 +186,62 @@ class RegressByYear(BaseMultipleImagesTask):
         return t.calculate_data()
 
 
+class SensorsCoefficientsTask(BaseTask):
+    """
+    Вычисляет коэффициенты для каждого датчика и стороны зеркала
+    Поля result:
+        channel: Номер канала
+        sensor: Номер датчика
+        slope_side_1: Коэффициент наклона при первой стороне зеркала
+        intercept_side_1: Коэффициент подъёма при первой стороне зеркала
+        slope_side_2: Коэффициент наклона при второй стороне зеркала
+        intercept_side_2: Коэффициент подъёма при второй стороне зеркала
+    """
+    task_name = "Вычислить коэффициенты"
+
+    def calculate_data(self):
+        year = 2023
+        columns = ["channel", "sensor", "slope_side_1", "intercept_side_1", "slope_side_2", "intercept_side_2"]
+        df = pd.DataFrame(columns=columns)
+
+        with tqdm.tqdm(total=15 * 10, desc="Calculating coefficients") as pbar:
+            for channel in range(5, 20):
+                for sensor_i in range(10):
+                    ch_sens_data = Deviations.get_dataframe(year=year, channel=channel, sensor=sensor_i)
+
+                    filt_side_1 = ch_sens_data["k_mirror_side"] == vars.KMirrorSide.SIDE_1.value
+                    filt_side_2 = ch_sens_data["k_mirror_side"] == vars.KMirrorSide.SIDE_2.value
+                    side_1_data = ch_sens_data.loc[filt_side_1]
+                    side_2_data = ch_sens_data.loc[filt_side_2]
+                    x_side_1 = side_1_data["area_avg"].to_numpy()
+                    y_side_1 = side_1_data["deviation"].to_numpy()
+                    x_side_2 = side_2_data["area_avg"].to_numpy()
+                    y_side_2 = side_2_data["deviation"].to_numpy()
+
+                    linreg_side_1 = linregress(x_side_1.astype(float), y_side_1.astype(float))
+                    linreg_side_2 = linregress(x_side_2.astype(float), y_side_2.astype(float))
+                    slope_1 = linreg_side_1.slope
+                    slope_2 = linreg_side_2.slope
+                    intercept_1 = linreg_side_1.intercept
+                    intercept_2 = linreg_side_2.intercept
+
+                    significance = 0.05
+
+                    is_slope_1_significant = linreg_side_1.pvalue < significance
+                    is_slope_2_significant = linreg_side_2.pvalue < significance
+                    if not is_slope_1_significant:
+                        slope_1 = 0
+                    if not is_slope_2_significant:
+                        slope_2 = 0
+
+                    row = [channel, sensor_i, slope_1, intercept_1, slope_2, intercept_2]
+                    df.loc[len(df)] = row
+
+                    pbar.update(1)
+        df.to_pickle("cal_coeffs.pkl")
+        return df
+
+
 MULTI_IMAGE_TASKS = [
     MultipleImagesCalibrationTask,
     DeviationsLinearRegression,
@@ -181,3 +251,7 @@ MULTI_IMAGE_TASKS = [
     RegressByYear
 ]
 DICT_MULTI_IMAGE_TASKS = {task.task_name: task for task in MULTI_IMAGE_TASKS}
+
+t = SensorsCoefficientsTask()
+t.run()
+t.save_to_excel()

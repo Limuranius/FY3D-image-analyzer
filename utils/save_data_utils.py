@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from PIL import Image, ImageOps, ImageDraw, ImageFont
+import os
 
 
 def save_excel(path: str, sheets: list[tuple[str, list | np.ndarray]]):
@@ -36,7 +38,15 @@ def create_and_save_figure(fig_path: str, y_rows: list[list[int | float]], x_row
             ax.plot(x, y, fmt)
     if legend:
         ax.legend(legend, title=legend_title, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 1))
-    ax.text(0.5, 0.1, text, horizontalalignment='center', verticalalignment='center', transform=ax.transAxes,
-            fontsize=12)
-    fig.savefig(fig_path)
+
+    # Пишем текст
+    font = ImageFont.truetype("arial.ttf", size=16)
+    fig.canvas.draw()
+    fig_img = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
+    text_space = 200
+    fig_img = ImageOps.expand(fig_img, border=(0, 0, text_space, 0), fill=(255, 255, 255))
+    drawer = ImageDraw.Draw(fig_img)
+    drawer.text((590, 100), text, fill=0, font=font)
+
+    fig_img.save(fig_path)
     plt.close(fig)
