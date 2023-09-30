@@ -18,7 +18,6 @@ class ConfigManager:
             data = json.load(f)
         self.draw_graphs = data["DRAW_GRAPHS"]
         self.save_colored_images = data["SAVE_COLORED_IMAGES"]
-        self.images_dir = data["IMAGES_DIR"]
 
         # Загружаем методы обработки
         self.area_tasks = []
@@ -33,7 +32,6 @@ class ConfigManager:
 
     def to_dict(self) -> dict:
         d = {
-            "IMAGES_DIR": self.images_dir,
             "DRAW_GRAPHS": self.draw_graphs,
             "SAVE_COLORED_IMAGES": self.save_colored_images,
             "USED_AREA_TASKS": [],

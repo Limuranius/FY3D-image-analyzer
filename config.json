@@ -1,10 +1,10 @@
 {
-  "IMAGES_DIR": "C:/Users/Gleb/Desktop/Диплом/Снимки со спутников",
   "DRAW_GRAPHS": true,
   "SAVE_COLORED_IMAGES": false,
-  "USED_AREA_TASKS": [
-    "Способ 1 (Отклонение от среднего по строке)"
-  ],
+  "USED_AREA_TASKS": [],
   "USED_IMAGE_TASKS": [],
-  "USED_MULTI_IMAGE_TASKS": []
+  "USED_MULTI_IMAGE_TASKS": [
+    "Отклонения в зависимости от яркости и поверхности",
+    "Отклонения в зависимости от яркости и зеркала"
+  ]
 }
