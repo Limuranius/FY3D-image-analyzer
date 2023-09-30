@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import numpy as np
 from vars import KMirrorSide, SurfaceType
-import cv2
 
 
 if TYPE_CHECKING:
@@ -76,7 +75,7 @@ def filter_areas_by_mirror_side(areas: list[FY3DImageArea], side: int):
     return filtered_areas
 
 
-def get_area_mirror_side(y: int, height: int) -> KMirrorSide:
+def get_area_mirror_side(y: int, height: int = 1) -> KMirrorSide:
     if y % 10 + height > 10:
         return KMirrorSide.MIXED
     if (y // 10) % 2 == 0:
@@ -94,27 +93,14 @@ def mean_area_color(area: FY3DImageArea) -> tuple[int, int, int]:
     return mean_r, mean_g, mean_b
 
 
-def pixel_in_hsv_range(rgb_pixel, hsv_low, hsv_high) -> bool:
-    pixel = np.array([[rgb_pixel]], dtype=np.uint8)
-    pixel_hsv = cv2.cvtColor(pixel, cv2.COLOR_RGB2HSV)
-    mask = cv2.inRange(pixel_hsv, hsv_low, hsv_high)
-    return mask[0][0] == 255
-
-
 def determine_surface_type(area: FY3DImageArea) -> SurfaceType:
-    sea_hsv_range = [
-        np.array([90, 25, 20]),
-        np.array([140, 255, 100])
-    ]
-    snow_hsv_range = [
-        np.array([0, 0, 40]),
-        np.array([180, 50, 255])
-    ]
-    area.load_arrays()
-    mean_color = mean_area_color(area)
-    is_sea = pixel_in_hsv_range(mean_color, sea_hsv_range[0], sea_hsv_range[1])
+    value_threshold = 1000
+    channel = 13
 
-    if is_sea:
+    ch_area = area.get_vis_channel(channel)
+    mean_value = ch_area.mean()
+
+    if mean_value < value_threshold:
         return SurfaceType.SEA
     else:
         return SurfaceType.SNOW

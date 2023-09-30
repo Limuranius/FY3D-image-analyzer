@@ -25,21 +25,12 @@ class FY3DImageArea(BaseModel):
     width = IntegerField()
     height = IntegerField()
     surface_type = IntegerField(default=SurfaceType.UNKNOWN.value)
-    k_mirror_side = IntegerField()
+    k_mirror_side = IntegerField(null=False)
     image = ForeignKeyField(FY3DImage.FY3DImage, backref="areas")
     is_selected = BooleanField(default=True)
+    are_deviations_calculated = BooleanField(default=False)
 
     cached_data: dict[int, CacheAreaData] = defaultdict(CacheAreaData)  # id: data
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.y % 10 + self.height > 10:
-            self.k_mirror_side = KMirrorSide.MIXED.value
-        if (self.y // 10) % 2 == 0:
-            self.k_mirror_side = KMirrorSide.SIDE_1.value
-        else:
-            self.k_mirror_side = KMirrorSide.SIDE_2.value
 
     def get_vis_channel(self, channel: int) -> np.ndarray:
         """channel - канал от 5 до 19"""

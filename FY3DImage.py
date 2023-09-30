@@ -1,3 +1,4 @@
+from __future__ import annotations
 import h5py
 from utils import some_utils
 from utils import getImageMonotone
@@ -8,6 +9,7 @@ import pickle
 from PIL import Image
 import numpy as np
 import vars
+import typing
 
 
 class FY3DImage(BaseModel):
@@ -17,6 +19,7 @@ class FY3DImage(BaseModel):
     is_selected = BooleanField(default=False)
     is_std_map_calculated = BooleanField(default=False)
     std_sum_map = BlobField(null=True)
+    year = IntegerField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -53,6 +56,7 @@ class FY3DImage(BaseModel):
         g = self.EV_250_Aggr1KM_RefSB[1]  # 2 канал
         b = self.EV_250_Aggr1KM_RefSB[0]  # 1 канал
         image = some_utils.get_colored_image(r, g, b)
+        image = some_utils.increase_brightness(image, 50)
 
         # Отмечаем границы областей на изображении
         for area in self.areas:
@@ -68,11 +72,13 @@ class FY3DImage(BaseModel):
         return image
 
     def get_preview(self) -> Image:
-        compress_factor = 3
+        compress_factor = vars.PREVIEW_COMPRESS_FACTOR
         r = self.EV_250_Aggr1KM_RefSB[2][0:2000:compress_factor, 0:2048:compress_factor]  # 3 канал
         g = self.EV_250_Aggr1KM_RefSB[1][0:2000:compress_factor, 0:2048:compress_factor]  # 2 канал
         b = self.EV_250_Aggr1KM_RefSB[0][0:2000:compress_factor, 0:2048:compress_factor]  # 1 канал
+
         image = some_utils.get_colored_image(r, g, b)
+        image = some_utils.increase_brightness(image)
 
         # Отмечаем границы областей на изображении
         for area in self.areas:
@@ -147,9 +153,16 @@ class FY3DImage(BaseModel):
         import FY3DImageArea
         return self.areas.where(FY3DImageArea.FY3DImageArea.is_selected == True)
 
+    def get_area(self, x, y, w, h):
+        import FY3DImageArea
+        return FY3DImageArea.FY3DImageArea(x=x, y=y, width=w, height=h, image=self)
+
     def get_unique_name(self) -> str:
         dt_fmt = "%d-%m-%Y %H.%M"
         return f"{self.name} ({self.get_datetime().strftime(dt_fmt)})"
 
+    @classmethod
+    def all_images(cls) -> typing.Iterable[FY3DImage]:
+        return cls.select()
 
 FY3DImage.create_table()

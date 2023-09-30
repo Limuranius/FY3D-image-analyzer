@@ -1,5 +1,7 @@
 from FY3DImage import FY3DImage
 from FY3DImageArea import FY3DImageArea
+from Deviations import Deviations
+from utils import area_utils
 import vars
 import os
 import logging
@@ -23,6 +25,7 @@ class FY3DImageManager:
     def load(self):
         self.__calculate_std_maps()
         self.__determine_areas_surfaces()
+        self.__calculate_deviations()
         self.images = list(FY3DImage.select().where(FY3DImage.is_selected == True))
 
     def __calculate_std_maps(self):
@@ -36,6 +39,31 @@ class FY3DImageManager:
             surface_type = area_utils.determine_surface_type(area)
             area.surface_type = surface_type.value
             area.save()
+
+    def __calculate_deviations(self):
+        uncalculated_areas = FY3DImageArea.select().where(
+            FY3DImageArea.are_deviations_calculated == False)
+
+        deviations_insert = []
+        for area in tqdm.tqdm(uncalculated_areas, desc="Calculating deviations in areas"):
+            for channel in range(5, 20):
+                ch_area = area.get_vis_channel(channel)
+                deviations = area_utils.ch_area_rows_deviations(ch_area)
+                for sensor_i in range(0, 10):
+                    sensor_deviation = deviations[sensor_i]
+                    deviations_insert.append({
+                        "area": area,
+                        "channel": channel,
+                        "sensor": sensor_i,
+                        "deviation": sensor_deviation,
+                        "area_avg": ch_area.mean()
+                    })
+        FY3DImageArea.update(are_deviations_calculated=True).where(FY3DImageArea.are_deviations_calculated == False)\
+            .execute()
+        for i in tqdm.tqdm(range(0, len(deviations_insert), 999), desc="Saving deviations"):
+            Deviations.insert_many(
+                deviations_insert[i: i + 999]
+            ).execute()
 
     def save_colored_images(self):
         logging.info(f"Сохраняем цветные изображения с областями")
@@ -79,7 +107,7 @@ class FY3DImageManager:
 
         for multi_image_task in self.config.multi_image_tasks:
             task = multi_image_task(self.images)
-            task.run()
+            # task.run()
 
             if self.config.draw_graphs:
                 task.save_to_graphs()
