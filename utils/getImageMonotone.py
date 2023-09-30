@@ -13,7 +13,7 @@ def calc_area_sum_std(img, w: int, h: int, out, x_min, x_max, y_min, y_max):
             out[y, x] = std_sum
 
 
-def get_n_min(std_sum_map, n: int, win_w: int, win_h: int) -> list[tuple[int, int]]:
+def get_n_min(std_sum_map, n: int, win_w: int, win_h: int, max_std: int) -> list[tuple[int, int]]:
     h, w = std_sum_map.shape
     std_sum_map = std_sum_map.flatten()
     order = std_sum_map.argsort()
@@ -25,6 +25,9 @@ def get_n_min(std_sum_map, n: int, win_w: int, win_h: int) -> list[tuple[int, in
         index = order[i]
         x = index % w
         y = index // w
+
+        if std_sum_map[index] > max_std:
+            break
 
         # Проверяем, что область не пересекается с другими
         intersect = False
@@ -122,11 +125,11 @@ def uncompress_std_sum_map(comp_std_map: np.ndarray):
 
 
 def get_monotone_areas(comp_std_map: np.ndarray, count=30,
-                       x_min=0, x_max=2048, y_min=0, y_max=2000) -> list[tuple[int, int]]:
+                       x_min=0, x_max=2048, y_min=0, y_max=2000, max_std=200) -> list[tuple[int, int]]:
     std_sum_map = uncompress_std_sum_map(comp_std_map)
     std_sum_map[:, :x_min] = np.inf
     std_sum_map[:, x_max:] = np.inf
     std_sum_map[:y_min, :] = np.inf
     std_sum_map[y_max:, :] = np.inf
-    areas = get_n_min(std_sum_map, count, 100, 10)
+    areas = get_n_min(std_sum_map, count, 100, 10, max_std)
     return areas

@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 import os
 import shutil
+import cv2
 
 
 def remove_dir(dir_path: str):
@@ -50,36 +51,17 @@ def draw_rectangle(image: Image, x: int, y: int, width: int, height: int, color:
         drawer.rectangle(shape, fill="#FFFFFF")
 
 
-def linregress(x, y, w=None, b=None):
-    """Линейная регрессия методом наименьших квадратов.
-    Возвращает угловой коэффициент, свободный коэффициент и коэффициент детерминации R^2
-    """
-    x = np.array(x, dtype=np.float64)
-    y = np.array(y, dtype=np.float64)
+def increase_brightness(img: Image, value=40) -> Image:
+    img_arr = np.array(img)
+    hsv = cv2.cvtColor(img_arr, cv2.COLOR_RGB2HSV)
+    h, s, v = cv2.split(hsv)
 
-    cov = ((x - x.mean()) * (y - y.mean())).sum() / len(x)
-    corr = cov / (x.std() * y.std())
+    lim = 255 - value
+    v[v > lim] = 255
+    v[v <= lim] += value
 
-    if w is None:
-        w = np.ones(x.size, dtype=np.float64)
-
-    wxy = np.sum(w * y * x)
-    wx = np.sum(w * x)
-    wy = np.sum(w * y)
-    wx2 = np.sum(w * x * x)
-    sw = np.sum(w)
-
-    den = wx2 * sw - wx * wx
-
-    if den == 0:
-        den = np.finfo(np.float64).eps
-
-    if b is None:
-        k = (sw * wxy - wx * wy) / den
-        b = (wy - k * wx) / sw
-    else:
-        k = (wxy - wx * b) / wx2
-
-    return k, b, corr ** 2
-
+    final_hsv = cv2.merge((h, s, v))
+    img_arr = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2RGB)
+    img = Image.fromarray(img_arr)
+    return img
 

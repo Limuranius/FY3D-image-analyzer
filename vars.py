@@ -10,6 +10,8 @@ DATABASE_PATH = path.join(ROOT_DIR, "database.db")
 
 RESULTS_DIR = path.join(ROOT_DIR, "Результаты")
 
+PREVIEW_COMPRESS_FACTOR = 4  # Во сколько раз уменьшается изображение для превью в GUI
+
 
 class SurfaceType(Enum):
     SEA = 1

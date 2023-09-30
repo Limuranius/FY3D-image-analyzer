@@ -1,5 +1,3 @@
-from PIL import Image
-from PyQt5.QtGui import QPixmap, QImage
 from main_window import Ui_MainWindow
 from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QTreeWidgetItem
 from PyQt5.QtCore import Qt
@@ -16,12 +14,8 @@ from utils import getImageMonotone
 import pickle
 from utils import area_utils
 import multiprocessing
+from utils import some_utils
 
-
-def set_image_to_label(label, image: Image.Image):
-    arr = np.array(image, dtype=np.uint8)
-    qimg = QImage(arr.data, image.width, image.height, image.width * 3, QImage.Format_RGB888)
-    label.setPixmap(QPixmap(qimg))
 
 class View(QMainWindow):
     config: ConfigManager
@@ -191,6 +185,13 @@ class View(QMainWindow):
         self.config.save_colored_images = save_colored_image
         self.config.save()
 
+    def on_year_comboBox_changed(self, value):
+        """Переключение года снимков"""
+        for image in FY3DImage.all_images():
+            image.is_selected = image.get_year() == int(value)
+            image.save()
+        self.update_image_list()
+
     def on_start_button_clicked(self):
         """Нажатие "Запустить анализ!" """
         self.image_manager.run()
@@ -223,9 +224,10 @@ class View(QMainWindow):
         y_min = self.ui.spinBox_ymin.value()
         y_max = self.ui.spinBox_ymax.value()
         count = self.ui.spinBox_areas_count.value()
+        max_std = self.ui.spinBox_max_std.value()
         areas = getImageMonotone.get_monotone_areas(
             pickle.loads(self.curr_img.std_sum_map), count=count,
-            x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+            x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, max_std=max_std)
         insert_data = []
         for x, y in areas:
             insert_data.append({"x": x, "y": y, "width": 100, "height": 10, "image": self.curr_img,
@@ -259,7 +261,33 @@ class View(QMainWindow):
 
     def show_img_preview(self):
         preview = self.curr_img.get_preview()
-        set_image_to_label(self.ui.label_preview, preview)
+        x0 = self.ui.spinBox_xmin.value() // vars.PREVIEW_COMPRESS_FACTOR
+        x1 = self.ui.spinBox_xmax.value() // vars.PREVIEW_COMPRESS_FACTOR
+        y0 = self.ui.spinBox_ymin.value() // vars.PREVIEW_COMPRESS_FACTOR
+        y1 = self.ui.spinBox_ymax.value() // vars.PREVIEW_COMPRESS_FACTOR
+        some_utils.draw_rectangle(preview, x0, y0, x1 - x0, y1 - y0, "#f8fc03")
+        self.ui.label_preview.set_image(preview)
+
+    def preview_clicked(self):
+        p1 = self.ui.label_preview.presses[-1]
+        p2 = self.ui.label_preview.presses[-2]
+        min_x = min(p1[0], p2[0])
+        max_x = max(p1[0], p2[0])
+        min_y = min(p1[1], p2[1])
+        max_y = max(p1[1], p2[1])
+        self.ui.spinBox_xmin.setValue(min_x * vars.PREVIEW_COMPRESS_FACTOR)
+        self.ui.spinBox_xmax.setValue(max_x * vars.PREVIEW_COMPRESS_FACTOR)
+        self.ui.spinBox_ymin.setValue(min_y * vars.PREVIEW_COMPRESS_FACTOR)
+        self.ui.spinBox_ymax.setValue(max_y * vars.PREVIEW_COMPRESS_FACTOR)
+        self.show_img_preview()
+
+    def all_sea_clicked(self):
+        FY3DImageArea.update(surface_type=vars.SurfaceType.SEA.value).where(FY3DImageArea.image == self.curr_img).execute()
+        self.load_current_image_areas()
+
+    def all_snow_clicked(self):
+        FY3DImageArea.update(surface_type=vars.SurfaceType.SNOW.value).where(FY3DImageArea.image == self.curr_img).execute()
+        self.load_current_image_areas()
 
     def connect_widgets(self):
         self.ui.treeWidget_images.itemSelectionChanged.connect(self.on_img_select)
@@ -280,3 +308,7 @@ class View(QMainWindow):
         self.ui.pushButton_see_image.clicked.connect(self.see_image_clicked)
         self.ui.pushButton_img_path.clicked.connect(self.img_path_clicked)
         self.ui.pushButton_add_image.clicked.connect(self.add_img_clicked)
+        self.ui.comboBox_year.currentTextChanged.connect(self.on_year_comboBox_changed)
+        self.ui.label_preview.clicked.connect(self.preview_clicked)
+        self.ui.pushButton_all_sea.clicked.connect(self.all_sea_clicked)
+        self.ui.pushButton_all_snow.clicked.connect(self.all_snow_clicked)
