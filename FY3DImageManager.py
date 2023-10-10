@@ -1,7 +1,7 @@
-from FY3DImage import FY3DImage
-from FY3DImageArea import FY3DImageArea
-from Deviations import Deviations
-from utils import area_utils
+from database import FY3DImage
+from database import FY3DImageArea
+from database import Deviations
+from database import AreaStats
 import vars
 import os
 import logging
@@ -25,7 +25,7 @@ class FY3DImageManager:
     def load(self):
         self.__calculate_std_maps()
         self.__determine_areas_surfaces()
-        self.__calculate_deviations()
+        self.__precalculate_areas()
         self.images = list(FY3DImage.select().where(FY3DImage.is_selected == True))
 
     def __calculate_std_maps(self):
@@ -40,14 +40,17 @@ class FY3DImageManager:
             area.surface_type = surface_type.value
             area.save()
 
-    def __calculate_deviations(self):
+    def __precalculate_areas(self):
         uncalculated_areas = FY3DImageArea.select().where(
-            FY3DImageArea.are_deviations_calculated == False)
-
+            FY3DImageArea.is_precalculated == False)
         deviations_insert = []
-        for area in tqdm.tqdm(uncalculated_areas, desc="Calculating deviations in areas"):
+        area_stats_insert = []
+        for area in tqdm.tqdm(uncalculated_areas, desc="Precalculating areas"):
             for channel in range(5, 20):
                 ch_area = area.get_vis_channel(channel)
+                area_avg = ch_area.mean()
+                if area_avg > 4070:
+                    continue
                 deviations = area_utils.ch_area_rows_deviations(ch_area)
                 for sensor_i in range(0, 10):
                     sensor_deviation = deviations[sensor_i]
@@ -56,13 +59,22 @@ class FY3DImageManager:
                         "channel": channel,
                         "sensor": sensor_i,
                         "deviation": sensor_deviation,
-                        "area_avg": ch_area.mean()
                     })
-        FY3DImageArea.update(are_deviations_calculated=True).where(FY3DImageArea.are_deviations_calculated == False)\
+                area_stats_insert.append({
+                    "area": area,
+                    "channel": channel,
+                    "area_avg": area_avg,
+                    "area_std": ch_area.std()
+                })
+        FY3DImageArea.update(is_precalculated=True).where(FY3DImageArea.is_precalculated == False) \
             .execute()
         for i in tqdm.tqdm(range(0, len(deviations_insert), 999), desc="Saving deviations"):
             Deviations.insert_many(
                 deviations_insert[i: i + 999]
+            ).execute()
+        for i in tqdm.tqdm(range(0, len(area_stats_insert), 999), desc="Saving area stats"):
+            AreaStats.insert_many(
+                area_stats_insert[i: i + 999]
             ).execute()
 
     def save_colored_images(self):
@@ -79,16 +91,7 @@ class FY3DImageManager:
 
     def analyze_images(self):
         some_utils.remove_dir(vars.RESULTS_DIR)
-
-        # areas = []
-        # for image in self.images:
-        #     for area in image.selected_areas():
-        #         areas.append(area)
-        # with tqdm.tqdm(total=len(areas), desc="Loading all areas") as pbar:
-        #     for area in areas:
-        #         area.EV_1KM_RefSB
-        #         pbar.update(1)
-
+        os.mkdir(vars.RESULTS_DIR)
         for image in tqdm.tqdm(self.images, desc="Running image and area tasks on images", unit="img"):
             for image_task in self.config.image_tasks:
                 task = image_task(image)
@@ -107,7 +110,6 @@ class FY3DImageManager:
 
         for multi_image_task in self.config.multi_image_tasks:
             task = multi_image_task(self.images)
-            # task.run()
 
             if self.config.draw_graphs:
                 task.save_to_graphs()
