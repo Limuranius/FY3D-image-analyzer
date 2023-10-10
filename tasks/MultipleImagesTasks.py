@@ -31,7 +31,7 @@ class MultipleImagesCalibrationTask(BaseMultipleImagesTask):
 
     task_name = "Калибровочные коэффициенты снимков"
 
-    def calculate_data(self) -> pd.DataFrame:
+    def calculate_data(self):
         columns = ["channel", "img_name", "c1", "c2", "c3"]
         df = pd.DataFrame(columns=columns)
         for ch in range(5, 20):
