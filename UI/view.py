@@ -3,12 +3,11 @@ from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QTreeWidg
 from PyQt5.QtCore import Qt
 from ConfigManager import ConfigManager
 from FY3DImageManager import FY3DImageManager
-from FY3DImage import FY3DImage
-from FY3DImageArea import FY3DImageArea
+from database.FY3DImageArea import FY3DImageArea
 import vars
 from tasks import AreaTasks, ImageTasks, MultipleImagesTasks
 from utils.some_utils import *
-from FY3DImage import FY3DImage
+from database.FY3DImage import FY3DImage
 import areaViewerView
 from utils import getImageMonotone
 import pickle

@@ -2,12 +2,12 @@ import numpy as np
 import pandas as pd
 from vars import SurfaceType, KMirrorSide
 import os
-from database import *
-import FY3DImage
+from .FY3DImage import FY3DImage
 from utils import some_utils
 from PIL import Image
 from dataclasses import dataclass
 from collections import defaultdict
+from .BaseModel import *
 
 
 @dataclass
@@ -26,9 +26,9 @@ class FY3DImageArea(BaseModel):
     height = IntegerField()
     surface_type = IntegerField(default=SurfaceType.UNKNOWN.value)
     k_mirror_side = IntegerField(null=False)
-    image = ForeignKeyField(FY3DImage.FY3DImage, backref="areas")
+    image = ForeignKeyField(FY3DImage, backref="areas")
     is_selected = BooleanField(default=True)
-    are_deviations_calculated = BooleanField(default=False)
+    is_precalculated = BooleanField(default=False)
 
     cached_data: dict[int, CacheAreaData] = defaultdict(CacheAreaData)  # id: data
 

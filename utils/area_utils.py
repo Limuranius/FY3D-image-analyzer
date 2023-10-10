@@ -5,7 +5,7 @@ from vars import KMirrorSide, SurfaceType
 
 
 if TYPE_CHECKING:
-    from FY3DImageArea import FY3DImageArea
+    from database.FY3DImageArea import FY3DImageArea
 
 
 def ch_area_rows_deviations(area: np.ndarray) -> list[float]:

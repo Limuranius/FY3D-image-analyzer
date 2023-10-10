@@ -1,7 +1,7 @@
 import area_viewer
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPixmap
-from FY3DImageArea import FY3DImageArea
+from database.FY3DImageArea import FY3DImageArea
 import matplotlib.pyplot as plt
 from PIL import Image, ImageQt
 import io

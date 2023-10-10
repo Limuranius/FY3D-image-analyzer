@@ -1,8 +1,5 @@
 from .BaseTasks import *
-from FY3DImageArea import FY3DImageArea
-import numpy as np
-from utils.save_data_utils import save_excel, create_and_save_figure
-from math import sqrt
+from database.FY3DImageArea import FY3DImageArea
 
 
 class BaseAreaTask(BaseTask, ABC):

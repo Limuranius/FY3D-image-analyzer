@@ -1,4 +1,4 @@
-import FY3DImage
+from database import FY3DImage
 import os
 
 output_path = r"C:\Users\Gleb\PycharmProjects\FY3D-images-analyzer\quick tools\area img"

@@ -1,7 +1,7 @@
 import tasks.BaseTasks as BaseTasks
 from abc import ABC
-from FY3DImage import FY3DImage
-from FY3DImageArea import FY3DImageArea
+from database.FY3DImage import FY3DImage
+from database.FY3DImageArea import FY3DImageArea
 import pandas as pd
 
 
@@ -28,8 +28,8 @@ class BBTask(BaseImageTask):
     def calculate_data(self) -> pd.DataFrame:
         bb = self.image.BB_DN_average
         columns = ["channel", "dataBB"]
-        df = pd.DataFrame(index=range(19), columns=columns)
-        for ch_i in range(19):
+        df = pd.DataFrame(index=range(25), columns=columns)
+        for ch_i in range(25):
             ch_num = ch_i + 1
             df.loc[ch_i] = [ch_num, bb[ch_i]]
         return df

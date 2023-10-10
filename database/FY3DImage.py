@@ -4,12 +4,12 @@ from utils import some_utils
 from utils import getImageMonotone
 import pandas as pd
 import datetime
-from database import *
 import pickle
 from PIL import Image
 import numpy as np
 import vars
 import typing
+from .BaseModel import *
 
 
 class FY3DImage(BaseModel):
