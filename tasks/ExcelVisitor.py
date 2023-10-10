@@ -82,8 +82,8 @@ class ExcelVisitor(BaseVisitor):
         path = get_excel_path_and_create(task, task.task_name)
         save_data_utils.save_excel(path, sheets)
 
-    def visit_SensorsCoefficientsTask(self, task: MultipleImagesTasks.SensorsCoefficientsTask):
-        data = task.result
+    def visit_SensorsCoefficientsTask(self, task: DatabaseTasks.SensorsCoefficientsTask):
+        data = task.get_data()
         path = get_excel_path_and_create(task, task.task_name)
         sheets = [
             ("Коэффициенты", data)

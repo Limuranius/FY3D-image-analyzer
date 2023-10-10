@@ -5,7 +5,7 @@ from ConfigManager import ConfigManager
 from FY3DImageManager import FY3DImageManager
 from database.FY3DImageArea import FY3DImageArea
 import vars
-from tasks import AreaTasks, ImageTasks, MultipleImagesTasks
+from tasks import AreaTasks, ImageTasks, MultipleImagesTasks, DatabaseTasks
 from utils.some_utils import *
 from database.FY3DImage import FY3DImage
 import areaViewerView
@@ -59,6 +59,13 @@ class View(QMainWindow):
             else:
                 item.setCheckState(Qt.Unchecked)
             self.ui.listWidget_tasks_multi_images.addItem(item)
+        for task in DatabaseTasks.DATABASE_TASKS:
+            item = QListWidgetItem(task.task_name)
+            if task in self.config.database_tasks:
+                item.setCheckState(Qt.Checked)
+            else:
+                item.setCheckState(Qt.Unchecked)
+            self.ui.listWidget_tasks_database.addItem(item)
 
         self.connect_widgets()
 
@@ -170,6 +177,18 @@ class View(QMainWindow):
             if item.checkState() == Qt.Checked:
                 save_tasks.append(task)
         self.config.multi_image_tasks = save_tasks
+        self.config.save()
+
+    def on_database_task_changed(self, item: QListWidgetItem):
+        """Изменение выбора методов БД"""
+        save_tasks = []
+        for i in range(self.ui.listWidget_tasks_database.count()):
+            item = self.ui.listWidget_tasks_database.item(i)
+            task_name = item.text()
+            task = DatabaseTasks.DICT_DATABASE_TASKS[task_name]
+            if item.checkState() == Qt.Checked:
+                save_tasks.append(task)
+        self.config.database_tasks = save_tasks
         self.config.save()
 
     def on_draw_graphs_changed(self):
@@ -296,6 +315,7 @@ class View(QMainWindow):
         self.ui.listWidget_tasks_images.itemChanged.connect(self.on_img_task_changed)
         self.ui.listWidget_tasks_areas.itemChanged.connect(self.on_area_task_changed)
         self.ui.listWidget_tasks_multi_images.itemChanged.connect(self.on_multi_img_task_changed)
+        self.ui.listWidget_tasks_database.itemChanged.connect(self.on_database_task_changed)
         self.ui.checkBox_draw_graphs.stateChanged.connect(self.on_draw_graphs_changed)
         self.ui.checkBox_save_colored_image.stateChanged.connect(self.on_save_colored_images_changed)
         self.ui.pushButton_start.clicked.connect(self.on_start_button_clicked)

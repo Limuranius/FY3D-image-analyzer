@@ -4,18 +4,15 @@ import pandas as pd
 
 class BaseTask(ABC):
     task_name: str
-    result: pd.DataFrame
-
-    def run(self) -> None:
-        self.result = self.calculate_data()
+    result: pd.DataFrame | dict[str, pd.DataFrame]
 
     def get_data(self) -> pd.DataFrame:
         if not hasattr(self, "result"):
-            self.run()
+            self.calculate_data()
         return self.result
 
     @abstractmethod
-    def calculate_data(self) -> pd.DataFrame:
+    def calculate_data(self) -> None:
         pass
 
     def accept(self, visitor):

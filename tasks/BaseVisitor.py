@@ -1,8 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 import tasks.BaseTasks as BaseTasks
 import tasks.AreaTasks as AreaTasks
 import tasks.ImageTasks as ImageTasks
 import tasks.MultipleImagesTasks as MultipleImagesTasks
+import tasks.DatabaseTasks as DatabaseTasks
 
 
 class BaseVisitor(ABC):
@@ -19,12 +20,13 @@ class BaseVisitor(ABC):
 
             # MultipleImagesTasks
             MultipleImagesTasks.MultipleImagesCalibrationTask: self.visit_MultipleImagesCalibrationTask,
-            MultipleImagesTasks.DeviationsLinearRegression: self.visit_DeviationsLinearRegression,
-            MultipleImagesTasks.DeviationsBySurface: self.visit_DeviationsBySurface,
-            MultipleImagesTasks.DeviationsByMirrorSide: self.visit_DeviationsByMirrorSide,
-            MultipleImagesTasks.DeviationsMeanPerImage: self.visit_DeviationsMeanPerImage,
-            MultipleImagesTasks.RegressByYear: self.visit_RegressByYear,
-            MultipleImagesTasks.SensorsCoefficientsTask: self.visit_SensorsCoefficientsTask,
+
+            # DatabaseTasks
+            DatabaseTasks.DeviationsBySurface: self.visit_DeviationsBySurface,
+            DatabaseTasks.DeviationsByMirrorSide: self.visit_DeviationsByMirrorSide,
+            DatabaseTasks.SensorsCoefficientsTask: self.visit_SensorsCoefficientsTask,
+            DatabaseTasks.AreaAvgStdTask: self.visit_AreaAvgStdTask,
+            DatabaseTasks.RegressByYear: self.visit_RegressByYear,
         }
 
         for task_type, visitor_method in methods.items():
@@ -47,23 +49,20 @@ class BaseVisitor(ABC):
     def visit_ImageSVTask(self, task: ImageTasks.SVTask):
         pass
 
-    def visit_RegressByYear(self, task: MultipleImagesTasks.RegressByYear):
+    def visit_RegressByYear(self, task: DatabaseTasks.RegressByYear):
         pass
 
-    def visit_DeviationsLinearRegression(self, task: MultipleImagesTasks.DeviationsLinearRegression):
+    def visit_DeviationsBySurface(self, task: DatabaseTasks.DeviationsBySurface):
         pass
 
-    def visit_DeviationsBySurface(self, task: MultipleImagesTasks.DeviationsBySurface):
-        pass
-
-    def visit_DeviationsByMirrorSide(self, task: MultipleImagesTasks.DeviationsByMirrorSide):
-        pass
-
-    def visit_DeviationsMeanPerImage(self, task: MultipleImagesTasks.DeviationsMeanPerImage):
+    def visit_DeviationsByMirrorSide(self, task: DatabaseTasks.DeviationsByMirrorSide):
         pass
 
     def visit_MultipleImagesCalibrationTask(self, task: MultipleImagesTasks.MultipleImagesCalibrationTask):
         pass
 
-    def visit_SensorsCoefficientsTask(self, task: MultipleImagesTasks.SensorsCoefficientsTask):
+    def visit_SensorsCoefficientsTask(self, task: DatabaseTasks.SensorsCoefficientsTask):
+        pass
+
+    def visit_AreaAvgStdTask(self, task: DatabaseTasks.AreaAvgStdTask):
         pass

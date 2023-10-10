@@ -113,6 +113,11 @@ class FY3DImageManager:
                 task.save_to_graphs()
             task.save_to_excel()
 
+        for database_task in self.config.database_tasks:
+            task = database_task()
+            task.save_to_excel()
+            task.save_to_graphs()
+
     def run(self):
         self.load()
         if self.config.save_colored_images:

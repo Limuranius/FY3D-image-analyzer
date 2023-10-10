@@ -1,5 +1,5 @@
 import json
-from tasks import AreaTasks, ImageTasks, MultipleImagesTasks
+from tasks import AreaTasks, ImageTasks, MultipleImagesTasks, DatabaseTasks
 
 
 class ConfigManager:
@@ -11,6 +11,7 @@ class ConfigManager:
     area_tasks: list[AreaTasks.BaseAreaTask]
     image_tasks: list[ImageTasks.BaseImageTask]
     multi_image_tasks: list[MultipleImagesTasks.BaseMultipleImagesTask]
+    database_tasks: list[DatabaseTasks.BaseTask]
 
     def __init__(self, path: str):
         self.path = path
@@ -29,6 +30,9 @@ class ConfigManager:
         self.multi_image_tasks = []
         for multi_img_task_name in data["USED_MULTI_IMAGE_TASKS"]:
             self.multi_image_tasks.append(MultipleImagesTasks.DICT_MULTI_IMAGE_TASKS[multi_img_task_name])
+        self.database_tasks = []
+        for database_task_name in data["USED_DATABASE_TASKS"]:
+            self.database_tasks.append(DatabaseTasks.DICT_DATABASE_TASKS[database_task_name])
 
     def to_dict(self) -> dict:
         d = {
@@ -37,6 +41,7 @@ class ConfigManager:
             "USED_AREA_TASKS": [],
             "USED_IMAGE_TASKS": [],
             "USED_MULTI_IMAGE_TASKS": [],
+            "USED_DATABASE_TASKS": []
         }
         for area_task in self.area_tasks:
             d["USED_AREA_TASKS"].append(area_task.task_name)
@@ -44,6 +49,8 @@ class ConfigManager:
             d["USED_IMAGE_TASKS"].append(img_task.task_name)
         for multi_img_task in self.multi_image_tasks:
             d["USED_MULTI_IMAGE_TASKS"].append(multi_img_task.task_name)
+        for database_task in self.database_tasks:
+            d["USED_DATABASE_TASKS"].append(database_task.task_name)
         return d
 
     def save(self):

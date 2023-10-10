@@ -3,7 +3,10 @@
   "SAVE_COLORED_IMAGES": false,
   "USED_AREA_TASKS": [],
   "USED_IMAGE_TASKS": [],
-  "USED_MULTI_IMAGE_TASKS": [
+  "USED_MULTI_IMAGE_TASKS": [],
+  "USED_DATABASE_TASKS": [
+    "Вычислить коэффициенты",
+    "Зависимость яркости области и std",
     "Отклонения в зависимости от яркости и поверхности",
     "Отклонения в зависимости от яркости и зеркала"
   ]
