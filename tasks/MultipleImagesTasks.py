@@ -1,15 +1,7 @@
-from FY3DImage import FY3DImage
-from FY3DImageArea import FY3DImageArea
+from database import FY3DImage
 from tasks.BaseTasks import *
-from utils.area_utils import ch_area_rows_deviations
 from abc import ABC
 from utils.save_data_utils import *
-import tqdm
-import random
-from vars import SurfaceType
-from Deviations import Deviations
-from scipy.stats import linregress
-import vars
 
 
 class BaseMultipleImagesTask(BaseTask, ABC):
@@ -244,14 +236,5 @@ class SensorsCoefficientsTask(BaseTask):
 
 MULTI_IMAGE_TASKS = [
     MultipleImagesCalibrationTask,
-    DeviationsLinearRegression,
-    DeviationsBySurface,
-    DeviationsByMirrorSide,
-    DeviationsMeanPerImage,
-    RegressByYear
 ]
 DICT_MULTI_IMAGE_TASKS = {task.task_name: task for task in MULTI_IMAGE_TASKS}
-
-t = SensorsCoefficientsTask()
-t.run()
-t.save_to_excel()
