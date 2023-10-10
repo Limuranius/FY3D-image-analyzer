@@ -5,7 +5,9 @@ from scipy.stats import linregress
 from utils.save_data_utils import create_and_save_figure
 import tqdm
 import numpy as np
-from Deviations import Deviations
+from database import Deviations
+from vars import SurfaceType, KMirrorSide
+import seaborn as sns
 
 
 def get_graphs_path_and_create(task, file_name: str, inner_dir: str = ""):
@@ -84,7 +86,7 @@ class GraphsVisitor(BaseVisitor):
             create_and_save_figure(path, [bb_data], None,
                                    title=f"График среднего значения чёрного тела для 10 строк\nдля канала {channel_number}",
                                    xlabel="Номер десятка строк", ylabel="Среднее значение чёрного тела по 10 строкам",
-                                   lim=(min_bb, max_bb))
+                                   ylim=(min_bb, max_bb))
             all_rows.append(bb_data)
 
         path = get_graphs_path_and_create(task, f"Все каналы", inner_dir=task.image.get_unique_name())
@@ -104,78 +106,38 @@ class GraphsVisitor(BaseVisitor):
             create_and_save_figure(path, [sv_data], [x],
                                    title=f"График среднего значения Space View для 10 строк\nдля канала {channel_number}",
                                    xlabel="Номер десятка строк", ylabel="Среднее значение чёрного тела по 10 строкам",
-                                   lim=(min_sv, max_sv))
+                                   ylim=(min_sv, max_sv))
 
-    def visit_RegressByYear(self, task: MultipleImagesTasks.RegressByYear):
-        data = task.result
-        years = data["year"].unique().tolist()
-        years.sort()
-
-        with tqdm.tqdm(total=15 * 10, desc="Saving graphs (RegressByYear)") as pbar:
+    def visit_RegressByYear(self, task: DatabaseTasks.RegressByYear):
+        data = task.get_data()
+        ranges = data["ranges"]
+        with tqdm.tqdm(desc="Saving graphs (RegressByYear)", total=150) as pbar:
             for channel in range(5, 20):
-                for sensor_i in range(10):
-                    path = get_graphs_path_and_create(task, f"Датчик {sensor_i}", inner_dir=f"Канал {channel}")
-                    years_x = []  # Координаты x точек начала и конца регрессионных линий
-                    years_y = []  # Координаты y точек начала и конца регрессионных линий
-                    for year in years:
-                        # Фильтруем данные по каналу, датчику и году
-                        filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i) & (data["year"] == year)
-                        ch_sens_data = data.loc[filt]
-
-                        x = ch_sens_data["area_avg"].to_numpy()
-                        y = ch_sens_data["sensor_deviation"].to_numpy()
-
-                        # Находим линии регрессии
-                        slope, intercept, *_ = linregress(x.astype(float), y.astype(float))
-                        line_x0 = x.min()
-                        line_x1 = x.max()
-                        line_y0 = line_x0 * slope + intercept
-                        line_y1 = line_x1 * slope + intercept
-
-                        years_x.append([line_x0, line_x1])
-                        years_y.append([line_y0, line_y1])
-
-                    create_and_save_figure(path,
-                                           y_rows=years_y,
-                                           x_rows=years_x,
-                                           title=f"Зависимость отклонения датчика {sensor_i} канала {channel} от яркости по годам",
-                                           xlabel="Яркость", ylabel="Отклонение датчика",
-                                           fmt_list=["-"] * len(years),
-                                           legend_title="Год",
-                                           legend=years)
+                _, x_min, x_max, y_min, y_max = ranges[ranges.channel == channel].squeeze()
+                for sensor in range(10):
+                    sensor_data = Deviations.get_dataframe(channel=channel, sensor=sensor)
+                    plot = sns.lmplot(data=sensor_data, x="area_avg", y="deviation", hue="year",
+                                      scatter_kws=dict(s=1), scatter=True)
+                    plot.set(ylim=[y_min, y_max])
+                    plot.fig.suptitle(f"Зависимость отклонения датчика от ср. яркости области\n(Канал {channel} датчик {sensor})")
+                    path = get_graphs_path_and_create(task, f"Датчик {sensor}", inner_dir=f"Канал {channel}")
+                    plot.fig.savefig(path, dpi=300)
                     pbar.update(1)
 
-    def visit_DeviationsMeanPerImage(self, task: MultipleImagesTasks.DeviationsMeanPerImage):
-        data = task.result
-        with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsMeanPerImage)") as pbar:
-            for channel in range(5, 20):
-                for sensor_i in range(10):
-                    path = get_graphs_path_and_create(task, f"Датчик {sensor_i}", inner_dir=f"Канал {channel}")
-
-                    # Фильтруем данные по каналу и датчику
-                    filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i)
-                    ch_sens_data = data.loc[filt]
-
-                    x = ch_sens_data["ch_avg"].to_numpy()
-                    y = ch_sens_data["deviation"].to_numpy()
-
-                    # slope, intercept, *_ = linregress(x.astype(float), y.astype(float))
-
-                    create_and_save_figure(path,
-                                           y_rows=[y],
-                                           x_rows=[x],
-                                           title=f"Зависимость отклонения датчика {sensor_i} канала {channel} от яркости",
-                                           xlabel="Яркость", ylabel="Отклонение датчика", fmt_list=["."])
-                    pbar.update(1)
-
-    def visit_DeviationsByMirrorSide(self, task: MultipleImagesTasks.DeviationsByMirrorSide):
+    def visit_DeviationsByMirrorSide(self, task: DatabaseTasks.DeviationsByMirrorSide):
+        data = task.get_data()
         with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsByMirrorSide)") as pbar:
             for channel in range(5, 20):
+                # ch_data = Deviations.get_dataframe(year=2023, channel=channel)
+                ch_data = data[data["channel"] == channel]
+                xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
+                ylim = (ch_data["deviation"].min(), ch_data["deviation"].max())
                 for sensor_i in range(10):
                     path = get_graphs_path_and_create(task, f"Датчик {sensor_i}", inner_dir=f"Канал {channel}")
 
                     # Фильтруем данные по каналу и датчику
-                    ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
+                    # ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
+                    ch_sens_data = ch_data.loc[ch_data["sensor"] == sensor_i]
 
                     # Фильтруем данные по стороне зеркала
                     filt_side_1 = ch_sens_data["k_mirror_side"] == vars.KMirrorSide.SIDE_1.value
@@ -203,17 +165,27 @@ class GraphsVisitor(BaseVisitor):
 
                     significance = 0.05
                     text = f"""Первое зеркало:
-slope={round(slope_side_1, 5)} stderr={round(linreg_side_1.stderr, 3)}
-intercept={round(intercept_side_1, 3)} stderr={round(linreg_side_1.intercept_stderr, 3)}
-r^2={round(linreg_side_1.rvalue ** 2, 2)}
-pvalue={round(linreg_side_1.pvalue, 3)}
+Количество = {len(side_1_data)}
+Среднее={y_side_1.mean()}
+Ст. откл={y_side_1.std()}
+slope={slope_side_1} 
+slope_stderr={linreg_side_1.stderr}
+intercept={intercept_side_1} 
+intercept_stderr={linreg_side_1.intercept_stderr}
+r^2={linreg_side_1.rvalue ** 2}
+pvalue={linreg_side_1.pvalue}
 Наклон значим? {"Да" if linreg_side_1.pvalue < significance else "Нет"}
 
 Второе зеркало:
-slope={round(slope_side_2, 5)} stderr={round(linreg_side_2.stderr, 3)}
-intercept={round(intercept_side_2, 3)} stderr={round(linreg_side_2.intercept_stderr, 3)}
-r^2={round(linreg_side_2.rvalue ** 2, 2)}
-pvalue={round(linreg_side_2.pvalue, 3)}
+Количество = {len(side_2_data)}
+Среднее={y_side_2.mean()}
+Ст. откл={y_side_2.std()}
+slope={slope_side_2} 
+slope_stderr={linreg_side_2.stderr}
+intercept={intercept_side_2} 
+intercept_stderr={linreg_side_2.intercept_stderr}
+r^2={linreg_side_2.rvalue ** 2}
+pvalue={linreg_side_2.pvalue}
 Наклон значим? {"Да" if linreg_side_2.pvalue < significance else "Нет"}"""
 
                     create_and_save_figure(path,
@@ -226,17 +198,23 @@ pvalue={round(linreg_side_2.pvalue, 3)}
                                            fmt_list=[".", ".", "--", "--"],
                                            legend_title="Сторона зеркала",
                                            legend=["Первая", "Вторая", "Первая", "Вторая"],
-                                           text=text)
+                                           text=text, xlim=xlim, ylim=ylim)
                     pbar.update(1)
 
-    def visit_DeviationsBySurface(self, task: MultipleImagesTasks.DeviationsBySurface):
+    def visit_DeviationsBySurface(self, task: DatabaseTasks.DeviationsBySurface):
+        data = task.get_data()
         with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsBySurface)") as pbar:
             for channel in range(5, 20):
+                # ch_data = Deviations.get_dataframe(year=2023, channel=channel)
+                ch_data = data[data["channel"] == channel]
+                xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
+                ylim = (ch_data["deviation"].min(), ch_data["deviation"].max())
                 for sensor_i in range(10):
                     file_name = f"Датчик {sensor_i}.png"
                     path = get_graphs_path_and_create(task, file_name, inner_dir=f"Канал {channel}")
 
-                    ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
+                    # ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
+                    ch_sens_data = ch_data[ch_data["sensor"] == sensor_i]
 
                     filt_sea = ch_sens_data["surface_type"] == vars.SurfaceType.SEA.value
                     filt_snow = ch_sens_data["surface_type"] == vars.SurfaceType.SNOW.value
@@ -262,17 +240,27 @@ pvalue={round(linreg_side_2.pvalue, 3)}
 
                     significance = 0.05
                     text = f"""Море:
-slope={round(slope_sea, 5)} stderr={round(linreg_sea.stderr, 3)}
-intercept={round(intercept_sea, 3)} stderr={round(linreg_sea.intercept_stderr, 3)}
-r^2={round(linreg_sea.rvalue ** 2, 2)}
-pvalue={round(linreg_sea.pvalue, 3)}
+Количество = {len(sea_data)}
+Среднее={y_sea.mean()}
+Ст. откл={y_sea.std()}
+slope={slope_sea} 
+slope_stderr={linreg_sea.stderr}
+intercept={intercept_sea} 
+intercept_stderr={linreg_sea.intercept_stderr}
+r^2={linreg_sea.rvalue ** 2}
+pvalue={linreg_sea.pvalue}
 Наклон значим? {"Да" if linreg_sea.pvalue < significance else "Нет"}
 
 Снег:
-slope={round(slope_snow, 5)} stderr={round(linreg_snow.stderr, 3)}
-intercept={round(intercept_snow, 3)} stderr={round(linreg_snow.intercept_stderr, 3)}
-r^2={round(linreg_snow.rvalue ** 2, 2)}
-pvalue={round(linreg_snow.pvalue, 3)}
+Количество = {len(snow_data)}
+Среднее={y_snow.mean()}
+Ст. откл={y_snow.std()}
+slope={slope_snow} 
+slope_stderr={linreg_snow.stderr}
+intercept={intercept_snow} 
+intercept_stderr={linreg_snow.intercept_stderr}
+r^2={linreg_snow.rvalue ** 2}
+pvalue={linreg_snow.pvalue}
 Наклон значим? {"Да" if linreg_snow.pvalue < significance else "Нет"}"""
 
                     create_and_save_figure(path,
@@ -284,38 +272,27 @@ pvalue={round(linreg_snow.pvalue, 3)}
                                            xlabel="Яркость", ylabel="Отклонение датчика",
                                            fmt_list=[".", ".", "--", "--"],
                                            legend_title="Тип поверхности", legend=["Море", "Снег", "Море", "Снег"],
-                                           text=text)
+                                           text=text,
+                                           xlim=xlim, ylim=ylim
+                                           )
                     pbar.update(1)
 
-    def visit_DeviationsLinearRegression(self, task: MultipleImagesTasks.DeviationsLinearRegression):
-        data = task.result
-        with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsLinearRegression)") as pbar:
+    def visit_AreaAvgStdTask(self, task: DatabaseTasks.AreaAvgStdTask):
+        data = task.get_data()
+        with tqdm.tqdm(total=15, desc="Saving graphs (AreaAvgStdTask)") as pbar:
             for channel in range(5, 20):
-                for sensor_i in range(10):
-                    path = get_graphs_path_and_create(task, f"Датчик {sensor_i}", inner_dir=f"Канал {channel}")
-                    filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i)
-                    graph_data = data.loc[filt]
-                    x = graph_data["area_avg"].to_numpy()
-                    y = graph_data["sensor_deviation"].to_numpy()
+                path = get_graphs_path_and_create(task, f"Канал {channel}")
+                filt_sea = ((data["channel"] == channel) & (data["surface_type"] == SurfaceType.SEA.value))
+                filt_snow = ((data["channel"] == channel) & (data["surface_type"] == SurfaceType.SNOW.value))
+                sea = data.loc[filt_sea]
+                snow = data.loc[filt_snow]
+                x_sea = sea["area_avg"].to_numpy()
+                x_snow = snow["area_avg"].to_numpy()
+                y_sea = sea["area_std"].to_numpy()
+                y_snow = snow["area_std"].to_numpy()
 
-                    regress = linregress(x.astype(float), y.astype(float))
-                    slope = regress.slope
-                    intercept = regress.intercept
-                    rvalue = regress.rvalue
-                    pvalue = regress.pvalue
-                    stderr = regress.stderr
-                    intercept_stderr = regress.intercept_stderr
-
-                    line_x0 = x.min()
-                    line_x1 = x.max()
-                    line_y0 = line_x0 * slope + intercept
-                    line_y1 = line_x1 * slope + intercept
-
-                    text = "slope={:.4f} intercept={:.4f}\nR^2={:.4f} pvalue={:.4f}\nstderr={:.4f} intercept_stderr={:.4f}" \
-                        .format(slope, intercept, rvalue ** 2, pvalue, stderr, intercept_stderr)
-
-                    create_and_save_figure(path, y_rows=[y, [line_y0, line_y1]], x_rows=[x, [line_x0, line_x1]],
-                                           title=f"Зависимость отклонения датчика {sensor_i} канала {channel} от яркости",
-                                           xlabel="Яркость", ylabel="Отклонение датчика", fmt_list=[".", "--"],
-                                           text=text)
-                    pbar.update(1)
+                create_and_save_figure(path, y_rows=[y_sea, y_snow], x_rows=[x_sea, x_snow],
+                                       title=f"Зависимость ст. отклонения области от средней яркости (канал {channel})",
+                                       fmt_list=[".", "."], xlabel="Яркость", ylabel="std", legend=["Море", "Снег"],
+                                       legend_title="Тип поверхности")
+                pbar.update(1)

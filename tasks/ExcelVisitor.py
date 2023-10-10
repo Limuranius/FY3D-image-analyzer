@@ -21,11 +21,14 @@ def get_excel_path_and_create(task, file_name: str, inner_dir: str = ""):
 class ExcelVisitor(BaseVisitor):
     def visit_ImageBBTask(self, task: ImageTasks.BBTask):
         data = task.result
+        sheet_data = [["Канал", "Данные Black Body"]]
+        for ch_i in range(25):
+            sheet_data.append([ch_i + 1, *data.loc[ch_i]["dataBB"]])
         sheets = [
-            ("Black Body", data)
+            ("Black Body", sheet_data)
         ]
         path = get_excel_path_and_create(task, task.image.get_unique_name())
-        save_data_utils.save_excel_dataframe(path, sheets, header=True)
+        save_data_utils.save_excel(path, sheets)
 
     def visit_ImageSVTask(self, task: ImageTasks.SVTask):
         data = task.result
@@ -34,37 +37,6 @@ class ExcelVisitor(BaseVisitor):
         ]
         path = get_excel_path_and_create(task, task.image.get_unique_name())
         save_data_utils.save_excel_dataframe(path, sheets, header=True)
-
-    def visit_DeviationsLinearRegression(self, task: MultipleImagesTasks.DeviationsLinearRegression):
-        data = task.result
-        for channel in range(5, 20):
-            path = get_excel_path_and_create(task, f"Канал {channel}")
-            sheets = []
-            for sensor_i in range(10):
-                sheet_name = f"Датчик {sensor_i}"
-                filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i)
-                sheet_data = data.loc[filt, ["name", "area_avg", "sensor_deviation"]]
-                sheet_data.rename(columns={"area_avg": "Яркость области", "sensor_deviation": "Отклонение датчика"},
-                                  inplace=True)
-                sheets.append((sheet_name, sheet_data))
-            save_data_utils.save_excel_dataframe(path, sheets, header=True)
-
-        # Создаём один общий excel с коэффициентами прямых
-        sheets = []
-        for channel in range(5, 20):
-            sheet_name = f"Канал {channel}"
-            sheet_data = pd.DataFrame(index=[f"Датчик {ch}" for ch in range(10)], columns=["a", "b", "R^2"])
-            for sensor_i in range(10):
-                filt = (data["channel"] == channel) & (data["sensor_i"] == sensor_i)
-                sensor_data = data.loc[filt]
-                x = sensor_data["area_avg"].to_numpy()
-                y = sensor_data["sensor_deviation"].to_numpy()
-                k, b, rval, *_ = linregress(x, y)
-                r_sq = rval ** 2
-                sheet_data.loc[f"Датчик {sensor_i}"] = [k, b, r_sq]
-            sheets.append((sheet_name, sheet_data))
-        path = get_excel_path_and_create(task, "Коэффициенты прямых")
-        save_data_utils.save_excel_dataframe(path, sheets, index=True, header=True)
 
     def visit_MultipleImagesCalibrationTask(self, task: MultipleImagesTasks.MultipleImagesCalibrationTask):
         data = task.result
@@ -87,5 +59,16 @@ class ExcelVisitor(BaseVisitor):
         path = get_excel_path_and_create(task, task.task_name)
         sheets = [
             ("Коэффициенты", data)
+        ]
+        save_data_utils.save_excel_dataframe(path, sheets, header=True)
+
+    def visit_RegressByYear(self, task: DatabaseTasks.RegressByYear):
+        data = task.get_data()
+        coefficients = data["coefficients"]
+        data_count = data["data_count"]
+        path = get_excel_path_and_create(task, task.task_name)
+        sheets = [
+            ("Коэффициенты", coefficients),
+            ("Количество данных", data_count),
         ]
         save_data_utils.save_excel_dataframe(path, sheets, header=True)
