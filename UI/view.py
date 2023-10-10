@@ -205,9 +205,14 @@ class View(QMainWindow):
 
     def on_year_comboBox_changed(self, value):
         """Переключение года снимков"""
-        for image in FY3DImage.all_images():
-            image.is_selected = image.get_year() == int(value)
-            image.save()
+        if value == "Всё":
+            for image in FY3DImage.all_images():
+                image.is_selected = True
+                image.save()
+        else:
+            for image in FY3DImage.all_images():
+                image.is_selected = image.get_year() == int(value)
+                image.save()
         self.update_image_list()
 
     def on_start_button_clicked(self):
