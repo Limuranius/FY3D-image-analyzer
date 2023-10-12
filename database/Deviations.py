@@ -14,14 +14,14 @@ class Deviations(BaseModel):
     channel = IntegerField()
     sensor = IntegerField()
     deviation = FloatField()
+    sensor_avg = FloatField()
 
     @classmethod
     def __load_df(cls):
         global _deviations_df
         _deviations_df = pd.DataFrame(
             Deviations.select(FY3DImage.year, FY3DImage.is_selected,
-                              Deviations.channel, Deviations.sensor,
-                              Deviations.deviation,
+                              Deviations.channel, Deviations.sensor, Deviations.deviation,
                               AreaStats.area_avg, AreaStats.area_std,
                               FY3DImageArea.surface_type, FY3DImageArea.k_mirror_side)
                 .join(FY3DImageArea)

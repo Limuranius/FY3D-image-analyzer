@@ -49,16 +49,16 @@ class FY3DImageManager:
             for channel in range(5, 20):
                 ch_area = area.get_vis_channel(channel)
                 area_avg = ch_area.mean()
-                if area_avg > 4070:
-                    continue
                 deviations = area_utils.ch_area_rows_deviations(ch_area)
                 for sensor_i in range(0, 10):
                     sensor_deviation = deviations[sensor_i]
+                    sensor_avg = ch_area[sensor_i].mean()
                     deviations_insert.append({
                         "area": area,
                         "channel": channel,
                         "sensor": sensor_i,
                         "deviation": sensor_deviation,
+                        "sensor_avg": sensor_avg
                     })
                 area_stats_insert.append({
                     "area": area,
