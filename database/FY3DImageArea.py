@@ -107,5 +107,20 @@ class FY3DImageArea(BaseModel):
             FY3DImageArea.cached_data[self.id].Longitude = area
         return FY3DImageArea.cached_data[self.id].Longitude
 
+    def get_channel_avg(self, channel: int) -> float:
+        from database import AreaStats
+        return list(AreaStats.select().where((AreaStats.area == self) & (AreaStats.channel == channel)))[0].area_avg
+
+    @classmethod
+    def selected_areas(cls):
+        return FY3DImageArea.select().join(FY3DImage).where((FY3DImage.is_selected == True)
+                                                            & (FY3DImageArea.is_selected == True))
+
+    def get_black_body_value(self, channel: int) -> float:
+        bb = self.image.BB_DN_average
+        row10 = self.y // 10
+        return bb[channel-1, row10]
+
+
 
 FY3DImageArea.create_table()

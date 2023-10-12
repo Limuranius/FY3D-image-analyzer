@@ -150,12 +150,12 @@ class FY3DImage(BaseModel):
         return np.uint16(self.EV_1KM_RefSB[ch_i])
 
     def selected_areas(self):
-        import FY3DImageArea
-        return self.areas.where(FY3DImageArea.FY3DImageArea.is_selected == True)
+        from database import FY3DImageArea
+        return self.areas.where(FY3DImageArea.is_selected == True)
 
     def get_area(self, x, y, w, h):
-        import FY3DImageArea
-        return FY3DImageArea.FY3DImageArea(x=x, y=y, width=w, height=h, image=self)
+        from database import FY3DImageArea
+        return FY3DImageArea(x=x, y=y, width=w, height=h, image=self)
 
     def get_unique_name(self) -> str:
         dt_fmt = "%d-%m-%Y %H.%M"
@@ -164,5 +164,10 @@ class FY3DImage(BaseModel):
     @classmethod
     def all_images(cls) -> typing.Iterable[FY3DImage]:
         return cls.select()
+
+    @classmethod
+    def selected_images(cls) -> typing.Iterable[FY3DImage]:
+        return cls.select().where(FY3DImage.is_selected == True)
+
 
 FY3DImage.create_table()
