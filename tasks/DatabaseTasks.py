@@ -1,9 +1,10 @@
 import pandas as pd
-
+from time import time
+import random
 from tasks.BaseTasks import *
 from utils.save_data_utils import *
 import tqdm
-from database import Deviations, AreaStats
+from database import Deviations, AreaStats, FY3DImage, FY3DImageArea
 from scipy.stats import linregress
 from vars import KMirrorSide, SurfaceType
 import vars
@@ -210,11 +211,137 @@ class RegressByYear(BaseTask):
         }
 
 
+class NeighboringMirrorsDifference(BaseTask):
+    """
+    Находит области, которые находятся близко друг к другу и на разных зеркалах и находит их разницу
+    Поля result:
+        Таблица whole_area:
+            channel:    Номер канала
+            difference: Разница между областями
+            avg_value:  Средняя яркость по двум областям
+
+        Таблица each_sensor:
+            channel:    Номер канала
+            sensor:     Номер сенсора
+            difference: Разница между областями
+            avg_value:  Средняя яркость по двум областям
+    """
+    task_name = "Разница между соседними областями зеркал"
+
+    def get_neighboring_areas(self, img: FY3DImage) -> list[tuple[FY3DImageArea, FY3DImageArea]]:
+        """Возвращает список соседствующих областей на снимке img.
+        При этом первый элемент принадлежит первому зеркалу, второй - второму зеркалу"""
+        areas = list(img.selected_areas())
+        neighbors = []
+        max_x_diff = 40
+        while areas:
+            area_1 = areas.pop()
+            for i, area_2 in enumerate(areas):
+                if abs(area_1.y - area_2.y) == 10 and abs(area_1.x - area_2.x) <= max_x_diff:
+                    if area_1.get_mirror_side() == KMirrorSide.SIDE_2:
+                        area_1, area_2 = area_2, area_1
+                    neighbors.append((area_1, area_2))
+                    del areas[i]
+                    break
+        return neighbors
+
+    def calculate_data(self) -> None:
+        areas_count = FY3DImageArea.select() \
+            .join(FY3DImage) \
+            .where((FY3DImageArea.is_selected == True) & (FY3DImage.is_selected == True)) \
+            .count()
+        whole_area = pd.DataFrame(columns=[
+            "channel",
+            "difference",
+            "avg_value",
+        ], index=range(areas_count * 15))
+        each_sensor = pd.DataFrame(columns=[
+            "channel",
+            "sensor",
+            "difference",
+            "avg_value",
+        ], index=range(areas_count * 150))
+        curr_i = 0
+        for image in tqdm.tqdm(FY3DImage.selected_images(), desc="Calculating neighbors on images"):
+            for area_1, area_2 in self.get_neighboring_areas(image):
+                for channel in range(5, 20):
+                    area_1_avg = area_1.get_channel_avg(channel)
+                    area_2_avg = area_2.get_channel_avg(channel)
+                    difference = area_1_avg - area_2_avg
+                    avg_value = (area_1_avg + area_2_avg) / 2
+                    whole_area.loc[curr_i] = [channel, difference, avg_value]
+                    for sensor in range(10):
+                        sensor_1_avg = list(Deviations.select()
+                                            .where((Deviations.area == area_1)
+                                                   & (Deviations.channel == channel)
+                                                   & (Deviations.sensor == sensor)))[0].sensor_avg
+                        sensor_2_avg = list(Deviations.select()
+                                            .where((Deviations.area == area_2)
+                                                   & (Deviations.channel == channel)
+                                                   & (Deviations.sensor == sensor)))[0].sensor_avg
+                        sensor_difference = sensor_1_avg - sensor_2_avg
+                        sensor_avg_value = (sensor_1_avg + sensor_2_avg) / 2
+                        each_sensor.loc[curr_i * 10 + sensor] = [channel, sensor, sensor_difference, sensor_avg_value]
+                    curr_i += 1
+
+        self.result = {
+            "whole_area": whole_area.dropna(),
+            "each_sensor": each_sensor.dropna()
+        }
+
+
+class FindSpectreBrightness(BaseTask):
+    """Берёт несколько областей на воде и льду и для каждого канала находит среднюю яркость
+    Поля result:
+        Таблица sea:
+            area_id:    Номер области
+            channel:    Номер канала
+            area_avg:   Средняя яркость области
+
+        Таблица snow:
+            area_id:    Номер области
+            channel:    Номер канала
+            area_avg:   Средняя яркость области
+    """
+    task_name = "Нахождение спектра"
+
+    def calculate_data(self) -> None:
+        sea = pd.DataFrame(columns=["area_id", "channel", "area_avg"])
+        snow = pd.DataFrame(columns=["area_id", "channel", "area_avg"])
+        areas_count = 10
+        areas = FY3DImageArea.selected_areas()
+        sea_areas = list(areas.where(FY3DImageArea.surface_type == SurfaceType.SEA.value).dicts())
+        snow_areas = list(areas.where(FY3DImageArea.surface_type == SurfaceType.SNOW.value).dicts())
+
+        random.Random(2).shuffle(sea_areas)
+        random.Random(2).shuffle(snow_areas)
+        sea_areas = sea_areas[:areas_count]
+        snow_areas = snow_areas[:areas_count]
+        for area_info in sea_areas:
+            area = FY3DImageArea.get(id=area_info["id"])
+            for channel in range(5, 20):
+                ch_area_avg = area.get_vis_channel(channel).mean()
+                ch_area_avg -= area.get_black_body_value(channel)
+                sea.loc[len(sea)] = [area.id, channel, ch_area_avg]
+        for area_info in snow_areas:
+            area = FY3DImageArea.get(id=area_info["id"])
+            for channel in range(5, 20):
+                ch_area_avg = area.get_vis_channel(channel).mean()
+                ch_area_avg -= area.get_black_body_value(channel)
+                snow.loc[len(snow)] = [area.id, channel, ch_area_avg]
+        self.result = {
+            "sea": sea,
+            "snow": snow
+        }
+
+
 DATABASE_TASKS = [
     SensorsCoefficientsTask,
     AreaAvgStdTask,
     DeviationsBySurface,
     DeviationsByMirrorSide,
-    RegressByYear
+    RegressByYear,
+    NeighboringMirrorsDifference,
+    FindSpectreBrightness
 ]
 DICT_DATABASE_TASKS = {task.task_name: task for task in DATABASE_TASKS}

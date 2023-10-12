@@ -31,7 +31,7 @@ class AreaStats(BaseModel):
         filt = reduce(lambda x, y: x & y, expressions)
         result = AreaStats.select(FY3DImage.year,
                                   AreaStats.channel, AreaStats.area_avg, AreaStats.area_std,
-                                  FY3DImageArea.surface_type) \
+                                  FY3DImageArea.surface_type, FY3DImageArea.k_mirror_side) \
             .join(FY3DImageArea) \
             .join(FY3DImage) \
             .where(filt)
