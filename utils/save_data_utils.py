@@ -22,7 +22,7 @@ def create_and_save_figure(fig_path: str, y_rows: list[list[int | float]], x_row
                            title: str = "", xlabel: str = "", ylabel: str = "",
                            ylim: tuple[float, float] = None, xlim: tuple[float, float] = None,
                            legend: list = None, legend_title: str = "", fmt_list: list[str] = None, text: str = "",
-                           markersize: float = 3):
+                           markersize: float = 3, grid: bool = False):
     fig, ax = plt.subplots()
     ax.set_title(title)
     ax.set_xlabel(xlabel)
@@ -42,7 +42,8 @@ def create_and_save_figure(fig_path: str, y_rows: list[list[int | float]], x_row
             ax.plot(x, y, fmt, markersize=markersize)
     if legend:
         ax.legend(legend, title=legend_title, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 1))
-
+    if grid:
+        plt.grid()
     # Пишем текст
     font = ImageFont.truetype("arial.ttf", size=16)
     fig.canvas.draw()
