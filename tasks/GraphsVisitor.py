@@ -357,3 +357,17 @@ pvalue={linreg_snow.pvalue}
         path = get_graphs_path_and_create(task, "Спектры (на льду)")
         create_and_save_figure(path, y_rows=y, x_rows=x, grid=True, xlabel="Канал", ylabel="Ср. яркость области",
                                title="Зависимость яркости области от канала (на льду)")
+
+    def visit_DeviationsByY(self, task: DatabaseTasks.DeviationsByY):
+        data = task.get_data()
+        for channel in range(5, 20):
+            # path = get_graphs_path_and_create(task, f"Датчик {sensor}", inner_dir=f"Канал {channel}")
+            path = get_graphs_path_and_create(task, f"Канал {channel}")
+            ch_data = data[(data.channel == channel)]
+            # sensor_data = data[(data.channel == channel) & (data.sensor == sensor)]
+            # for sensor in range(10):
+            #     path = get_graphs_path_and_create(task, f"Датчик {sensor}", inner_dir=f"Канал {channel}")
+            #     sensor_data = data[(data.channel == channel) & (data.sensor == sensor)]
+            sns.lmplot(data=ch_data, x="y", y="deviation", hue="sensor", scatter_kws=dict(s=2))
+            plt.savefig(path, dpi=300)
+            plt.close()

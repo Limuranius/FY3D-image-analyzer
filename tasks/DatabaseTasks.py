@@ -368,6 +368,13 @@ class FindSpectreBrightness(BaseTask):
         }
 
 
+class DeviationsByY(BaseTask):
+    task_name = "Отклонения в зависимости от координаты Y"
+
+    def calculate_data(self) -> None:
+        self.result = Deviations.get_dataframe()
+
+
 DATABASE_TASKS = [
     SensorsCoefficientsTask,
     AreaAvgStdTask,
@@ -375,6 +382,7 @@ DATABASE_TASKS = [
     DeviationsByMirrorSide,
     RegressByYear,
     NeighboringMirrorsDifference,
-    FindSpectreBrightness
+    FindSpectreBrightness,
+    DeviationsByY
 ]
 DICT_DATABASE_TASKS = {task.task_name: task for task in DATABASE_TASKS}

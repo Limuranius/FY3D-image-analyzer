@@ -23,7 +23,7 @@ class Deviations(BaseModel):
             Deviations.select(FY3DImage.year, FY3DImage.is_selected,
                               Deviations.channel, Deviations.sensor, Deviations.deviation,
                               AreaStats.area_avg, AreaStats.area_std,
-                              FY3DImageArea.surface_type, FY3DImageArea.k_mirror_side)
+                              FY3DImageArea.surface_type, FY3DImageArea.k_mirror_side, FY3DImageArea.id, FY3DImageArea.y)
                 .join(FY3DImageArea)
                 .join(AreaStats, on=(AreaStats.area == FY3DImageArea.id) & (AreaStats.channel == Deviations.channel))
                 .switch(FY3DImageArea)
@@ -38,6 +38,22 @@ class Deviations(BaseModel):
                       channel: int = None,
                       sensor: int = None,
                       check_select: bool = True) -> pd.DataFrame:
+        """
+        Подбирает данные об отклонениях, подходящие под условия
+        Поля DataFrame:
+            year:           Год
+            channel:        Номер канала
+            sensor:         Номер датчика
+            deviation:      Значение отклонения датчика
+            area_avg:       Ср. значение области
+            area_std:       Ст. отклонение области
+            surface_type:   Тип поверхности
+            k_mirror_side:  Сторона зеркала
+            is_selected:    Выбрано ли значение
+            id:             Id области
+            y:              Координата y области
+        """
+
         global _deviations_df
         if _deviations_df is None:
             cls.__load_df()
