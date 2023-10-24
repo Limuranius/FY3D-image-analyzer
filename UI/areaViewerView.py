@@ -5,15 +5,15 @@ from database.FY3DImageArea import FY3DImageArea
 import matplotlib.pyplot as plt
 from PIL import Image, ImageQt
 import io
+from utils import some_utils
 
 
 def fig_to_img(fig) -> Image:
     img_buf = io.BytesIO()
     plt.savefig(img_buf, format='png')
     im = Image.open(img_buf)
+    im = im.convert("RGB")
     return im
-
-
 
 
 class AreaViewerView(QWidget):
@@ -34,8 +34,9 @@ class AreaViewerView(QWidget):
         ch = int(self.ui.comboBox_channel.currentText())
         sensor = int(self.ui.comboBox_sensor.currentText())
 
-        self.ui.label_col_avg.setPixmap(QPixmap.fromImage(self.get_col_avg_graph(ch)))
-        self.ui.label_sensor_deviation.setPixmap(QPixmap.fromImage(self.get_sensor_deviation_graph(ch, sensor)))
+        # self.ui.label_col_avg.set_image(self.get_col_avg_graph(ch))
+        # self.ui.label_sensor_deviation.set_image(self.get_sensor_deviation_graph(ch, sensor))
+        self.ui.label_spectre.set_image(self.get_normalized_spectre_graph())
 
         ch_area = self.area.get_vis_channel(ch)
         area_avg = ch_area.mean()
@@ -55,7 +56,7 @@ class AreaViewerView(QWidget):
         ax.plot(x, y)
 
         img = fig_to_img(fig)
-        return ImageQt.ImageQt(img)
+        return img
 
     def get_sensor_deviation_graph(self, ch: int, sensor: int):
         ch_area = self.area.get_vis_channel(ch)
@@ -70,4 +71,20 @@ class AreaViewerView(QWidget):
         ax.plot(x, y)
 
         img = fig_to_img(fig)
-        return ImageQt.ImageQt(img)
+        return img
+
+    def get_normalized_spectre_graph(self):
+        x = list(range(5, 20))
+        y = []
+        for channel in range(5, 20):
+            ch_area = self.area.get_vis_channel(channel)
+            DN = ch_area.mean()
+            DN_norm = some_utils.DN_to_Ref(DN, self.area.image, channel)
+            y.append(DN_norm)
+        fig, ax = plt.subplots()
+        ax.set_xlabel("Номер канала")
+        ax.set_ylabel("DN_normalized")
+        ax.plot(x, y)
+
+        img = fig_to_img(fig)
+        return img
