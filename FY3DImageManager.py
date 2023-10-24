@@ -95,7 +95,6 @@ class FY3DImageManager:
         for image in tqdm.tqdm(self.images, desc="Running image and area tasks on images", unit="img"):
             for image_task in self.config.image_tasks:
                 task = image_task(image)
-                task.run()
                 if self.config.draw_graphs:
                     task.save_to_graphs()
                 task.save_to_excel()

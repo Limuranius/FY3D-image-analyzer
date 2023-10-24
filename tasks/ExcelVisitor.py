@@ -39,14 +39,16 @@ class ExcelVisitor(BaseVisitor):
         save_data_utils.save_excel_dataframe(path, sheets, header=True)
 
     def visit_MultipleImagesCalibrationTask(self, task: MultipleImagesTasks.MultipleImagesCalibrationTask):
-        data = task.result
+        data = task.get_data()
         sheets = []
         channels = data["channel"].unique()
         channels.sort()
         for ch in channels:
             filt = data["channel"] == ch
-            header = ["Снимок", "Коэф. 1", "Коэф. 2", "Коэф. 3"]
-            sheet_data = data.loc[filt].tolist()
+            header = ["Дата снимка", "Коэф. 1", "Коэф. 2", "Коэф. 3"]
+            sheet_data = (data[filt].drop(columns=["channel"])
+                          .sort_values("img_date")
+                          .values.tolist())
             sheets.append((
                 f"Канал {ch}",
                 [header, *sheet_data]

@@ -23,7 +23,7 @@ class MultipleImagesCalibrationTask(BaseMultipleImagesTask):
     Находит калибровочные коэффициенты каждого снимка
     Поля таблицы result:
         channel:    Номер канала
-        img_name:   Название снимка
+        img_date:   Дата снимка
         c1:         Коэффициент 1
         c2:         Коэффициент 2
         c3:         Коэффициент 3
@@ -32,13 +32,13 @@ class MultipleImagesCalibrationTask(BaseMultipleImagesTask):
     task_name = "Калибровочные коэффициенты снимков"
 
     def calculate_data(self):
-        columns = ["channel", "img_name", "c1", "c2", "c3"]
+        columns = ["channel", "img_date", "c1", "c2", "c3"]
         df = pd.DataFrame(columns=columns)
         for ch in range(5, 20):
             ch_i = ch - 5
             for image in self.images:
                 coeffs = image.VIS_Cal_Coeff[ch_i].tolist()
-                row = [ch, image.get_unique_name(), *coeffs]
+                row = [ch, image.get_date(), *coeffs]
                 df.loc[len(df)] = row
         self.result = df
 
