@@ -78,18 +78,30 @@ class GraphsVisitor(BaseVisitor):
                                    xlabel="Номер столбца", ylabel="Среднее значение")
 
     def visit_ImageBBTask(self, task: ImageTasks.BBTask):
-        data = task.result
+        data = task.get_data()
         min_bb = data["dataBB"].apply(np.min).min()
         max_bb = data["dataBB"].apply(np.max).max()
         all_rows = []
         for _, row in data.iterrows():
             channel_number = row["channel"]
             bb_data = row["dataBB"]
-            path = get_graphs_path_and_create(task, f"Канал {row['channel']}", inner_dir=task.image.get_unique_name())
+            # path = get_graphs_path_and_create(task, f"Канал {row['channel']}", inner_dir=task.image.get_unique_name())
+
+            if channel_number not in [8, 9, 10]:
+                continue
+            path = get_graphs_path_and_create(task, task.image.get_unique_name(), inner_dir=f"Канал {row['channel']}")
+            lims = {
+                8: [140, 160],
+                9: [130, 145],
+                10: [90, 120]
+            }
+
             create_and_save_figure(path, [bb_data], None,
                                    title=f"График среднего значения чёрного тела для 10 строк\nдля канала {channel_number}",
                                    xlabel="Номер десятка строк", ylabel="Среднее значение чёрного тела по 10 строкам",
-                                   ylim=(min_bb, max_bb))
+                                   # ylim=(min_bb, max_bb)
+                                   ylim=lims[channel_number]
+                                   )
             all_rows.append(bb_data)
 
         path = get_graphs_path_and_create(task, f"Все каналы", inner_dir=task.image.get_unique_name())
@@ -209,7 +221,6 @@ pvalue={linreg_side_2.pvalue}
         data = task.get_data()
         with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsBySurface)") as pbar:
             for channel in range(5, 20):
-                # ch_data = Deviations.get_dataframe(year=2023, channel=channel)
                 ch_data = data[data["channel"] == channel]
                 xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
                 ylim = (ch_data["deviation"].min(), ch_data["deviation"].max())
@@ -217,7 +228,6 @@ pvalue={linreg_side_2.pvalue}
                     file_name = f"Датчик {sensor_i}.png"
                     path = get_graphs_path_and_create(task, file_name, inner_dir=f"Канал {channel}")
 
-                    # ch_sens_data = Deviations.get_dataframe(year=2023, channel=channel, sensor=sensor_i)
                     ch_sens_data = ch_data[ch_data["sensor"] == sensor_i]
 
                     filt_sea = ch_sens_data["surface_type"] == vars.SurfaceType.SEA.value

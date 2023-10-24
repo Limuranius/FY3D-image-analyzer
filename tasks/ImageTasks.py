@@ -32,7 +32,7 @@ class BBTask(BaseImageTask):
         for ch_i in range(25):
             ch_num = ch_i + 1
             df.loc[ch_i] = [ch_num, bb[ch_i]]
-        return df
+        self.result = df
 
 
 class SVTask(BaseImageTask):
