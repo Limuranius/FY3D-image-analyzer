@@ -28,7 +28,8 @@ class BaseVisitor(ABC):
             DatabaseTasks.AreaAvgStdTask: self.visit_AreaAvgStdTask,
             DatabaseTasks.RegressByYear: self.visit_RegressByYear,
             DatabaseTasks.NeighboringMirrorsDifference: self.visit_NeighboringMirrorsDifference,
-            DatabaseTasks.FindSpectreBrightness: self.visit_FindSpectreBrightness
+            DatabaseTasks.FindSpectreBrightness: self.visit_FindSpectreBrightness,
+            DatabaseTasks.DeviationsByY: self.visit_DeviationsByY,
         }
 
         for task_type, visitor_method in methods.items():
@@ -73,4 +74,7 @@ class BaseVisitor(ABC):
         pass
 
     def visit_FindSpectreBrightness(self, task: DatabaseTasks.FindSpectreBrightness):
+        pass
+
+    def visit_DeviationsByY(self, task: DatabaseTasks.DeviationsByY):
         pass

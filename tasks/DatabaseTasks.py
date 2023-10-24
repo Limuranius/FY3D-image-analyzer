@@ -3,7 +3,9 @@ from time import time
 import random
 from tasks.BaseTasks import *
 from utils.save_data_utils import *
+from utils import some_utils
 import tqdm
+from tqdm import trange
 from database import Deviations, AreaStats, FY3DImage, FY3DImageArea
 from scipy.stats import linregress
 from vars import KMirrorSide, SurfaceType
@@ -90,8 +92,30 @@ class AreaAvgStdTask(BaseTask):
 class DeviationsBySurface(BaseTask):
     task_name = "Отклонения в зависимости от яркости и поверхности"
 
+    CONVERT_TO_REF = True
+    SUBTRACT_BB = True
+
     def calculate_data(self):
-        self.result = Deviations.get_dataframe()
+        data = Deviations.get_dataframe()
+        # 61, 1960
+        data = pd.concat([
+            data[(data.channel == 8) | (data.channel == 10)],
+            data[(data.id == 61) | (data.id == 1960)]
+        ])
+        for i, row in tqdm.tqdm(data.iterrows(), total=len(data), desc="Calculating deviations by surface"):
+            area = FY3DImageArea.get(id=row.id)
+            image = area.image
+            area_avg = row.area_avg
+            if self.SUBTRACT_BB:
+                area_avg -= area.get_black_body_value(row.channel)
+            if self.CONVERT_TO_REF:
+                sensor_avg = area_avg + row.deviation
+                area_avg_Ref = some_utils.DN_to_Ref(area_avg, image, row.channel)
+                sensor_avg_Ref = some_utils.DN_to_Ref(sensor_avg, image, row.channel)
+                deviation_Ref = sensor_avg_Ref - area_avg_Ref
+                data.loc[i, "deviation"] = deviation_Ref
+                data.loc[i, "area_avg"] = area_avg_Ref
+        self.result = data
 
 
 class DeviationsByMirrorSide(BaseTask):
@@ -305,6 +329,9 @@ class FindSpectreBrightness(BaseTask):
     """
     task_name = "Нахождение спектра"
 
+    CONVERT_TO_REF = True
+    SUBTRACT_BB = True
+
     def calculate_data(self) -> None:
         sea = pd.DataFrame(columns=["area_id", "channel", "area_avg"])
         snow = pd.DataFrame(columns=["area_id", "channel", "area_avg"])
@@ -321,13 +348,19 @@ class FindSpectreBrightness(BaseTask):
             area = FY3DImageArea.get(id=area_info["id"])
             for channel in range(5, 20):
                 ch_area_avg = area.get_vis_channel(channel).mean()
-                ch_area_avg -= area.get_black_body_value(channel)
+                if self.SUBTRACT_BB:
+                    ch_area_avg -= area.get_black_body_value(channel)
+                if self.CONVERT_TO_REF:
+                    ch_area_avg = some_utils.DN_to_Ref(ch_area_avg, area.image, channel)
                 sea.loc[len(sea)] = [area.id, channel, ch_area_avg]
         for area_info in snow_areas:
             area = FY3DImageArea.get(id=area_info["id"])
             for channel in range(5, 20):
                 ch_area_avg = area.get_vis_channel(channel).mean()
-                ch_area_avg -= area.get_black_body_value(channel)
+                if self.SUBTRACT_BB:
+                    ch_area_avg -= area.get_black_body_value(channel)
+                if self.CONVERT_TO_REF:
+                    ch_area_avg = some_utils.DN_to_Ref(ch_area_avg, area.image, channel)
                 snow.loc[len(snow)] = [area.id, channel, ch_area_avg]
         self.result = {
             "sea": sea,
