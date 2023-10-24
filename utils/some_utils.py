@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw
 import os
 import shutil
 import cv2
+import subprocess
 
 
 def remove_dir(dir_path: str):
@@ -65,3 +66,17 @@ def increase_brightness(img: Image, value=40) -> Image:
     img = Image.fromarray(img_arr)
     return img
 
+
+def open_in_explorer(dir_path: str):
+    explorer_path = os.path.join(os.getenv("WINDIR"), "explorer.exe")
+    dir_path = os.path.normpath(dir_path)
+    subprocess.run([explorer_path, dir_path])
+
+
+def DN_to_Ref(DN: float | int, image, channel: int):
+    Cal_0, Cal_1, Cal_2 = image.VIS_Cal_Coeff[channel - 1]
+    Slope = image.EV_1KM_RefSB.attrs["Slope"][channel - 5]
+    Intercept = image.EV_1KM_RefSB.attrs["Intercept"][channel - 5]
+    dn = DN * Slope + Intercept
+    Ref = Cal_2 * dn ** 2 + Cal_1 * dn + Cal_0
+    return Ref
