@@ -74,8 +74,9 @@ class View(QMainWindow):
         self.ui.treeWidget_images.clear()
         for img in FY3DImage.select():
             item = QTreeWidgetItem(None)
-            item.setText(0, img.name)
-            item.setText(1, str(img.get_datetime()))
+            item.setText(0, str(img.id))
+            item.setText(1, img.name)
+            item.setText(2, str(img.get_datetime()))
 
             item.setData(0, Qt.UserRole, img)
             if img.is_selected:
@@ -225,7 +226,8 @@ class View(QMainWindow):
         y = self.ui.spinBox_add_area_y.value()
         w = self.ui.spinBox_add_area_width.value()
         h = self.ui.spinBox_add_area_height.value()
-        FY3DImageArea.create(x=x, y=y, width=w, height=h, image=self.curr_img)
+        FY3DImageArea.create(x=x, y=y, width=w, height=h, image=self.curr_img,
+                             k_mirror_side=area_utils.get_area_mirror_side(y, h).value)
         self.load_current_image_areas()
 
     def on_del_area_button_clicked(self):
@@ -312,6 +314,13 @@ class View(QMainWindow):
         FY3DImageArea.update(surface_type=vars.SurfaceType.SNOW.value).where(FY3DImageArea.image == self.curr_img).execute()
         self.load_current_image_areas()
 
+    def open_folder_clicked(self):
+        some_utils.open_in_explorer(vars.RESULTS_DIR)
+
+    def unselect_images_clicked(self):
+        FY3DImage.update(is_selected=False).execute()
+        self.update_image_list()
+
     def connect_widgets(self):
         self.ui.treeWidget_images.itemSelectionChanged.connect(self.on_img_select)
         self.ui.treeWidget_areas.itemSelectionChanged.connect(self.on_area_select)
@@ -336,3 +345,5 @@ class View(QMainWindow):
         self.ui.label_preview.clicked.connect(self.preview_clicked)
         self.ui.pushButton_all_sea.clicked.connect(self.all_sea_clicked)
         self.ui.pushButton_all_snow.clicked.connect(self.all_snow_clicked)
+        self.ui.pushButton_open_results_folder.clicked.connect(self.open_folder_clicked)
+        self.ui.pushButton_unselect_images.clicked.connect(self.unselect_images_clicked)

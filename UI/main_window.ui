@@ -95,7 +95,19 @@
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="pushButton_unselect_images">
+             <property name="text">
+              <string>Убрать выделение</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QTreeWidget" name="treeWidget_images">
+             <column>
+              <property name="text">
+               <string>ID</string>
+              </property>
+             </column>
              <column>
               <property name="text">
                <string>Название</string>
@@ -377,14 +389,14 @@
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="4" column="1">
                <widget class="QPushButton" name="pushButton_open_area">
                 <property name="text">
                  <string>Открыть область</string>
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
+              <item row="6" column="1">
                <widget class="QFrame" name="frame_10">
                 <property name="frameShape">
                  <enum>QFrame::StyledPanel</enum>
@@ -497,6 +509,13 @@
                   </widget>
                  </item>
                 </layout>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QPushButton" name="pushButton_open_results_folder">
+                <property name="text">
+                 <string>Открыть папку с результатами</string>
+                </property>
                </widget>
               </item>
              </layout>
