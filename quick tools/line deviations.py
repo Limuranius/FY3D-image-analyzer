@@ -6,8 +6,8 @@ import pandas as pd
 from tqdm import tqdm
 from database import FY3DImage
 
-id = 5
-y_min = 1100
+id = 119
+y_min = 260
 chunk_width = 5
 channel = 8
 

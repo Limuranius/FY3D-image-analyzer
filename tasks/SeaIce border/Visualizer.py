@@ -13,6 +13,7 @@ FOLDER_NAME = "Влияние датчиков друг на друга"
 if not os.path.exists(os.path.join(RESULTS_DIR, FOLDER_NAME)):
     os.mkdir(os.path.join(RESULTS_DIR, FOLDER_NAME))
 
+
 class Visualizer:
     def save_noise_approximation(self,
                                  areas: list[ChannelArea],
@@ -70,6 +71,23 @@ class Visualizer:
             kind="line"
         )
         path = os.path.join(RESULTS_DIR, FOLDER_NAME, "INDIV_COEFFS.png")
+        plt.savefig(path, dpi=300)
+
+    def save_common_coeffs(self,
+                           phis: np.ndarray):
+        df = pd.DataFrame(columns=["main_sensor", "sensor", "phi_value"])
+        for main_sensor in range(10):
+            for sensor in range(10):
+                phi_value = phis[main_sensor, sensor]
+                df.loc[len(df)] = [main_sensor, sensor, phi_value]
+        sns.relplot(
+            data=df,
+            x="sensor",
+            y="phi_value",
+            row="main_sensor",
+            kind="line"
+        )
+        path = os.path.join(RESULTS_DIR, FOLDER_NAME, "COMMON_COEFFS.png")
         plt.savefig(path, dpi=300)
 
     def show_all(self):

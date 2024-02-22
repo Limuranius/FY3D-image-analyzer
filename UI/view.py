@@ -90,9 +90,10 @@ class View(QMainWindow):
         self.ui.treeWidget_areas.clear()
         for area in self.curr_img.areas:
             item = QTreeWidgetItem(None)
-            item.setText(0, str(area.x))
-            item.setText(1, str(area.y))
-            item.setText(2, area.get_surface_type().name)
+            item.setText(0, str(area.id))
+            item.setText(1, str(area.x))
+            item.setText(2, str(area.y))
+            item.setText(3, area.get_surface_type().name)
 
             item.setData(0, Qt.UserRole, area)
             if area.is_selected:

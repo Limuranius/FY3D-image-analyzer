@@ -89,7 +89,10 @@ class GraphsVisitor(BaseVisitor):
 
             if channel_number not in [8, 9, 10]:
                 continue
-            path = get_graphs_path_and_create(task, task.image.get_unique_name(), inner_dir=f"Канал {row['channel']}")
+            path = get_graphs_path_and_create(task,
+                                              # task.image.get_unique_name(),
+                                              str(task.image.id),
+                                              inner_dir=f"Канал {row['channel']}")
             lims = {
                 8: [140, 160],
                 9: [130, 145],
@@ -128,7 +131,7 @@ class GraphsVisitor(BaseVisitor):
         ranges = data["ranges"]
         with tqdm.tqdm(desc="Saving graphs (RegressByYear)", total=150) as pbar:
             for channel in range(5, 20):
-                _, x_min, x_max, y_min, y_max = ranges[ranges.channel == channel].squeeze()
+                _, x_min, x_max, y_min, y_max = ranges[ranges.CHANNEL == channel].squeeze()
                 for sensor in range(10):
                     sensor_data = Deviations.get_dataframe(channel=channel, sensor=sensor)
                     plot = sns.lmplot(data=sensor_data, x="area_avg", y="deviation", hue="year",
@@ -309,7 +312,7 @@ pvalue={linreg_snow.pvalue}
         each_sensor = data["each_sensor"]
         for channel in trange(5, 20, desc="Saving graphs (NeighboringMirrorsDifference, whole_area)"):
             path = get_graphs_path_and_create(task, f"Канал {channel}", inner_dir="Среднее по всей области")
-            ch_data = whole_area[whole_area.channel == channel]
+            ch_data = whole_area[whole_area.CHANNEL == channel]
             g = sns.relplot(data=ch_data, x="avg_value", y="difference", kind="scatter", s=3)
             g.fig.suptitle(f"Разница между ср. яркостью областей разных зеркал\nКанал {channel}")
             plt.grid()
@@ -317,7 +320,7 @@ pvalue={linreg_snow.pvalue}
             plt.close()
         with tqdm.tqdm(total=150, desc="Saving graphs (NeighboringMirrorsDifference, each_sensor)") as pbar:
             for channel in trange(5, 20):
-                ch_data = each_sensor[each_sensor.channel == channel]
+                ch_data = each_sensor[each_sensor.CHANNEL == channel]
 
                 # path = get_graphs_path_and_create(task, f"Канал {channel}",
                 #                                   inner_dir=f"Среднее по отдельному датчику")
@@ -329,9 +332,10 @@ pvalue={linreg_snow.pvalue}
                 for sensor in range(10):
                     path = get_graphs_path_and_create(task, f"Датчик {sensor}",
                                                       inner_dir=f"Среднее по отдельному датчику/Канал {channel}")
-                    sensor_data = ch_data[ch_data.sensor == sensor]
+                    sensor_data = ch_data[ch_data.sensor_i == sensor]
                     g = sns.relplot(data=sensor_data, x="avg_value", y="difference", kind="scatter", s=3)
-                    g.fig.suptitle(f"Разница между ср. яркостью датчиков разных зеркал\nКанал {channel} Датчик {sensor}")
+                    g.fig.suptitle(
+                        f"Разница между ср. яркостью датчиков разных зеркал\nКанал {channel} Датчик {sensor}")
                     avg_difference = sensor_data.difference.mean()
                     std = sensor_data.difference.std()
                     g.set(ylim=diff_lim)
@@ -353,7 +357,7 @@ pvalue={linreg_snow.pvalue}
         x = []
         y = []
         for area_id in sea.area_id.unique():
-            x.append(sea[sea.area_id == area_id].channel)
+            x.append(sea[sea.area_id == area_id].CHANNEL)
             y.append(sea[sea.area_id == area_id].area_avg)
         path = get_graphs_path_and_create(task, "Спектры (на воде)")
         create_and_save_figure(path, y_rows=y, x_rows=x, grid=True, xlabel="Канал", ylabel="Ср. яркость области",
@@ -362,7 +366,7 @@ pvalue={linreg_snow.pvalue}
         x = []
         y = []
         for area_id in snow.area_id.unique():
-            x.append(snow[snow.area_id == area_id].channel)
+            x.append(snow[snow.area_id == area_id].CHANNEL)
             y.append(snow[snow.area_id == area_id].area_avg)
         path = get_graphs_path_and_create(task, "Спектры (на льду)")
         create_and_save_figure(path, y_rows=y, x_rows=x, grid=True, xlabel="Канал", ylabel="Ср. яркость области",

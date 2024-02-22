@@ -9,6 +9,8 @@ MONOCHROME_PICTURES_PATH = path.join(ROOT_DIR, "Изображения/Одно�
 DATABASE_PATH = path.join(ROOT_DIR, "database.db")
 
 RESULTS_DIR = path.join(ROOT_DIR, "Результаты")
+INDIV_COEFFS_FILE_PATH = path.join(RESULTS_DIR, "indiv_coeffs.pkl")
+COMMON_COEFFS_FILE_PATH = path.join(RESULTS_DIR, "common_coeffs.pkl")
 
 PREVIEW_COMPRESS_FACTOR = 4  # Во сколько раз уменьшается изображение для превью в GUI
 
@@ -17,6 +19,7 @@ class SurfaceType(Enum):
     SEA = 1
     SNOW = 2
     UNKNOWN = 3
+    MIXED = 4
 
 
 class KMirrorSide(Enum):

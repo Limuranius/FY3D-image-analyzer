@@ -1,3 +1,5 @@
+from functools import reduce
+
 import numpy as np
 import pandas as pd
 from vars import SurfaceType, KMirrorSide
@@ -8,6 +10,7 @@ from PIL import Image
 from dataclasses import dataclass
 from collections import defaultdict
 from .BaseModel import *
+from .ChannelArea import ChannelArea
 
 
 @dataclass
@@ -37,12 +40,11 @@ class FY3DImageArea(BaseModel):
         ch_i = channel - 5
         return np.uint16(self.EV_1KM_RefSB[ch_i])
 
-    def save_vis_to_excel(self, file_name: str):
+    def save_vis_to_excel(self, file_name: str, channel: int):
         excel_writer = pd.ExcelWriter(file_name)
-        for channel in range(5, 20):
-            ch_area = self.get_vis_channel(channel)
-            df = pd.DataFrame(ch_area)
-            df.to_excel(excel_writer)
+        ch_area = self.get_vis_channel(channel)
+        df = pd.DataFrame(ch_area)
+        df.to_excel(excel_writer, sheet_name=f"Канал {channel}")
         excel_writer.close()
 
     def get_global_coords(self, x: int, y: int) -> tuple[int, int]:
@@ -119,8 +121,41 @@ class FY3DImageArea(BaseModel):
     def get_black_body_value(self, channel: int) -> float:
         bb = self.image.BB_DN_average
         row10 = self.y // 10
-        return bb[channel-1, row10]
+        return bb[channel - 1, row10]
 
+    def clear_cache(self):
+        del self.cached_data[self.id]
+
+    def get_channel_area(self, channel: int) -> ChannelArea:
+        return ChannelArea.from_area(self, channel)
+
+    @classmethod
+    def find(cls,
+             k_mirror_side: KMirrorSide = None,
+             surface_type: SurfaceType = None,
+             year: int = None):
+
+        conditions = []
+        if k_mirror_side is not None:
+            conditions.append(FY3DImageArea.k_mirror_side == k_mirror_side.value)
+        if surface_type is not None:
+            conditions.append(FY3DImageArea.surface_type == surface_type.value)
+        if year is not None:
+            conditions.append(FY3DImage.year == year)
+        filt = reduce(lambda x, y: x & y, conditions)
+
+        ids = (
+            cls
+            .select(FY3DImageArea.id)
+            .join(FY3DImage)
+            .where(filt)
+            .tuples()
+        )
+        return [cls.get(id=area_id) for area_id in ids]
+
+        # return (cls
+        #         .select()
+        #         .where(filt).tuples())
 
 
 FY3DImageArea.create_table()

@@ -11,8 +11,18 @@ o = OptimizerVisualizer(areas, CHANNEL)
 
 # o.optimize_cut_borders()
 # o.validate_approximations()
-o.calculate_individual_coefficients()
-o.calculate_common_coefficients()
-o.save_individual_approximation()
-o.save_common_approximation()
-o.save_indiv_coeffs()
+
+def common():
+    o.calculate_common_coefficients()
+    # o.save_common_approximation()
+    # o.save_common_coeffs()
+
+
+def individual():
+    o.calculate_individual_coefficients()
+    o.save_individual_approximation()
+    o.save_indiv_coeffs()
+
+
+# individual()
+common()

@@ -90,6 +90,8 @@ class FY3DImage(BaseModel):
                         color = "#00FF00"
                     case vars.SurfaceType.SEA.value:
                         color = "#0000FF"
+                    case vars.SurfaceType.MIXED.value:
+                        color = "#C27734"
                 some_utils.draw_rectangle(image, area.x // compress_factor, area.y // compress_factor,
                                           area.width // compress_factor, area.height // compress_factor, color)
         return image
@@ -168,6 +170,9 @@ class FY3DImage(BaseModel):
     @classmethod
     def selected_images(cls) -> typing.Iterable[FY3DImage]:
         return cls.select().where(FY3DImage.is_selected == True)
+
+    def get_BB_value(self, channel: int, y: int) -> float:
+        return self.BB_DN_average[channel-1, y // 10]
 
 
 FY3DImage.create_table()

@@ -46,7 +46,7 @@ def create_and_save_figure(fig_path: str, y_rows: list[list[int | float]], x_row
         plt.grid()
     # Пишем текст
     font = ImageFont.truetype("arial.ttf", size=16)
-    fig.canvas.draw()
+    fig.canvas.draw_constant()
     fig_img = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
     text_space = 250
     fig_img = ImageOps.expand(fig_img, border=(0, 0, text_space, 0), fill=(255, 255, 255))

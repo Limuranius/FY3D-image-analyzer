@@ -80,3 +80,12 @@ def DN_to_Ref(DN: float | int, image, channel: int):
     dn = DN * Slope + Intercept
     Ref = Cal_2 * dn ** 2 + Cal_1 * dn + Cal_0
     return Ref
+
+
+def change_contrast(image: np.ndarray, min_value: int, max_value: int) -> np.ndarray:
+    new_image = image.astype(np.int32) - min_value
+    dist = max_value - min_value
+    new_image = new_image / dist * 4096
+    new_image[new_image < 0] = 0
+    new_image[new_image > 4096] = 4096
+    return new_image

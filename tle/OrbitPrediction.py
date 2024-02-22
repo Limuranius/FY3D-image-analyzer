@@ -2,7 +2,6 @@ from pyorbital import tlefile
 from pyorbital.orbital import Orbital
 from pyorbital import astronomy
 from datetime import datetime, timedelta
-import time
 
 
 MIN_ELEVATION = 70
@@ -62,15 +61,27 @@ class OrbitPredictor:
                 res.append((azimuth, elevation, site))
         return res
 
+    #
+    # def is_point_visible(self, lon, lat, alt, dt: datetime) -> bool:
+    #     self.orbit.get_next_passes()
+
 
 def main():
-    o = OrbitPredictor()
-    start = datetime(2023, 6, 1)
-    step = timedelta(minutes=5)
-    for i in range(100):
-        t = start + step * i
-        if not o.is_night_side(t):
-            print(t, o.get_optimal_sea_sites(t))
+    # o = OrbitPredictor()
+    # start = datetime(2023, 6, 1)
+    # step = timedelta(minutes=5)
+    # for i in range(100):
+    #     t = start + step * i
+    #     if not o.is_night_side(t):
+    #         print(t, o.get_optimal_sea_sites(t))
 
+    o = OrbitPredictor()
+    start = datetime(2023, 12, 3)
+    lon, lat, alt = 131.8971482141884, 43.03237160140015, 0
+    HOURS = 24
+    res = o.orbit.get_next_passes(start, HOURS, lon, lat, alt)
+    for t in res:
+        mid_time = t[2]
+        print(mid_time)
 
 main()

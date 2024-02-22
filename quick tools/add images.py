@@ -1,8 +1,8 @@
 from database.FY3DImage import FY3DImage
 import os
 
-folder_path = r"D:\Снимки со спутников\2021 2"
-name = "2021 2"
+folder_path = r"D:\Снимки со спутников\Лёд с водой"
+name = "Лёд с водой"
 
 files = os.listdir(folder_path)
 for fname in files:

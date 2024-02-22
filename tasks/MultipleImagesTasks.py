@@ -34,8 +34,8 @@ class MultipleImagesCalibrationTask(BaseMultipleImagesTask):
     def calculate_data(self):
         columns = ["channel", "img_date", "c1", "c2", "c3"]
         df = pd.DataFrame(columns=columns)
-        for ch in range(5, 20):
-            ch_i = ch - 5
+        for ch in range(1, 20):
+            ch_i = ch - 1
             for image in self.images:
                 coeffs = image.VIS_Cal_Coeff[ch_i].tolist()
                 row = [ch, image.get_date(), *coeffs]

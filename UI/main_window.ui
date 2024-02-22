@@ -17,6 +17,11 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -27,6 +32,11 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QFrame" name="frame">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -121,12 +131,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QFrame" name="frame_9">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+            <widget class="QGroupBox" name="groupBox_9">
+             <property name="title">
+              <string>Добавить снимок</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_2">
               <item row="0" column="1">
@@ -171,6 +178,11 @@
         </item>
         <item>
          <widget class="QFrame" name="frame_2">
+          <property name="font">
+           <font>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -194,6 +206,11 @@
             <widget class="QTreeWidget" name="treeWidget_areas">
              <column>
               <property name="text">
+               <string>ID</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
                <string>x</string>
               </property>
              </column>
@@ -207,6 +224,118 @@
                <string>Поверхность</string>
               </property>
              </column>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_10">
+             <property name="title">
+              <string>Однородные области</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Y_min</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="spinBox_ymin">
+                <property name="maximum">
+                 <number>2000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QSpinBox" name="spinBox_xmin">
+                <property name="maximum">
+                 <number>2048</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QSpinBox" name="spinBox_xmax">
+                <property name="maximum">
+                 <number>2048</number>
+                </property>
+                <property name="value">
+                 <number>2048</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>X_max</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0" colspan="4">
+               <widget class="QPushButton" name="pushButton_add_monotone_areas">
+                <property name="text">
+                 <string>Найти однородные области</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string>X_min</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QSpinBox" name="spinBox_ymax">
+                <property name="maximum">
+                 <number>2000</number>
+                </property>
+                <property name="value">
+                 <number>2000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_15">
+                <property name="text">
+                 <string>Y_max</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="spinBox_areas_count">
+                <property name="maximum">
+                 <number>2000</number>
+                </property>
+                <property name="value">
+                 <number>50</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>Количество</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="3">
+               <widget class="QSpinBox" name="spinBox_max_std">
+                <property name="maximum">
+                 <number>2000</number>
+                </property>
+                <property name="value">
+                 <number>200</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QLabel" name="label_18">
+                <property name="text">
+                 <string>Max std</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
            <item>
@@ -321,200 +450,10 @@
                 </property>
                </widget>
               </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_3">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_4">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <pointsize>20</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Параметры</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QFrame" name="frame_4">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
-             </property>
-             <layout class="QFormLayout" name="formLayout">
-              <item row="0" column="1">
-               <widget class="QCheckBox" name="checkBox_draw_graphs">
-                <property name="text">
-                 <string>Рисовать графики</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QCheckBox" name="checkBox_save_colored_image">
-                <property name="text">
-                 <string>Сохранять изображения снимков</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QPushButton" name="pushButton_start">
-                <property name="font">
-                 <font>
-                  <pointsize>15</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Запустить анализ!</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
+              <item row="0" column="3">
                <widget class="QPushButton" name="pushButton_open_area">
                 <property name="text">
                  <string>Открыть область</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="1">
-               <widget class="QFrame" name="frame_10">
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_3">
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_14">
-                   <property name="text">
-                    <string>Y_min</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QSpinBox" name="spinBox_ymin">
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QSpinBox" name="spinBox_xmin">
-                   <property name="maximum">
-                    <number>2048</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QSpinBox" name="spinBox_xmax">
-                   <property name="maximum">
-                    <number>2048</number>
-                   </property>
-                   <property name="value">
-                    <number>2048</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="label_13">
-                   <property name="text">
-                    <string>X_max</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0" colspan="4">
-                  <widget class="QPushButton" name="pushButton_add_monotone_areas">
-                   <property name="text">
-                    <string>Найти однородные области</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_12">
-                   <property name="text">
-                    <string>X_min</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QSpinBox" name="spinBox_ymax">
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                   <property name="value">
-                    <number>2000</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="label_15">
-                   <property name="text">
-                    <string>Y_max</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="spinBox_areas_count">
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                   <property name="value">
-                    <number>50</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_16">
-                   <property name="text">
-                    <string>Количество</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="QSpinBox" name="spinBox_max_std">
-                   <property name="maximum">
-                    <number>2000</number>
-                   </property>
-                   <property name="value">
-                    <number>200</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="label_18">
-                   <property name="text">
-                    <string>Max std</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QPushButton" name="pushButton_open_results_folder">
-                <property name="text">
-                 <string>Открыть папку с результатами</string>
                 </property>
                </widget>
               </item>
@@ -544,6 +483,121 @@
         <string>Методы</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QFrame" name="frame_12">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <widget class="QLabel" name="label_19">
+             <property name="font">
+              <font>
+               <pointsize>20</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Методы анализа</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QListWidget" name="listWidget_tasks_database"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="title">
+           <string>Параметры анализа</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="2" column="0">
+            <widget class="QComboBox" name="comboBox">
+             <item>
+              <property name="text">
+               <string>Зеркало 1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Зеркало 2</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBox_2">
+             <item>
+              <property name="text">
+               <string>Вода</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Лёд</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QCheckBox" name="checkBox_save_colored_image">
+             <property name="text">
+              <string>Сохранять изображения снимков</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="checkBox_draw_graphs">
+             <property name="text">
+              <string>Рисовать графики</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="pushButton_start">
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>Запустить анализ!</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QPushButton" name="pushButton_open_results_folder">
+             <property name="text">
+              <string>Открыть папку с результатами</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QFrame" name="frame_6">
           <property name="frameShape">
@@ -621,33 +675,6 @@
            </item>
            <item>
             <widget class="QListWidget" name="listWidget_tasks_multi_images"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QFrame" name="frame_12">
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QLabel" name="label_19">
-             <property name="font">
-              <font>
-               <pointsize>20</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Методы БД</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QListWidget" name="listWidget_tasks_database"/>
            </item>
           </layout>
          </widget>

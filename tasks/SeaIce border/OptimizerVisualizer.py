@@ -8,6 +8,7 @@ from Visualizer import Visualizer
 from tqdm import tqdm
 from utils.area_utils import remove_border_values
 
+
 class OptimizerVisualizer:
     __areas: list[ChannelArea]
     __channel: int
@@ -19,16 +20,19 @@ class OptimizerVisualizer:
         self.__channel = channel
 
     def calculate_individual_coefficients(self) -> None:
-        if os.path.exists(INDIV_COEFFS_FILE_PATH):
-            with open(INDIV_COEFFS_FILE_PATH, "rb") as f:
-                indiv_coeffs = pickle.load(f)
-        else:
-            indiv_coeffs = dict()
+        # if os.path.exists(INDIV_COEFFS_FILE_PATH):
+        #     with open(INDIV_COEFFS_FILE_PATH, "rb") as f:
+        #         indiv_coeffs = pickle.load(f)
+        # else:
+        #     indiv_coeffs = dict()
 
         optimizer = SeaIceOptimizer()
-        for area in tqdm(self.__areas):
-            if area.unique_str() not in indiv_coeffs:
-                indiv_coeffs[area.unique_str()] = optimizer.optimize_area(area)
+        coeffs = optimizer.optimize_batch_individually(self.__areas)
+        indiv_coeffs = {area.unique_str(): phis for area, phis in zip(self.__areas, coeffs)}
+
+        # for area in tqdm(self.__areas):
+        #     if area.unique_str() not in indiv_coeffs:
+        #         indiv_coeffs[area.unique_str()] = optimizer.optimize_area(area)
         with open(INDIV_COEFFS_FILE_PATH, "wb") as f:
             pickle.dump(indiv_coeffs, f)
 
@@ -74,6 +78,11 @@ class OptimizerVisualizer:
             areas=self.__areas,
             areas_phis=areas_phis
         )
+
+    def save_common_coeffs(self):
+        visualizer = Visualizer()
+        phis = self.get_common_coefficients()
+        visualizer.save_common_coeffs(phis)
 
     def validate_approximations(self):
         import noise

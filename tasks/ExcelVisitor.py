@@ -56,7 +56,15 @@ class ExcelVisitor(BaseVisitor):
         path = get_excel_path_and_create(task, task.task_name)
         save_data_utils.save_excel(path, sheets)
 
-    def visit_SensorsCoefficientsTask(self, task: DatabaseTasks.SensorsCoefficientsTask):
+    def visit_SensorsCoefficientsTaskByMirror(self, task: DatabaseTasks.SensorsCoefficientsTaskByMirror):
+        data = task.get_data()
+        path = get_excel_path_and_create(task, task.task_name)
+        sheets = [
+            ("Коэффициенты", data)
+        ]
+        save_data_utils.save_excel_dataframe(path, sheets, header=True)
+
+    def visit_SensorsCoefficientsTaskBySurface(self, task: DatabaseTasks.SensorsCoefficientsTaskBySurface):
         data = task.get_data()
         path = get_excel_path_and_create(task, task.task_name)
         sheets = [
@@ -86,7 +94,7 @@ class ExcelVisitor(BaseVisitor):
         ]
         for channel in range(5, 20):
             whole_area_sheet[1].append(
-                whole_area[whole_area.channel == channel].difference.mean()
+                whole_area[whole_area.CHANNEL == channel].difference.mean()
             )
 
         each_sensor_sheet = [
@@ -95,7 +103,7 @@ class ExcelVisitor(BaseVisitor):
         for sensor in range(10):
             row = [f"Датчик {sensor}"]
             for channel in range(5, 20):
-                sensor_data = each_sensor[(each_sensor.channel == channel) & (each_sensor.sensor == sensor)]
+                sensor_data = each_sensor[(each_sensor.CHANNEL == channel) & (each_sensor.sensor_i == sensor)]
                 row.append(sensor_data.difference.mean())
             each_sensor_sheet.append(row)
 
