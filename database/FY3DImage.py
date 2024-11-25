@@ -1,6 +1,6 @@
 from __future__ import annotations
 import h5py
-from utils import some_utils
+from utils import some_utils, math_utils
 from utils import getImageMonotone
 import pandas as pd
 import datetime
@@ -50,7 +50,7 @@ class FY3DImage(BaseModel):
         long = self.Longitude[y, x]
         return lat, long
 
-    def get_colored_picture(self) -> Image:
+    def get_colored_picture(self, draw_areas=True) -> Image:
         """Возвращает цветное изображение, состоящее из каналов 3, 2 и 1"""
         r = self.EV_250_Aggr1KM_RefSB[2]  # 3 канал
         g = self.EV_250_Aggr1KM_RefSB[1]  # 2 канал
@@ -59,16 +59,18 @@ class FY3DImage(BaseModel):
         image = some_utils.increase_brightness(image, 50)
 
         # Отмечаем границы областей на изображении
-        for area in self.areas:
-            if area.is_selected:
-                match area.surface_type:
-                    case vars.SurfaceType.UNKNOWN.value:
-                        color = "#FF0000"
-                    case vars.SurfaceType.SNOW.value:
-                        color = "#00FF00"
-                    case vars.SurfaceType.SEA.value:
-                        color = "#0000FF"
-                some_utils.draw_rectangle(image, area.x, area.y, area.width, area.height, color)
+        if draw_areas:
+            for area in self.areas:
+                if area.is_selected:
+                    match area.surface_type:
+                        case vars.SurfaceType.UNKNOWN.value:
+                            color = "#FF0000"
+                        case vars.SurfaceType.SNOW.value:
+                            # color = "#00FF00"
+                            color = "#FF0000"
+                        case vars.SurfaceType.SEA.value:
+                            color = "#0000FF"
+                    some_utils.draw_rectangle(image, area.x, area.y, area.width, area.height, color)
         return image
 
     def get_preview(self) -> Image:
@@ -172,7 +174,39 @@ class FY3DImage(BaseModel):
         return cls.select().where(FY3DImage.is_selected == True)
 
     def get_BB_value(self, channel: int, y: int) -> float:
-        return self.BB_DN_average[channel-1, y // 10]
+        return self.BB_DN_average[channel - 1, y // 10]
+
+    def corners_coords(self) -> tuple[
+        tuple[float, float], tuple[float, float], tuple[float, float], tuple[float, float]]:
+        # Returns geo-coordinates of corners of image (longitude, latitude)
+        tl = (self.Longitude[0, 0], self.Latitude[0, 0])
+        tr = (self.Longitude[0, -1], self.Latitude[0, -1])
+        br = (self.Longitude[-1, -1], self.Latitude[-1, -1])
+        bl = (self.Longitude[-1, 0], self.Latitude[-1, 0])
+        return tl, tr, br, bl
+
+    def get_closest_pixel(self, lat: float, lon: float) -> tuple[int, int]:
+        # Returns raster coordinates of pixel closest to (lat, lon)
+        lat_grid = self.Latitude[:, :].astype(float)
+        lon_grid = self.Longitude[:, :].astype(float)
+        lat_enhance = math_utils.interpolate_matrix(lat_grid, new_size=(2000, 2048))
+        lon_enhance = math_utils.interpolate_matrix(lon_grid, new_size=(2000, 2048))
+
+        distance = (
+                np.abs(lat_enhance - lat) ** 2
+                + np.abs(lon_enhance - lon) ** 2
+        )
+        i, j = np.unravel_index(distance.argmin(), distance.shape)
+        return i, j
+
+    def contains_pos(self, lat: float, lon: float) -> bool:
+        # i, j = self.get_closest_pixel(lat, lon)
+        # return 0 < i < 1999 and 0 < j < 2047
+        corners = self.corners_coords()
+        return math_utils.geopoint_inside_polygon(
+            (lon, lat),
+            corners
+        )
 
 
 FY3DImage.create_table()

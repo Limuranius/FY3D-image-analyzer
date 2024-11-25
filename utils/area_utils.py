@@ -7,7 +7,6 @@ import cv2
 from vars import KMirrorSide, SurfaceType
 import pandas as pd
 
-
 if TYPE_CHECKING:
     from database.FY3DImageArea import FY3DImageArea
     from database import ChannelArea
@@ -115,7 +114,6 @@ def determine_surface_type(area: FY3DImageArea) -> SurfaceType:
         return SurfaceType.SNOW
 
 
-
 def ch_area_to_df(ch_area: np.ndarray):
     df = pd.DataFrame(columns=["sensor", "x", "value"])
     for sensor in range(10):
@@ -130,8 +128,18 @@ def ch_area_to_median(ch_area: np.ndarray, kernel=(1, 20)):
     return median_area
 
 
+def area_to_surrounding_median(ch_area: ChannelArea, size) -> np.ndarray:
+    """Applies median filter on whole image and returns current area out of it"""
+    area = ch_area.parent
+    image = area.image.get_vis_channel(ch_area.channel)
+    x, y, w, h = area.x, area.y, area.width, area.height
+    median_values = median_filter(image, size=size)[y: y + h, x: x + w]
+    return median_values
+
+
 def find_two_peaks(ch_area: np.ndarray) -> tuple[int, int]:
-    hist_y, hist_x = np.histogram(ch_area, bins=int(ch_area.max() - ch_area.min() + 1))
+    total_range = int(ch_area.max() - ch_area.min() + 1)
+    hist_y, hist_x = np.histogram(ch_area, bins=total_range // 2)
     hist_x = (hist_x[:-1] + hist_x[1:]) / 2
     med = np.median(hist_x)
     left_max_i = hist_y[hist_x <= med].argmax()
@@ -164,6 +172,16 @@ def ch_area_to_sea_mask(ch_area: np.ndarray):
     sea_value, ice_value = find_two_peaks(ch_area)
     sea_mask = np.abs(ch_area - sea_value) < np.abs(ch_area - ice_value)
     return sea_mask
+
+
+def two_peak_filter(ch_area: np.ndarray):
+    median = ch_area_to_median(ch_area, kernel=(7, 7))
+    sea_mask = ch_area_to_sea_mask(median)
+    sea_value, ice_value = find_two_peaks(median)
+    res = ch_area.copy().astype(np.int32)
+    res[sea_mask] = sea_value
+    res[~sea_mask] = ice_value
+    return res
 
 
 # def ch_area_to_sea_mask(ch_area: np.ndarray):

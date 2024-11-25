@@ -71,7 +71,7 @@ class SensorsCoefficientsTaskByMirror(BaseTask):
                                        linreg_side_2.rvalue ** 2, linreg_side_2.pvalue, linreg_side_2.stderr,
                                        linreg_side_2.intercept_stderr, y_side_2.mean(), y_side_2.std()]
                     pbar.update(1)
-        df.to_pickle(os.path.join(vars.RESULTS_DIR, "cal_coeffs.pkl"))
+        df.to_pickle(os.path.join(vars.RESULTS_DIR, "cal_coeffs_mirror.pkl"))
         self.result = df
 
 
@@ -133,7 +133,7 @@ class SensorsCoefficientsTaskBySurface(BaseTask):
                                        linreg_ice.rvalue ** 2, linreg_ice.pvalue, linreg_ice.stderr,
                                        linreg_ice.intercept_stderr, y_ice.mean(), y_ice.std()]
                     pbar.update(1)
-        df.to_pickle(os.path.join(vars.RESULTS_DIR, "cal_coeffs.pkl"))
+        df.to_pickle(os.path.join(vars.RESULTS_DIR, "cal_coeffs_surface.pkl"))
         self.result = df
 
 
@@ -145,7 +145,6 @@ class SensorsCoefficientsTask(BaseTask):
         sensor:             Номер датчика
         slope:              Коэффициент наклона
         intercept:          Коэффициент подъёма
-        surface_type:       Тип поверхности
         r^2:                Коэффициент детерминации
         pvalue:             p-значение
         slope_stderr:       Ст. ошибка коэффициента наклона
@@ -156,7 +155,8 @@ class SensorsCoefficientsTask(BaseTask):
     task_name = "Вычислить коэффициенты"
 
     def calculate_data(self):
-        columns = ["channel", "sensor", "slope", "intercept", "surface_type",
+        print("ЖОПАААААААААА")
+        columns = ["channel", "sensor", "slope", "intercept",
                    "r^2", "pvalue", "slope_stderr", "intercept_stderr", "avg_deviation", "std_deviation"]
         df = pd.DataFrame(columns=columns)
 
@@ -177,7 +177,7 @@ class SensorsCoefficientsTask(BaseTask):
                     if not is_slope_significant:
                         slope = 0
 
-                    df.loc[len(df)] = [channel, sensor_i, slope, intercept, KMirrorSide.SIDE_2.value,
+                    df.loc[len(df)] = [channel, sensor_i, slope, intercept,
                                        linreg.rvalue ** 2, linreg.pvalue, linreg.stderr,
                                        linreg.intercept_stderr, y.mean(), y.std()]
                     pbar.update(1)
@@ -230,6 +230,13 @@ class DeviationsBySurface(BaseTask):
 
 class DeviationsByMirrorSide(BaseTask):
     task_name = "Отклонения в зависимости от яркости и зеркала"
+
+    def calculate_data(self):
+        self.result = Deviations.get_dataframe()
+
+
+class DeviationsRegression(BaseTask):
+    task_name = "Отклонения в зависимости от яркости"
 
     def calculate_data(self):
         self.result = Deviations.get_dataframe()
@@ -485,6 +492,48 @@ class DeviationsByY(BaseTask):
         self.result = Deviations.get_dataframe()
 
 
+class CalcZebraCoeffs(BaseTask):
+    task_name = "Вычислить коэффициенты полосатости"
+
+    def calculate_data(self) -> None:
+        pass
+
+
+class CalcInfluenceCoeffs(BaseTask):
+    task_name = "Вычислить коэффициенты влияния датчиков друг на друга"
+
+    def calculate_data(self) -> None:
+        pass
+
+
+class CalcTraceCoeffs(BaseTask):
+    task_name = "Вычислить коэффициенты остаточного сигнала"
+
+    def calculate_data(self) -> None:
+        pass
+
+
+class ApplyZebraCoeffs(BaseTask):
+    task_name = "Коррекция полосатости"
+
+    def calculate_data(self) -> None:
+        pass
+
+
+class ApplyInfluenceCoeffs(BaseTask):
+    task_name = "Коррекция влияния датчиков друг на друга"
+
+    def calculate_data(self) -> None:
+        pass
+
+
+class ApplyTraceCoeffs(BaseTask):
+    task_name = "Коррекция остаточного сигнала"
+
+    def calculate_data(self) -> None:
+        pass
+
+
 DATABASE_TASKS = [
     SensorsCoefficientsTaskByMirror,
     SensorsCoefficientsTaskBySurface,
@@ -492,9 +541,16 @@ DATABASE_TASKS = [
     AreaAvgStdTask,
     DeviationsBySurface,
     DeviationsByMirrorSide,
+    DeviationsRegression,
     RegressByYear,
     NeighboringMirrorsDifference,
     FindSpectreBrightness,
     DeviationsByY,
+    CalcZebraCoeffs,
+    CalcInfluenceCoeffs,
+    CalcTraceCoeffs,
+    ApplyZebraCoeffs,
+    ApplyInfluenceCoeffs,
+    ApplyTraceCoeffs,
 ]
 DICT_DATABASE_TASKS = {task.task_name: task for task in DATABASE_TASKS}

@@ -1,5 +1,7 @@
+import matplotlib.pyplot as plt
+
 from main_window import Ui_MainWindow
-from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QTreeWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QListWidgetItem, QFileDialog, QTreeWidgetItem, QMessageBox
 from PyQt5.QtCore import Qt
 from ConfigManager import ConfigManager
 from FY3DImageManager import FY3DImageManager
@@ -14,6 +16,12 @@ import pickle
 from utils import area_utils
 import multiprocessing
 from utils import some_utils
+
+
+def message_box(text: str):
+    msg = QMessageBox()
+    msg.setText(text)
+    msg.exec()
 
 
 class View(QMainWindow):
@@ -33,6 +41,8 @@ class View(QMainWindow):
         self.image_manager.load()
 
     def setup(self):
+        self.ui.tabWidget.setTabVisible(2, False)
+
         self.ui.checkBox_draw_graphs.setChecked(self.config.draw_graphs)
         self.ui.checkBox_save_colored_image.setChecked(self.config.save_colored_images)
 
@@ -109,7 +119,11 @@ class View(QMainWindow):
 
     def on_img_select(self):
         """Выделение изображения"""
-        item = self.ui.treeWidget_images.selectedItems()[0]
+        items = self.ui.treeWidget_images.selectedItems()
+        if len(items) == 0:
+            return
+        else:
+            item = items[0]
         self.curr_img = item.data(0, Qt.UserRole)
         self.show_img_preview()
         self.load_current_image_areas()
@@ -220,6 +234,7 @@ class View(QMainWindow):
     def on_start_button_clicked(self):
         """Нажатие "Запустить анализ!" """
         self.image_manager.run()
+        message_box("Завершено!")
 
     def on_add_area_button_clicked(self):
         """Нажатие "Добавить область" """
@@ -272,6 +287,12 @@ class View(QMainWindow):
         img = self.load_current_image()
         show_im_process = multiprocessing.Process(target=img.show)
         show_im_process.start()
+
+    def see_image_plt_clicked(self):
+        """Нажатие "Открыть в matplotlib" """
+        img = self.load_current_image()
+        plt.imshow(img)
+        plt.show()
 
     def img_path_clicked(self):
         """Нажатие "Путь" у снимков """
@@ -340,6 +361,7 @@ class View(QMainWindow):
         self.ui.pushButton_add_monotone_areas.clicked.connect(self.on_add_mono_areas_clicked)
         self.ui.pushButton_open_area.clicked.connect(self.open_area_clicked)
         self.ui.pushButton_see_image.clicked.connect(self.see_image_clicked)
+        self.ui.pushButton_see_image_plt.clicked.connect(self.see_image_plt_clicked)
         self.ui.pushButton_img_path.clicked.connect(self.img_path_clicked)
         self.ui.pushButton_add_image.clicked.connect(self.add_img_clicked)
         self.ui.comboBox_year.currentTextChanged.connect(self.on_year_comboBox_changed)

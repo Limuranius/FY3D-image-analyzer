@@ -90,8 +90,8 @@ class FY3DImageManager:
             logging.info(f"Изображение \"{image.name}\" сохранено")
 
     def analyze_images(self):
-        some_utils.remove_dir(vars.RESULTS_DIR)
-        os.mkdir(vars.RESULTS_DIR)
+        # some_utils.remove_dir(vars.RESULTS_DIR)
+        # os.mkdir(vars.RESULTS_DIR)
         for image in tqdm.tqdm(self.images, desc="Running image and area tasks on images", unit="img"):
             for image_task in self.config.image_tasks:
                 task = image_task(image)
@@ -116,6 +116,7 @@ class FY3DImageManager:
 
         for database_task in self.config.database_tasks:
             task = database_task()
+            task.calculate_data()
             task.save_to_excel()
             task.save_to_graphs()
 

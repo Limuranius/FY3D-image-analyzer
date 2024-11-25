@@ -294,6 +294,56 @@ pvalue={linreg_snow.pvalue}
                                            )
                     pbar.update(1)
 
+
+    def visit_DeviationsRegression(self, task: DatabaseTasks.DeviationsRegression):
+        data = task.get_data()
+        with tqdm.tqdm(total=15 * 10, desc="Saving graphs (DeviationsRegression)") as pbar:
+            for channel in range(5, 20):
+                ch_data = data[data["channel"] == channel]
+                xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
+
+                dev_std = ch_data["deviation"].std()
+                dev_avg = ch_data["deviation"].mean()
+                ylim = (dev_avg - dev_std * 3, dev_avg + dev_std * 3)
+                for sensor_i in range(10):
+                    file_name = f"Датчик {sensor_i}.png"
+                    path = get_graphs_path_and_create(task, file_name, inner_dir=f"Канал {channel}")
+
+                    ch_sens_data = ch_data[ch_data["sensor"] == sensor_i]
+
+                    x = ch_sens_data["area_avg"].to_numpy()
+                    y = ch_sens_data["deviation"].to_numpy()
+
+                    linreg = linregress(x.astype(float), y.astype(float))
+                    slope, intercept = linreg.slope, linreg.intercept
+                    line_x0 = x.min()
+                    line_x1 = x.max()
+                    line_y0 = line_x0 * slope + intercept
+                    line_y1 = line_x1 * slope + intercept
+
+                    significance = 0.05
+                    text = f"""Количество={len(ch_sens_data)}
+Среднее={y.mean()}
+Ст. откл={y.std()}
+slope={slope} 
+slope_stderr={linreg.stderr}
+intercept={intercept} 
+intercept_stderr={linreg.intercept_stderr}
+r^2={linreg.rvalue ** 2}
+pvalue={linreg.pvalue}
+Наклон значим? {"Да" if linreg.pvalue < significance else "Нет"}"""
+
+                    create_and_save_figure(path,
+                                           y_rows=[y, [line_y0, line_y1]],
+                                           x_rows=[x, [line_x0, line_x1]],
+                                           title=f"Зависимость отклонения датчика {sensor_i} канала {channel} от яркости",
+                                           xlabel="Яркость", ylabel="Отклонение датчика",
+                                           fmt_list=[".", "--"],
+                                           text=text,
+                                           xlim=xlim, ylim=ylim
+                                           )
+                    pbar.update(1)
+
     def visit_AreaAvgStdTask(self, task: DatabaseTasks.AreaAvgStdTask):
         data = task.get_data()
         with tqdm.tqdm(total=15, desc="Saving graphs (AreaAvgStdTask)") as pbar:

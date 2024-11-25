@@ -12,8 +12,6 @@ class ChannelArea:
     sea_value: int
     ice_value: int
     sea_mask: np.ndarray
-    true_noise: np.ndarray
-    median_values: np.ndarray
     h: int
     w: int
 
@@ -41,16 +39,8 @@ class ChannelArea:
         self.__ch_area = ch_area
         self.channel = channel
         self.h, self.w = self.__ch_area.shape
-        self.sea_mask = area_utils.ch_area_to_sea_mask(self.__ch_area)
-        self.sea_value, self.ice_value = area_utils.find_two_peaks(self.__ch_area)
-
-        self.true_noise = self.to_numpy().copy()
-        self.true_noise[self.sea_mask] -= self.sea_value
-        self.true_noise[~self.sea_mask] -= self.ice_value
-
-        self.median_values = self.to_numpy().copy()
-        self.median_values[self.sea_mask] = self.sea_value
-        self.median_values[~self.sea_mask] = self.ice_value
+        # self.sea_mask = area_utils.ch_area_to_sea_mask(self.__ch_area)
+        # self.sea_value, self.ice_value = area_utils.find_two_peaks(self.__ch_area)
 
     def to_numpy(self) -> np.ndarray:
         return self.__ch_area
@@ -75,3 +65,6 @@ class ChannelArea:
         for area in tqdm(areas):
             res.append(area.get_channel_area(channel))
         return res
+
+    def get_black_body_value(self) -> float:
+        return self.parent.get_black_body_value(self.channel)

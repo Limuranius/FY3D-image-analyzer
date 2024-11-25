@@ -12,6 +12,9 @@ coeffs = pd.read_pickle(os.path.join(vars.RESULTS_DIR, "cal_coeffs.pkl"))
 IMG_ID = 114
 image = FY3DImage.get(id=IMG_ID).EV_1KM_RefSB[:, :, :]
 
+with h5py.File(os.path.join(vars.RESULTS_DIR, "before.hdf"), "w") as f:
+    f.create_dataset("EV_1KM_RefSB", data=image)
+
 height = 2000
 width = 2048
 
@@ -23,8 +26,9 @@ with tqdm.tqdm(total=15 * height * width, desc="Calibrating image") as pbar:
             sensor = y % 10
             # coeff = coeffs[(coeffs["channel"] == channel) & (coeffs["sensor"] == sensor)
             #                & (coeffs["k_mirror_side"] == get_area_mirror_side(y).value)].squeeze()
-            coeff = coeffs[(coeffs["channel"] == channel) & (coeffs["sensor"] == sensor)
-                           & (coeffs["surface_type"] == vars.SurfaceType.SNOW.value)].squeeze()
+            # coeff = coeffs[(coeffs["channel"] == channel) & (coeffs["sensor"] == sensor)
+            #                & (coeffs["surface_type"] == vars.SurfaceType.SNOW.value)].squeeze()
+            coeff = coeffs[(coeffs["channel"] == channel) & (coeffs["sensor"] == sensor)].squeeze()
             slope = coeff["slope"]
             intercept = coeff["intercept"]
 

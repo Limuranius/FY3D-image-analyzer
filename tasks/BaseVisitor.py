@@ -24,6 +24,7 @@ class BaseVisitor(ABC):
             # DatabaseTasks
             DatabaseTasks.DeviationsBySurface: self.visit_DeviationsBySurface,
             DatabaseTasks.DeviationsByMirrorSide: self.visit_DeviationsByMirrorSide,
+            DatabaseTasks.DeviationsRegression: self.visit_DeviationsRegression,
             DatabaseTasks.SensorsCoefficientsTaskByMirror: self.visit_SensorsCoefficientsTaskByMirror,
             DatabaseTasks.SensorsCoefficientsTaskBySurface: self.visit_SensorsCoefficientsTaskBySurface,
             DatabaseTasks.SensorsCoefficientsTask: self.visit_SensorsCoefficientsTask,
@@ -61,6 +62,9 @@ class BaseVisitor(ABC):
         pass
 
     def visit_DeviationsByMirrorSide(self, task: DatabaseTasks.DeviationsByMirrorSide):
+        pass
+
+    def visit_DeviationsRegression(self, task: DatabaseTasks.DeviationsRegression):
         pass
 
     def visit_MultipleImagesCalibrationTask(self, task: MultipleImagesTasks.MultipleImagesCalibrationTask):

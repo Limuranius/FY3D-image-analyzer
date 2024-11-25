@@ -1,5 +1,6 @@
 import os
 
+import h5py
 import numpy as np
 import pandas as pd
 import visual
@@ -18,8 +19,16 @@ def prepare_results(
         areas_ids: list[int],
         func_values_df: pd.DataFrame | None,
         image: np.ndarray,
-        image_areas: list[tuple[int, int, int, int, int, int]]
+        image_areas: list[tuple[int, int, int, int, int, int]],
+        channel: int,
+        save_image: bool = False
 ) -> None:
+    print(name)
+
+    # Устанавливаем главную диагональ в 0
+    for i in range(10):
+        a_coeffs[i, i] = 0
+
     coeffs = np.empty(shape=(10, 30))
     coeffs[:, 0:10] = a_coeffs
     coeffs[:, 10:20] = b1_coeffs
@@ -29,6 +38,7 @@ def prepare_results(
     os.makedirs(folder, exist_ok=True)
 
     if func_values_df is not None:
+        print("Сохраняем прогресс оптимизации")
         # График уменьшения функции ошибки
         visual.func_values(
             df=func_values_df,
@@ -36,25 +46,12 @@ def prepare_results(
         )
 
         # pickle файл со значениями функций
-        func_values_df.to_pickle(
-            path.join(folder, "Прогресс оптимизации.pickle")
+        func_values_df.to_excel(
+            path.join(folder, "Прогресс оптимизации.xlsx")
         )
 
-    # Графики приближения для каждого датчика
-    visual.visualize_all(
-        coeffs=coeffs,
-        ids=areas_ids,
-        path=path.join(folder, "Графики приближения")
-    )
-
-    # Гистограмма соотношений датчиков после калибровки
-    # relation_data = sensors_relation.collect_data(coeffs)
-    # visual.visualize_sensors_relation(
-    #     df=relation_data,
-    #     path=path.join(folder, "Отношение датчиков")
-    # )
-
     # Изображения части снимка после калибровки
+    print("Сохраняем отфильтрованные части снимков")
     filtered_img = filter_image.filter_area(image, coeffs)
     os.makedirs(path.join(folder, "Отфильтрованные изображения"), exist_ok=True)
     for i, (x, y, w, h, min_value, max_value) in enumerate(image_areas):
@@ -67,7 +64,28 @@ def prepare_results(
             max_value=max_value,
         )
 
+    # Графики приближения для каждого датчика
+    print("Сохраняем графики приближения")
+    visual.visualize_all(
+        coeffs=coeffs,
+        ids=areas_ids,
+        path=path.join(folder, "Графики приближения"),
+        channel=channel,
+    )
+
+    # Гистограмма соотношений датчиков после калибровки
+    # print("Сохраняем гистограмму соотношения датчиков")
+    # relation_data = sensors_relation.collect_data(coeffs)
+    # (relation_data.groupby(["main_sensor", "other_sensor", "surface_type"])
+    #  .agg(["mean", "std"])
+    #  .to_excel(path.join(folder, "Отношение датчиков.xlsx")))
+    # visual.visualize_sensors_relation(
+    #     df=relation_data,
+    #     path=path.join(folder, "Отношение датчиков")
+    # )
+
     # Excel и pickle файл с коэффициентами
+    print("Сохраняем коэффициенты")
     with pd.ExcelWriter(path=path.join(folder, "Коэффициенты.xlsx")) as writer:
         pd.DataFrame(a_coeffs).to_excel(
             excel_writer=writer,
@@ -91,6 +109,17 @@ def prepare_results(
         pickle.dump([a_coeffs, b1_coeffs, b2_coeffs], f)
 
     # Визуализация коэффициентов
+    print("Визуализируем коэффициенты")
     visual.visualize_coeffs(a_coeffs, path.join(folder, "Коэффициенты a.png"))
     visual.visualize_coeffs(b1_coeffs, path.join(folder, "Коэффициенты b1.png"))
     visual.visualize_coeffs(b2_coeffs, path.join(folder, "Коэффициенты b2.png"))
+
+    if save_image:
+        print("Сохраняем калиброванное изображение")
+        new_image = filter_image.filter_area(image, coeffs)
+        with h5py.File(path.join(folder, "Снимок.hdf"), "w") as f:
+            f.create_dataset("Before", data=image)
+            f.create_dataset("After", data=new_image)
+
+    with open(path.join(folder, "coeffs.pickle"), "wb") as f:
+        pickle.dump(coeffs, f)

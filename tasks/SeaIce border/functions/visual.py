@@ -1,53 +1,34 @@
-import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from database import FY3DImageArea
 from optimize_funcs import *
 import seaborn as sns
-import timeresults
 import utils
+import extra
 
 sns.set_style("darkgrid")
-
-
-def visualize_sensor(
-        sensor_coeffs: np.ndarray,
-        area_id: int,
-        sensor: int
-):
-    channel_area = FY3DImageArea.get(id=area_id).get_channel_area(8)
-    arr_area = channel_area.to_numpy()
-    median_values = channel_area.median_values
-
-    true = row_true_noise(arr_area, sensor_coeffs, sensor, median_values)
-    predicted = row_predicted_noise(arr_area, sensor_coeffs, sensor)
-
-    x = list(range(len(true)))
-    plt.plot(x, true)
-    plt.plot(x, predicted)
-    plt.show()
 
 
 def visualize_all(
         coeffs: np.ndarray,
         ids: list[int],
-        path: str
+        path: str,
+        channel: int
 ):
-    areas = [FY3DImageArea.get(id=area_id).get_channel_area(8) for area_id in ids]
+    areas = [FY3DImageArea.get(id=area_id).get_channel_area(channel) for area_id in ids]
 
     df = pd.DataFrame(columns=["area_id", "sensor", "x", "value", "type"])
 
-    for sensor in range(10):
-        sensor_coeffs = coeffs[sensor]
-        for area_id, area in zip(ids, areas):
-            arr_area = area.to_numpy()
-            median_values = area.median_values
+    for area_id, channel_area in zip(ids, areas):
+        arr_area, arr_target = extra.prepare_area(channel_area)
+        for sensor in range(10):
+            sensor_coeffs = coeffs[sensor]
+            sensor_target = arr_target[sensor]
 
-            true = row_true_noise(arr_area, sensor_coeffs, sensor, median_values)
             predicted = row_predicted_noise(arr_area, sensor_coeffs, sensor)
 
-            for x in range(len(true)):
-                df.loc[len(df)] = [area_id, sensor, x, true[x], "true"]
+            for x in range(len(sensor_target)):
+                df.loc[len(df)] = [area_id, sensor, x, sensor_target[x], "target"]
                 df.loc[len(df)] = [area_id, sensor, x, predicted[x], "predicted"]
 
     sns.relplot(

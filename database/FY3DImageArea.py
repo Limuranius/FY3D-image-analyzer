@@ -36,9 +36,13 @@ class FY3DImageArea(BaseModel):
     cached_data: dict[int, CacheAreaData] = defaultdict(CacheAreaData)  # id: data
 
     def get_vis_channel(self, channel: int) -> np.ndarray:
-        """channel - канал от 5 до 19"""
-        ch_i = channel - 5
-        return np.uint16(self.EV_1KM_RefSB[ch_i])
+        """channel - канал от 1 до 19"""
+        if channel <= 4:
+            ch_i = channel - 1
+            return np.uint16(self.EV_250_Aggr1KM_RefSB[ch_i])
+        else:
+            ch_i = channel - 5
+            return np.uint16(self.EV_1KM_RefSB[ch_i])
 
     def save_vis_to_excel(self, file_name: str, channel: int):
         excel_writer = pd.ExcelWriter(file_name)

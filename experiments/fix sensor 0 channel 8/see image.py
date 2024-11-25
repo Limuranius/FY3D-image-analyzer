@@ -7,5 +7,8 @@ img = FY3DImage.get(id=119)
 ch_img = img.get_vis_channel(8)
 ch_img = change_contrast(ch_img, 1000, 1300)
 
+# ch_img = img.get_vis_channel(12)
+# ch_img = change_contrast(ch_img, 450, 750)
+
 plt.imshow(ch_img, cmap="grey")
 plt.show()

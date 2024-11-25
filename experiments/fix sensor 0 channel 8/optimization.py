@@ -9,20 +9,6 @@ from scipy.optimize import minimize
 
 MAX_NOISE = 100
 
-CONCRETE_SENSORS = {
-    0: [1, 2, 3],
-    1: [0],
-    2: [1, 3, 4],
-    3: [2, 4, 5],
-    4: [3, 5, 6],
-    5: [4, 6, 7],
-    6: [5, 7, 8, 9],
-    7: [6, 8, 9],
-    8: [5, 6, 7, 9],
-    9: [6, 7, 8],
-}
-
-
 
 def get_median_image(image):
     return median_filter(image, size=5)
@@ -40,26 +26,24 @@ def get_area(area_id: int, image):
 def optimize(
         area,
         median_values,
-        sensor
+        sensor,
+        n_iters
 ):
     true_values = area[sensor] - median_values[sensor]
-    # coeffs = np.zeros(10)
+    coeffs = np.zeros(10)
 
-    depend_sensors = CONCRETE_SENSORS[sensor]
-    coeffs = np.zeros(len(depend_sensors))
-
-    res = minimize(
-        fun=error_sum,
-        x0=coeffs,
-        args=(area, true_values, sensor)
-    )
-    return res.x
-
-    # coeffs = np.zeros(10)
-    # for i, sensor_i in enumerate(CONCRETE_SENSORS[sensor]):
-    #     coeffs[sensor_i] = res.x[i]
-    # return coeffs
-
+    methods = ["BFGS", "Nelder-Mead", "Powell", "CG", "COBYLA"]
+    for _ in range(n_iters):
+        method = methods[_ % len(methods)]
+        res = minimize(
+            fun=error_sum,
+            x0=coeffs,
+            args=(area, true_values, sensor),
+            method=method
+        )
+        print(res.fun)
+        coeffs = res.x
+    return coeffs
 
 def error_sum(
         coeffs,
@@ -79,16 +63,9 @@ def get_predicted_values(
         area,
         sensor
 ):
-    depend_sensors = CONCRETE_SENSORS[sensor]
-    sensor_row = area[sensor]
-    depend_area = area[depend_sensors]
-    sens_diff = depend_area - sensor_row
-    sens_diff_coeff = sens_diff * coeffs.reshape(len(depend_sensors), 1)
+    sens_diff = area - area[sensor]
+    sens_diff_coeff = sens_diff * coeffs.reshape(10, 1)
     predicted_values = sens_diff_coeff.sum(axis=0)
-
-    # sens_diff = area - area[sensor]
-    # sens_diff_coeff = sens_diff * coeffs.reshape(10, 1)
-    # predicted_values = sens_diff_coeff.sum(axis=0)
     return predicted_values
 
 

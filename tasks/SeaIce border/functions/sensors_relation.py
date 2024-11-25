@@ -24,6 +24,7 @@ def preprocess_area(
 
 
 def collect_data(coeffs: np.ndarray) -> pd.DataFrame:
+    """main_sensor | other_sensor | relation | surface_type"""
     sea_areas = ChannelArea.find(
         channel=CHANNEL,
         surface_type=SurfaceType.SEA,

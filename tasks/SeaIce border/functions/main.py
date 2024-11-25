@@ -41,7 +41,7 @@ def only_b():
     a = get_a_coeffs()
     ids = [8917, 8918, 8919, 8920]
     coeffs, func_values = extra.optimize_all_sensors_only_b(
-        areas=ids,
+        area_ids=ids,
         n_iters=100,
         a_coeffs=a
     )
@@ -59,9 +59,9 @@ def main():
     ids = [8917, 8918, 8919, 8920]
 
     coeffs, func_values = extra.optimize_all_sensors(
-        areas=ids,
+        area_ids=ids,
         n_iters=10,
-        x0_arr=x0,
+        start_coeffs=x0,
     )
 
     visual.func_values(func_values)

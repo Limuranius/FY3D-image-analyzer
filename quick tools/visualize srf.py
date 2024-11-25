@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-channels = list(range(8, 11))
+channels = [3, 12]
 
 data = pd.DataFrame(columns=["Wavelength (nm)", "SRF", "channel"])
 
