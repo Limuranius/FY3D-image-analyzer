@@ -15,7 +15,7 @@ import os
 
 class SensorsCoefficientsTaskByMirror(BaseTask):
     """
-    Вычисляет коэффициенты для каждого датчика и стороны зеркала
+    Вычисляет коэффициенты линейной регрессии полосатости для каждого датчика и стороны зеркала
     Поля result:
         channel:            Номер канала
         sensor:             Номер датчика
@@ -55,15 +55,6 @@ class SensorsCoefficientsTaskByMirror(BaseTask):
                     intercept_1 = linreg_side_1.intercept
                     intercept_2 = linreg_side_2.intercept
 
-                    significance = 0.05
-
-                    is_slope_1_significant = linreg_side_1.pvalue < significance
-                    is_slope_2_significant = linreg_side_2.pvalue < significance
-                    if not is_slope_1_significant:
-                        slope_1 = 0
-                    if not is_slope_2_significant:
-                        slope_2 = 0
-
                     df.loc[len(df)] = [channel, sensor_i, slope_1, intercept_1, KMirrorSide.SIDE_1.value,
                                        linreg_side_1.rvalue ** 2, linreg_side_1.pvalue, linreg_side_1.stderr,
                                        linreg_side_1.intercept_stderr, y_side_1.mean(), y_side_1.std()]
@@ -77,7 +68,7 @@ class SensorsCoefficientsTaskByMirror(BaseTask):
 
 class SensorsCoefficientsTaskBySurface(BaseTask):
     """
-    Вычисляет коэффициенты для каждого датчика и стороны зеркала
+    Вычисляет коэффициенты для каждого датчика и типа поверхности
     Поля result:
         channel:            Номер канала
         sensor:             Номер датчика
@@ -117,15 +108,6 @@ class SensorsCoefficientsTaskBySurface(BaseTask):
                     intercept_1 = linreg_sea.intercept
                     intercept_2 = linreg_ice.intercept
 
-                    significance = 0.05
-
-                    is_slope_1_significant = linreg_sea.pvalue < significance
-                    is_slope_2_significant = linreg_ice.pvalue < significance
-                    if not is_slope_1_significant:
-                        slope_1 = 0
-                    if not is_slope_2_significant:
-                        slope_2 = 0
-
                     df.loc[len(df)] = [channel, sensor_i, slope_1, intercept_1, KMirrorSide.SIDE_1.value,
                                        linreg_sea.rvalue ** 2, linreg_sea.pvalue, linreg_sea.stderr,
                                        linreg_sea.intercept_stderr, y_sea.mean(), y_sea.std()]
@@ -155,7 +137,6 @@ class SensorsCoefficientsTask(BaseTask):
     task_name = "Вычислить коэффициенты"
 
     def calculate_data(self):
-        print("ЖОПАААААААААА")
         columns = ["channel", "sensor", "slope", "intercept",
                    "r^2", "pvalue", "slope_stderr", "intercept_stderr", "avg_deviation", "std_deviation"]
         df = pd.DataFrame(columns=columns)
@@ -171,17 +152,12 @@ class SensorsCoefficientsTask(BaseTask):
                     slope = linreg.slope
                     intercept = linreg.intercept
 
-                    significance = 0.05
-
-                    is_slope_significant = linreg.pvalue < significance
-                    if not is_slope_significant:
-                        slope = 0
-
                     df.loc[len(df)] = [channel, sensor_i, slope, intercept,
                                        linreg.rvalue ** 2, linreg.pvalue, linreg.stderr,
                                        linreg.intercept_stderr, y.mean(), y.std()]
                     pbar.update(1)
         df.to_pickle(os.path.join(vars.RESULTS_DIR, "cal_coeffs.pkl"))
+        df[["channel", "sensor", "slope", "intercept"]].to_csv(os.path.join(vars.RESULTS_DIR, "cal_coeffs.csv"), index=False)
         self.result = df
 
 
@@ -202,30 +178,8 @@ class AreaAvgStdTask(BaseTask):
 class DeviationsBySurface(BaseTask):
     task_name = "Отклонения в зависимости от яркости и поверхности"
 
-    CONVERT_TO_REF = False
-    SUBTRACT_BB = False
-
     def calculate_data(self):
-        data = Deviations.get_dataframe()
-        # data = pd.concat([
-        #     data[(data.channel == 8) | (data.channel == 10)],
-        #     data[(data.id == 61) | (data.id == 1960)]
-        # ])
-        if self.CONVERT_TO_REF or self.SUBTRACT_BB:
-            for i, row in tqdm.tqdm(data.iterrows(), total=len(data), desc="Calculating deviations by surface"):
-                area = FY3DImageArea.get(id=row.id)
-                image = area.image
-                area_avg = row.area_avg
-                if self.SUBTRACT_BB:
-                    area_avg -= area.get_black_body_value(row.channel)
-                if self.CONVERT_TO_REF:
-                    sensor_avg = area_avg + row.deviation
-                    area_avg_Ref = some_utils.DN_to_Ref(area_avg, image, row.channel)
-                    sensor_avg_Ref = some_utils.DN_to_Ref(sensor_avg, image, row.channel)
-                    deviation_Ref = sensor_avg_Ref - area_avg_Ref
-                    data.loc[i, "deviation"] = deviation_Ref
-                    data.loc[i, "area_avg"] = area_avg_Ref
-        self.result = data
+        self.result = Deviations.get_dataframe()
 
 
 class DeviationsByMirrorSide(BaseTask):
@@ -485,55 +439,6 @@ class FindSpectreBrightness(BaseTask):
         }
 
 
-class DeviationsByY(BaseTask):
-    task_name = "Отклонения в зависимости от координаты Y"
-
-    def calculate_data(self) -> None:
-        self.result = Deviations.get_dataframe()
-
-
-class CalcZebraCoeffs(BaseTask):
-    task_name = "Вычислить коэффициенты полосатости"
-
-    def calculate_data(self) -> None:
-        pass
-
-
-class CalcInfluenceCoeffs(BaseTask):
-    task_name = "Вычислить коэффициенты влияния датчиков друг на друга"
-
-    def calculate_data(self) -> None:
-        pass
-
-
-class CalcTraceCoeffs(BaseTask):
-    task_name = "Вычислить коэффициенты остаточного сигнала"
-
-    def calculate_data(self) -> None:
-        pass
-
-
-class ApplyZebraCoeffs(BaseTask):
-    task_name = "Коррекция полосатости"
-
-    def calculate_data(self) -> None:
-        pass
-
-
-class ApplyInfluenceCoeffs(BaseTask):
-    task_name = "Коррекция влияния датчиков друг на друга"
-
-    def calculate_data(self) -> None:
-        pass
-
-
-class ApplyTraceCoeffs(BaseTask):
-    task_name = "Коррекция остаточного сигнала"
-
-    def calculate_data(self) -> None:
-        pass
-
-
 DATABASE_TASKS = [
     SensorsCoefficientsTaskByMirror,
     SensorsCoefficientsTaskBySurface,
@@ -545,12 +450,5 @@ DATABASE_TASKS = [
     RegressByYear,
     NeighboringMirrorsDifference,
     FindSpectreBrightness,
-    DeviationsByY,
-    CalcZebraCoeffs,
-    CalcInfluenceCoeffs,
-    CalcTraceCoeffs,
-    ApplyZebraCoeffs,
-    ApplyInfluenceCoeffs,
-    ApplyTraceCoeffs,
 ]
 DICT_DATABASE_TASKS = {task.task_name: task for task in DATABASE_TASKS}

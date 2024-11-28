@@ -44,14 +44,20 @@ def create_and_save_figure(fig_path: str, y_rows: list[list[int | float]], x_row
         ax.legend(legend, title=legend_title, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 1))
     if grid:
         plt.grid()
+
+    # ax.text(0.05, 0.95, text,
+    #         horizontalalignment='left',
+    #         verticalalignment='top',
+    #         transform=ax.transAxes)
+    # plt.savefig(fig_path)
+    # plt.close(fig)
     # Пишем текст
-    font = ImageFont.truetype("arial.ttf", size=16)
     fig.canvas.draw()
     fig_img = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
     text_space = 250
     fig_img = ImageOps.expand(fig_img, border=(0, 0, text_space, 0), fill=(255, 255, 255))
     drawer = ImageDraw.Draw(fig_img)
-    drawer.text((590, 20), text, fill=0, font=font)
+    drawer.text((590, 20), text, fill=0)
 
-    fig_img.save(fig_path)
+    fig_img.save(fig_path, dpi=(200, 200))
     plt.close(fig)

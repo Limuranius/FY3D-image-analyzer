@@ -227,7 +227,7 @@ class View(QMainWindow):
                 image.save()
         else:
             for image in FY3DImage.all_images():
-                image.is_selected = image.get_year() == int(value)
+                image.is_selected = image.get_date().year == int(value)
                 image.save()
         self.update_image_list()
 

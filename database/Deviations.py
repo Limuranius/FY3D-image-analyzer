@@ -58,6 +58,7 @@ class Deviations(BaseModel):
         if _deviations_df is None:
             cls.__load_df()
         expressions = []
+        expressions.append(_deviations_df.area_avg < 4000)  # Убираем большие значения
         if check_select:
             expressions.append(_deviations_df.is_selected == True)
         if k_mirror_side is not None:

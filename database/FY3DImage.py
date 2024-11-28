@@ -125,23 +125,20 @@ class FY3DImage(BaseModel):
         writer.close()
 
     def get_date(self) -> datetime.date:
-        date_str = self.file_attrs["Data Creating Date"].decode()
+        date_str = self.file_attrs["Observing Beginning Date"].decode()
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
         return date
 
-    def get_year(self) -> int:
-        return self.get_date().year
-
     def get_datetime(self) -> datetime.datetime:
-        date_str = self.file_attrs["Data Creating Date"].decode()
-        time_str = self.file_attrs["Data Creating Time"].decode().split(".")[0]
+        date_str = self.file_attrs["Observing Beginning Date"].decode()
+        time_str = self.file_attrs["Observing Beginning Time"].decode().split(".")[0]
         date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
         time = datetime.datetime.strptime(time_str, "%H:%M:%S").time()
         dt = datetime.datetime.combine(date, time)
         return dt
 
     def calculate_std_map(self) -> None:
-        std_map = getImageMonotone.calc_std_sum_map_gpu(self.EV_1KM_RefSB)
+        std_map = getImageMonotone.calc_std_sum_map(self.EV_1KM_RefSB)
         compressed = getImageMonotone.compress_std_sum_map(std_map)
         pkl = pickle.dumps(compressed)
         self.std_sum_map = pkl

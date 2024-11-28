@@ -150,7 +150,13 @@ class GraphsVisitor(BaseVisitor):
                 # ch_data = Deviations.get_dataframe(year=2023, channel=channel)
                 ch_data = data[data["channel"] == channel]
                 xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
-                ylim = (ch_data["deviation"].min(), ch_data["deviation"].max())
+
+                # q1 = np.quantile(ch_data["deviation"], 0.25)
+                # q3 = np.quantile(ch_data["deviation"], 0.75)
+                # iqr = q3 - q1
+                # ylim = (q1 - iqr * 1.5, q3 + iqr * 1.5)
+                ylim = (-15, 15)
+
                 for sensor_i in range(10):
                     path = get_graphs_path_and_create(task, f"Датчик {sensor_i}", inner_dir=f"Канал {channel}")
 
@@ -182,31 +188,17 @@ class GraphsVisitor(BaseVisitor):
                     line_y0_side_2 = line_x0_side_2 * slope_side_2 + intercept_side_2
                     line_y1_side_2 = line_x1_side_2 * slope_side_2 + intercept_side_2
 
-                    significance = 0.05
-                    text = f"""Первое зеркало:
-Количество = {len(side_1_data)}
-Среднее={y_side_1.mean()}
-Ст. откл={y_side_1.std()}
+                    text = f"""Side 1:
+count={len(side_1_data)}
 slope={slope_side_1} 
-slope_stderr={linreg_side_1.stderr}
 intercept={intercept_side_1} 
-intercept_stderr={linreg_side_1.intercept_stderr}
 r^2={linreg_side_1.rvalue ** 2}
-pvalue={linreg_side_1.pvalue}
-Наклон значим? {"Да" if linreg_side_1.pvalue < significance else "Нет"}
 
-Второе зеркало:
-Количество = {len(side_2_data)}
-Среднее={y_side_2.mean()}
-Ст. откл={y_side_2.std()}
+Side 2:
+count={len(side_2_data)}
 slope={slope_side_2} 
-slope_stderr={linreg_side_2.stderr}
 intercept={intercept_side_2} 
-intercept_stderr={linreg_side_2.intercept_stderr}
-r^2={linreg_side_2.rvalue ** 2}
-pvalue={linreg_side_2.pvalue}
-Наклон значим? {"Да" if linreg_side_2.pvalue < significance else "Нет"}"""
-
+r^2={linreg_side_2.rvalue ** 2}"""
                     create_and_save_figure(path,
                                            y_rows=[y_side_1, y_side_2, [line_y0_side_1, line_y1_side_1],
                                                    [line_y0_side_2, line_y1_side_2]],
@@ -226,7 +218,12 @@ pvalue={linreg_side_2.pvalue}
             for channel in range(5, 20):
                 ch_data = data[data["channel"] == channel]
                 xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
-                ylim = (ch_data["deviation"].min(), ch_data["deviation"].max())
+
+                # q1 = np.quantile(ch_data["deviation"], 0.25)
+                # q3 = np.quantile(ch_data["deviation"], 0.75)
+                # iqr = q3 - q1
+                # ylim = (q1 - iqr * 1.5, q3 + iqr * 1.5)
+                ylim = (-15, 15)
                 for sensor_i in range(10):
                     file_name = f"Датчик {sensor_i}.png"
                     path = get_graphs_path_and_create(task, file_name, inner_dir=f"Канал {channel}")
@@ -255,30 +252,17 @@ pvalue={linreg_side_2.pvalue}
                     line_y0_snow = line_x0_snow * slope_snow + intercept_snow
                     line_y1_snow = line_x1_snow * slope_snow + intercept_snow
 
-                    significance = 0.05
-                    text = f"""Море:
-Количество = {len(sea_data)}
-Среднее={y_sea.mean()}
-Ст. откл={y_sea.std()}
+                    text = f"""Water:
+count={len(sea_data)}
 slope={slope_sea} 
-slope_stderr={linreg_sea.stderr}
 intercept={intercept_sea} 
-intercept_stderr={linreg_sea.intercept_stderr}
 r^2={linreg_sea.rvalue ** 2}
-pvalue={linreg_sea.pvalue}
-Наклон значим? {"Да" if linreg_sea.pvalue < significance else "Нет"}
 
-Снег:
-Количество = {len(snow_data)}
-Среднее={y_snow.mean()}
-Ст. откл={y_snow.std()}
+Ice:
+count={len(snow_data)}
 slope={slope_snow} 
-slope_stderr={linreg_snow.stderr}
 intercept={intercept_snow} 
-intercept_stderr={linreg_snow.intercept_stderr}
-r^2={linreg_snow.rvalue ** 2}
-pvalue={linreg_snow.pvalue}
-Наклон значим? {"Да" if linreg_snow.pvalue < significance else "Нет"}"""
+r^2={linreg_snow.rvalue ** 2}"""
 
                     create_and_save_figure(path,
                                            y_rows=[y_sea, y_snow, [line_y0_sea, line_y1_sea],
@@ -302,9 +286,11 @@ pvalue={linreg_snow.pvalue}
                 ch_data = data[data["channel"] == channel]
                 xlim = (ch_data["area_avg"].min(), ch_data["area_avg"].max())
 
-                dev_std = ch_data["deviation"].std()
-                dev_avg = ch_data["deviation"].mean()
-                ylim = (dev_avg - dev_std * 3, dev_avg + dev_std * 3)
+                # q1 = np.quantile(ch_data["deviation"], 0.25)
+                # q3 = np.quantile(ch_data["deviation"], 0.75)
+                # iqr = q3 - q1
+                # ylim = (q1 - iqr * 1.5, q3 + iqr * 1.5)
+                ylim = (-15, 15)
                 for sensor_i in range(10):
                     file_name = f"Датчик {sensor_i}.png"
                     path = get_graphs_path_and_create(task, file_name, inner_dir=f"Канал {channel}")
@@ -322,17 +308,10 @@ pvalue={linreg_snow.pvalue}
                     line_y1 = line_x1 * slope + intercept
 
                     significance = 0.05
-                    text = f"""Количество={len(ch_sens_data)}
-Среднее={y.mean()}
-Ст. откл={y.std()}
+                    text = f"""count={len(ch_sens_data)}
 slope={slope} 
-slope_stderr={linreg.stderr}
 intercept={intercept} 
-intercept_stderr={linreg.intercept_stderr}
-r^2={linreg.rvalue ** 2}
-pvalue={linreg.pvalue}
-Наклон значим? {"Да" if linreg.pvalue < significance else "Нет"}"""
-
+r^2={linreg.rvalue ** 2}"""
                     create_and_save_figure(path,
                                            y_rows=[y, [line_y0, line_y1]],
                                            x_rows=[x, [line_x0, line_x1]],
@@ -421,17 +400,3 @@ pvalue={linreg.pvalue}
         path = get_graphs_path_and_create(task, "Спектры (на льду)")
         create_and_save_figure(path, y_rows=y, x_rows=x, grid=True, xlabel="Канал", ylabel="Ср. яркость области",
                                title="Зависимость яркости области от канала (на льду)")
-
-    def visit_DeviationsByY(self, task: DatabaseTasks.DeviationsByY):
-        data = task.get_data()
-        for channel in range(5, 20):
-            # path = get_graphs_path_and_create(task, f"Датчик {sensor}", inner_dir=f"Канал {channel}")
-            path = get_graphs_path_and_create(task, f"Канал {channel}")
-            ch_data = data[(data.channel == channel)]
-            # sensor_data = data[(data.channel == channel) & (data.sensor == sensor)]
-            # for sensor in range(10):
-            #     path = get_graphs_path_and_create(task, f"Датчик {sensor}", inner_dir=f"Канал {channel}")
-            #     sensor_data = data[(data.channel == channel) & (data.sensor == sensor)]
-            sns.lmplot(data=ch_data, x="y", y="deviation", hue="sensor", scatter_kws=dict(s=2))
-            plt.savefig(path, dpi=300)
-            plt.close()
